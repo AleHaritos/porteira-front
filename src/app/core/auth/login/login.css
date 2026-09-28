@@ -1,0 +1,116 @@
+/* core/auth/login/login.css */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: linear-gradient(160deg, #6fc088, #93d4a6 55%, #6fc088);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 48px -16px rgba(50, 110, 75, 0.4);
+}
+
+.login-card__top {
+  background: linear-gradient(135deg, #4fae70, #6fc088);
+  padding: 2rem 1.5rem 1.75rem;
+  text-align: center;
+}
+
+.login-card__brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.login-card__icon {
+  font-size: 1.75rem;
+}
+
+.login-card__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.login-card__subtitle {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.login-card__body {
+  padding: 2rem 1.75rem 1.75rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #2f4d3a;
+}
+
+.field__input {
+  border-radius: 10px;
+  border: 1px solid #cfe4d6;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.95rem;
+}
+
+.field__input:focus {
+  border-color: #4fae70;
+  box-shadow: 0 0 0 3px rgba(79, 174, 112, 0.25);
+  outline: none;
+}
+
+.login-btn {
+  background: #2f9e58;
+  color: white;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 0.8rem;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  box-shadow: 0 6px 16px -4px rgba(47, 158, 88, 0.5);
+}
+
+.login-btn:hover:not(:disabled) {
+  background: #278a4c;
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.login-voltar {
+  text-align: center;
+  width: 100%;
+  color: #4fae70;
+}
+
+.login-erro {
+  font-size: 0.85rem;
+  color: #d97878;
+}

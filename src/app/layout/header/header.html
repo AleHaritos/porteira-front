@@ -1,0 +1,37 @@
+<header
+  class="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#d8e6dc] bg-white px-4 md:px-6">
+  <div class="flex items-center gap-2">
+    <span class="text-xl font-bold text-[#2f9e58]">Porteira</span>
+  </div>
+
+  <button hlmBtn variant="ghost" class="flex h-auto items-center gap-3 px-2 py-1 cursor-pointer" [hlmDropdownMenuTrigger]="menu"
+    align="end">
+    <span class="hidden text-sm font-medium text-[#2f4d3a] sm:block">
+      {{ usuario()?.nome }}
+    </span>
+    <hlm-avatar>
+      <span hlmAvatarFallback class="bg-[#cde8d4] font-semibold text-[#2f9e58]">
+        {{ iniciais() }}
+      </span>
+    </hlm-avatar>
+  </button>
+
+
+</header>
+<ng-template #menu>
+  <hlm-dropdown-menu class="w-56">
+    <hlm-dropdown-menu-group>
+      <hlm-dropdown-menu-label class="text-xs font-semibold uppercase tracking-wide text-muted-foreground"> Minha
+        conta</hlm-dropdown-menu-label>
+      <div class="px-2 py-2">
+        <p class="text-base font-medium semi-bold">{{ usuario()?.nome }}</p>
+        <p class="text-sm font-medium text-muted-foreground">{{ usuario()?.numero }}</p>
+      </div>
+
+
+
+    </hlm-dropdown-menu-group>
+    <hlm-dropdown-menu-separator />
+    <button hlmDropdownMenuItem (click)="sair()" class="font-semibold text-destructive focus:text-destructive cursor-pointer">Sair</button>
+  </hlm-dropdown-menu>
+</ng-template>

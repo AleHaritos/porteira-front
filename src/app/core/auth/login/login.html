@@ -1,0 +1,69 @@
+<!-- core/auth/login/login.html -->
+<div class="login-page">
+  <div class="login-card">
+
+    <div class="login-card__top">
+      <div class="login-card__brand">
+        <h1 class="login-card__title">Porteira</h1>
+      </div>
+      <p class="login-card__subtitle">Gerencie sua fazenda com inteligência</p>
+    </div>
+
+    <div class="login-card__body">
+      <form [formGroup]="form" (ngSubmit)="entrar()" class="login-form">
+
+        <div class="field">
+          <label hlmLabel for="numero">Usuário</label>
+          <input
+            hlmInput
+            id="numero"
+            type="tel"
+            formControlName="numero"
+            placeholder="Seu telefone"
+            [readonly]="etapa() !== 'numero'"
+            class="w-full field__input"
+          />
+        </div>
+
+        @if (etapa() !== 'numero') {
+          <div class="field">
+            <label hlmLabel for="senha">
+              {{ etapa() === 'cadastroSenha' ? 'Nova senha' : 'Senha' }}
+            </label>
+            <input
+              hlmInput
+              id="senha"
+              type="password"
+              formControlName="senha"
+              placeholder="Sua senha"
+              class="w-full field__input"
+            />
+          </div>
+        }
+
+        @if (erro()) {
+          <p class="login-erro">{{ erro() }}</p>
+        }
+
+        <button hlmBtn type="submit" [disabled]="form.invalid || loading()" class="login-btn">
+          @if (loading()) {
+            Enviando...
+          } @else if (etapa() === 'numero') {
+            Continuar
+          } @else if (etapa() === 'cadastroSenha') {
+            Cadastrar senha
+          } @else {
+            Entrar
+          }
+        </button>
+
+        @if (etapa() !== 'numero') {
+          <button hlmBtn type="button" variant="link" (click)="voltar()" class="login-voltar">
+            Voltar
+          </button>
+        }
+
+      </form>
+    </div>
+  </div>
+</div>
