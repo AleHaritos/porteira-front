@@ -21,7 +21,7 @@ export class FazendaService {
         )
     }
 
-    buscarFazendaPorId(fazendaId: string): Observable<IFazenda> {
+    buscarFazendaPorId(fazendaId: number): Observable<IFazenda> {
         return this.http.get<IFazenda>(this.API_URL + '/' + fazendaId).pipe(
             map((res) => res),
             catchError(e => {

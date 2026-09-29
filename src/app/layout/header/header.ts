@@ -25,7 +25,6 @@ export class Header implements OnInit {
   });
 
   ngOnInit() {
-    console.log(this.usuario)
     if (!this.usuario()) {
       console.log("teste")
       this.auth.carregarUsuario().subscribe({ error: () => {} });
