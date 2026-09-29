@@ -11,6 +11,12 @@ export interface UsuarioRequest {
 }
 
 export interface SenhaRequest {
-    numero: string,
-    senha: string
+  numero: string,
+  senha: string
+}
+
+export interface IUsuarioDTO {
+  id: number;
+  nome: string;
+  numero: string;
 }

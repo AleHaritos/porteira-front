@@ -26,6 +26,9 @@ export class UtilService {
                 this.toastService.showWarning('Atenção', e.error.error)
                 break
             }
+            case 422: {
+                this.toastService.showError('Atenção', e.error.error)
+            }
         }
     }
 
