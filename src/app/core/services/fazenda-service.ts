@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { UtilService } from './util-service';
 import { IFazenda, IFazendaRequest } from '../../shared/intefaces/IFazenda';
 import { catchError, map, Observable } from 'rxjs';
+import { PageResponse } from '../../shared/intefaces/IPage';
 
 @Service()
 export class FazendaService {
@@ -30,13 +31,15 @@ export class FazendaService {
         )
     }
 
-    listarFazendas(): Observable<IFazenda[]> {
-        return this.http.get<IFazenda[]>(this.API_URL + "/listarFazendas").pipe(
-            map((res) => res),
-            catchError(e => {
-                return this.util.errorHandler(e)
-            })
-        )
+    listarFazendas(page: number = 0, size: number = 5): Observable<PageResponse<IFazenda>> {
+        const params = new HttpParams().set('page', page).set('size', size);
+        return this.http.get<PageResponse<IFazenda>>(this.API_URL + '/listarFazendas', { params })
+            .pipe(
+                map((res) => res),
+                catchError(e => {
+                    return this.util.errorHandler(e)
+                })
+            )
     }
 
     adicionarColaboradorFazenda(fazendaId: number, numeroColaborador: number): Observable<void> {
@@ -48,7 +51,7 @@ export class FazendaService {
         )
     }
 
-     removerColaborador(fazendaId: number, idColaborador: number): Observable<void> {
+    removerColaborador(fazendaId: number, idColaborador: number): Observable<void> {
         return this.http.delete<void>(this.API_URL + '/' + fazendaId + "/colaboradores/" + idColaborador).pipe(
             map((res) => res),
             catchError(e => {

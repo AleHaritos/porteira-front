@@ -1,12 +1,20 @@
 <hlm-tabs tab="home" class="w-full">
 	<hlm-tabs-list variant="line" class="mx-auto w-full max-w-xl h-12">
-		<button hlmTabsTrigger="home" class="cursor-pointer after:bg-green-600">Home</button>
+		<button hlmTabsTrigger="home" class="cursor-pointer after:bg-green-600">Fazendas</button>
 		<button hlmTabsTrigger="administracao" class="cursor-pointer after:bg-green-600">Administração</button>
 	</hlm-tabs-list>
 
 	<div hlmTabsContent="home" class="w-full">
+		<div class="flex w-full items-center justify-end gap-2">
+			<button hlmBtn variant="outline" size="sm" class="h-10 px-4 text-sm botaoAdd font-semibold" (click)="adicionarFazenda()">
+				<ng-icon name="lucideHousePlus" />
+				Adicionar Fazenda
+			</button>
+		</div>
 
-		<span>home</span>
+		<app-fazenda-table [fazendas]="fazendas()" [paginaAtual]="paginaAtual()" [totalPaginas]="totalPaginas()"
+			(mudarPagina)="onMudarPagina($event)" (editar)="onEditar($event)" (excluir)="onExcluir($event)"
+			(verDetalhes)="onVerDetalhes($event)" />
 	</div>
 
 	<div hlmTabsContent="administracao" class="w-full">
