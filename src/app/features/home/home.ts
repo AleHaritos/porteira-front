@@ -63,7 +63,7 @@ export class Home implements OnInit {
 
 		dialogRef.closed$.subscribe((fazenda) => {
 			if (fazenda) {
-				console.log('Teste', fazenda);
+				this.carregar()
 			}
 		});
 	}

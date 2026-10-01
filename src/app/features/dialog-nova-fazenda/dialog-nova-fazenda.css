@@ -1,0 +1,54 @@
+/* shared/components/dialog-nova-fazenda/dialog-nova-fazenda.css */
+.dialog-fazenda__header {
+  padding-bottom: 0.25rem;
+}
+
+.dialog-fazenda__title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.dialog-fazenda__icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 8px;
+  background: #e3f5e8;
+  color: #278a4c;
+  flex-shrink: 0;
+}
+
+.dialog-fazenda__input:focus {
+  border-color: #4fae70;
+  box-shadow: 0 0 0 3px rgba(79, 174, 112, 0.2);
+}
+
+.dialog-fazenda__btn-salvar {
+  background: #2f9e58;
+  color: white;
+  cursor: pointer;
+ 
+}
+
+.dialog-fazenda__btn-salvar:hover:not(:disabled) {
+  background: #278a4c;
+}
+
+.dialog-fazenda__btn-salvar:disabled {
+  opacity: 0.6;
+}
+
+ng-icon {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+}
+
+.dialog-fazenda__description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
