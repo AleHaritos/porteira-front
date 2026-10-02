@@ -15,19 +15,19 @@ export class UtilService {
         let status = e.status
         switch (status) {
             case 400: {
-                this.toastService.showError('Erro', e.error.error)
+                this.toastService.showError('Erro', e.error.detail)
                 break
             }
             case 500: {
-                this.toastService.showError('Erro', e.error.error)
+                this.toastService.showError('Erro', e.error.detail)
                 break
             }
             case 404: {
-                this.toastService.showWarning('Atenção', e.error.error)
+                this.toastService.showWarning('Atenção', e.error.detail)
                 break
             }
             case 422: {
-                this.toastService.showError('Atenção', e.error.error)
+                this.toastService.showError('Atenção', e.error.detail)
             }
         }
     }

@@ -13,12 +13,7 @@ export class UsuarioService {
     private readonly API_URL = this.util.getUrlBase() + "/usuario"
 
     salvarUsuario(request: UsuarioRequest): Observable<Usuario> {
-        return this.http.post<Usuario>(this.API_URL, request).pipe(
-            map((res) => res),
-            catchError(e => {
-                return this.util.errorHandler(e)
-            })
-        )
+        return this.http.post<Usuario>(this.API_URL, request)
     }
 
     validarUsuario(numero: string): Observable<boolean> {

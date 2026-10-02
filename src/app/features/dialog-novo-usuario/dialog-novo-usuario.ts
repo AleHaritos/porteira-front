@@ -10,6 +10,7 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { lucideUserPlus } from '@ng-icons/lucide';
 import { HlmRadioGroupImports } from '@spartan-ng/helm/radio-group';
+import { ToastService } from '../../core/services/toast-service';
 
 @Component({
   imports: [ReactiveFormsModule, HlmDialogImports, HlmInputImports, HlmLabelImports, HlmButtonImports, HlmRadioGroupImports, NgIcon],
@@ -22,6 +23,7 @@ export class DialogNovoUsuario {
   private readonly _dialogRef = inject<BrnDialogRef<Usuario>>(BrnDialogRef);
   private readonly fb = inject(FormBuilder);
   private usuarioService = inject(UsuarioService)
+  private toastService = inject(ToastService)
 
   loading = signal(false);
   erro = signal<string | null>(null);
@@ -54,9 +56,16 @@ export class DialogNovoUsuario {
         admin: this.form.value.admin ?? false,
         numero: this.form.value.numero ?? "",
       })
-      .subscribe(res => {
-        this.loading.set(false);
-        this._dialogRef.close(res);
+      .subscribe({
+        next: (res) => {
+          this.loading.set(false);
+          this._dialogRef.close(res);
+        },
+        error: (e) => {
+          this.loading.set(false);
+          this.toastService.showError("Erro", e.error.detail)
+        }
+
       })
   }
 
