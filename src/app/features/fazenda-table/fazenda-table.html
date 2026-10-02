@@ -1,3 +1,4 @@
+<!-- shared/components/fazenda-table/fazenda-table.html -->
 <div class="fazenda-table">
   <div hlmTableContainer>
     <table hlmTable>
@@ -12,13 +13,13 @@
 
       <tbody hlmTBody>
         @for (fazenda of fazendas(); track fazenda.id) {
-          <tr hlmTr class="fazenda-table__row cursor-pointer">
+          <tr hlmTr class="fazenda-table__row cursor-pointer" (click)="verDetalhes.emit(fazenda)">
             <td hlmTd class="fazenda-table__nome">{{ fazenda.nome }}</td>
             <td hlmTd>
               <span class="fazenda-table__badge">{{ fazenda.hectares }}</span>
             </td>
             <td hlmTd>{{ fazenda.dono.nome }}</td>
-            <td hlmTd class="text-right">
+            <td hlmTd class="text-right" (click)="$event.stopPropagation()">
               <button
                 hlmBtn
                 variant="ghost"

@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 import { AdministracaoTable } from '../administracao-table/administracao-table';
 import { Usuario } from '../../shared/intefaces/IUsuario';
 import { DialogNovoUsuario } from '../dialog-novo-usuario/dialog-novo-usuario';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [HlmTabsImports, HlmCardImports, HlmButtonImports, FazendaTable, AdministracaoTable, NgIcon, CommonModule],
@@ -24,10 +25,11 @@ import { DialogNovoUsuario } from '../dialog-novo-usuario/dialog-novo-usuario';
   templateUrl: './home.html',
 })
 export class Home implements OnInit {
-  private fazendaService = inject(FazendaService)
-  private authService = inject(AuthService)
+  private fazendaService = inject(FazendaService);
+  private authService = inject(AuthService);
   private readonly _hlmDialogService = inject(HlmDialogService);
-  usuario = signal<UsuarioLogado | null>(this.authService.usuario())
+  private router = inject(Router);
+  usuario = signal<UsuarioLogado | null>(this.authService.usuario());
 
   carregarUsuarios = signal(0);
 
@@ -64,7 +66,7 @@ export class Home implements OnInit {
   }
 
   onVerDetalhes(fazenda: IFazenda) {
-    console.log(fazenda)
+    this.router.navigate(['/fazenda', fazenda.id]);
   }
 
   adicionarFazenda() {

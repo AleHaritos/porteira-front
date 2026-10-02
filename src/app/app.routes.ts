@@ -20,6 +20,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/home/home').then((m) => m.Home),
       },
+        {
+        path: 'fazenda/:id',
+        loadComponent: () =>
+          import('./features/fazenda-home/fazenda-home').then((m) => m.FazendaHome),
+      },
     ]
   }
 ];
