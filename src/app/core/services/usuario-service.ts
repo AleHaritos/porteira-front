@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
 import { UsuarioRequest, Usuario, SenhaRequest } from '../../shared/intefaces/IUsuario';
 import { UtilService } from './util-service';
+import { PageResponse } from '../../shared/intefaces/IPage';
 
 @Service()
 export class UsuarioService {
@@ -24,6 +25,33 @@ export class UsuarioService {
         return this.http.get<boolean>(this.API_URL + '/' + numero).pipe(
             map((res) => res),
         )
+    }
+
+    listarUsuarios(page: number = 0, size: number = 5): Observable<PageResponse<Usuario>> {
+        const params = new HttpParams().set('page', page).set('size', size);
+        return this.http.get<PageResponse<Usuario>>(this.API_URL, { params })
+            .pipe(
+                map((res) => res),
+                catchError(e => {
+                    return this.util.errorHandler(e)
+                })
+            )
+    }
+
+    desativarUsuario(idUsuario: number): Observable<void> {
+        return this.http.patch<void>(this.API_URL + '/' + idUsuario + '/desativar', {}).pipe(
+            catchError(e => {
+                return this.util.errorHandler(e);
+            })
+        );
+    }
+
+    reativarUsuario(usuarioId: number): Observable<void> {
+        return this.http.patch<void>(this.API_URL + '/' + usuarioId + '/reativar', {}).pipe(
+            catchError(e => {
+                return this.util.errorHandler(e);
+            })
+        );
     }
 
     atualizarSenha(request: SenhaRequest): Observable<void> {

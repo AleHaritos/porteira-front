@@ -3,11 +3,13 @@ export interface Usuario {
   nome: string;
   numero: string;
   admin: boolean;
+  ativo: boolean
 }
 
 export interface UsuarioRequest {
   nome: string;
   numero: string;
+  admin: boolean
 }
 
 export interface SenhaRequest {

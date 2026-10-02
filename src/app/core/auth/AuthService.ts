@@ -19,6 +19,7 @@ export interface UsuarioLogado {
   nome: string;
   numero: string;
   admin: boolean;
+  ativo: boolean
 }
 
 const TOKEN_KEY = 'token';

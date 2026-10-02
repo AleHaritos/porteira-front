@@ -1,18 +1,23 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, output, signal } from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { FazendaService } from '../../core/services/fazenda-service';
 import { IFazenda } from '../../shared/intefaces/IFazenda';
 import { FazendaTable } from '../fazenda-table/fazenda-table';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideHousePlus } from '@ng-icons/lucide';
+import { lucideHousePlus, lucideUserPlus } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { DialogNovaFazenda } from '../dialog-nova-fazenda/dialog-nova-fazenda';
+import { AuthService, UsuarioLogado } from '../../core/auth/AuthService';
+import { CommonModule } from '@angular/common';
+import { AdministracaoTable } from '../administracao-table/administracao-table';
+import { Usuario } from '../../shared/intefaces/IUsuario';
+import { DialogNovoUsuario } from '../dialog-novo-usuario/dialog-novo-usuario';
 
 @Component({
-  imports: [HlmTabsImports, HlmCardImports, HlmButtonImports, FazendaTable, NgIcon],
-  providers: [provideIcons({ lucideHousePlus })],
+  imports: [HlmTabsImports, HlmCardImports, HlmButtonImports, FazendaTable, AdministracaoTable, NgIcon, CommonModule],
+  providers: [provideIcons({ lucideHousePlus, lucideUserPlus })],
   selector: 'app-home',
   styleUrl: './home.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,10 +25,19 @@ import { DialogNovaFazenda } from '../dialog-nova-fazenda/dialog-nova-fazenda';
 })
 export class Home implements OnInit {
   private fazendaService = inject(FazendaService)
+  private authService = inject(AuthService)
   private readonly _hlmDialogService = inject(HlmDialogService);
+  usuario = signal<UsuarioLogado | null>(this.authService.usuario())
+
+  carregarUsuarios = signal(0);
+
+
   fazendas = signal<IFazenda[]>([]);
+  usuariosCadastrados = signal<Usuario[]>([]);
+  usuariosCarregados = signal(false);
   paginaAtual = signal(0);
   totalPaginas = signal(0);
+  abaAtiva = signal('home');
 
   ngOnInit(): void {
     this.carregar();
@@ -42,11 +56,11 @@ export class Home implements OnInit {
   }
 
   onEditar(fazenda: IFazenda) {
-    // sua lógica depois
+
   }
 
   onExcluir(fazenda: IFazenda) {
-    // sua lógica depois
+
   }
 
   onVerDetalhes(fazenda: IFazenda) {
@@ -55,17 +69,37 @@ export class Home implements OnInit {
 
   adicionarFazenda() {
     const dialogRef = this._hlmDialogService.open(DialogNovaFazenda, {
-			context: {
-				fazenda: {},
-			},
-			contentClass: 'sm:!max-w-[950px], sm:!min-w-[700px]',
-		});
+      context: {
+        fazenda: {},
+      },
+      contentClass: 'sm:!max-w-[950px], sm:!min-w-[700px]',
+    });
 
-		dialogRef.closed$.subscribe((fazenda) => {
-			if (fazenda) {
-				this.carregar()
-			}
-		});
-	}
-  
+    dialogRef.closed$.subscribe((fazenda) => {
+      if (fazenda) {
+        this.carregar()
+      }
+    });
+  }
+
+  adicionarUsuario() {
+    const dialogRef = this._hlmDialogService.open(DialogNovoUsuario, {
+      context: {
+        usuario: {},
+      },
+      contentClass: 'sm:!max-w-[950px], sm:!min-w-[700px]',
+    });
+
+    dialogRef.closed$.subscribe((usuario) => {
+      if (usuario) {
+        console.log(usuario)
+        this.carregarUsuarios.update(value => value + 1);
+      }
+    });
+  }
+
+  onAbaChange(aba: string) {
+    this.abaAtiva.set(aba);
+  }
+
 }

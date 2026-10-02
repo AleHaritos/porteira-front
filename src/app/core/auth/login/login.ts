@@ -79,8 +79,10 @@ export class Login {
       })
       .subscribe({
         next: () => {
+          this.auth.carregarUsuario().subscribe(res => {
           const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
           this.router.navigateByUrl(returnUrl);
+          })
         },
         error: () => {
           this.loading.set(false);

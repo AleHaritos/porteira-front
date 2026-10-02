@@ -1,0 +1,152 @@
+<div class="administracao-table">
+  <div hlmTableContainer>
+    <table hlmTable>
+      <thead hlmTHead>
+        <tr hlmTr class="administracao-table__head-row">
+          <th hlmTh class="w-[70px]">Id</th>
+          <th hlmTh>Nome</th>
+          <th hlmTh>Número</th>
+          <th hlmTh>Status</th>
+          <th hlmTh class="w-[60px] text-right pr-2">Ações</th>
+        </tr>
+      </thead>
+
+      <tbody hlmTBody>
+        @for (usuario of usuarios(); track usuario.id) {
+          <tr hlmTr class="administracao-table__row">
+            <td hlmTd class="text-muted-foreground">{{ usuario.id }}</td>
+            <td hlmTd class="administracao-table__nome">{{ usuario.nome }}</td>
+            <td hlmTd>{{ usuario.numero }}</td>
+            <td hlmTd>
+              <span class="administracao-table__badge" [class.administracao-table__badge--inativo]="!usuario.ativo">
+                {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
+              </span>
+            </td>
+            <td hlmTd class="text-right">
+              <button
+                hlmBtn
+                variant="ghost"
+                size="icon"
+                [hlmDropdownMenuTrigger]="menu"
+                align="end"
+                class="administracao-table__action-btn"
+              >
+                <ng-icon name="lucideEllipsisVertical" />
+              </button>
+
+              <ng-template #menu>
+                <hlm-dropdown-menu>
+                  @if (usuario.ativo) {
+                    <button
+                      hlmDropdownMenuItem
+                      variant="destructive"
+                      (click)="alternarStatus(usuario)"
+                      class="cursor-pointer"
+                    >
+                      Desativar
+                    </button>
+                  } @else {
+                    <button
+                      hlmDropdownMenuItem
+                      (click)="alternarStatus(usuario)"
+                      class="cursor-pointer administracao-table__item-reativar"
+                    >
+                      Reativar
+                    </button>
+                  }
+                </hlm-dropdown-menu>
+              </ng-template>
+            </td>
+          </tr>
+        } @empty {
+          <tr hlmTr>
+            <td hlmTd [attr.colSpan]="5" class="administracao-table__empty">
+              @if (carregando()) {
+                Carregando usuários...
+              } @else {
+                Nenhum usuário cadastrado ainda
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (totalPaginas() > 1) {
+    <nav hlmPagination class="administracao-table__pagination">
+      <ul hlmPaginationContent>
+
+        <!-- Anterior -->
+        <li hlmPaginationItem>
+          <hlm-pagination-previous
+            iconOnly="true"
+            (click)="irPara(paginaAtual() - 1)"
+          />
+        </li>
+
+        <!-- Primeira página + ellipsis -->
+        @if (paginasVisiveis()[0] > 0) {
+          <li hlmPaginationItem>
+            <button
+              hlmPaginationLink
+              [isActive]="paginaAtual() === 0"
+              (click)="irPara(0)"
+            >
+              1
+            </button>
+          </li>
+
+          @if (paginasVisiveis()[0] > 1) {
+            <li hlmPaginationItem>
+              <hlm-pagination-ellipsis />
+            </li>
+          }
+        }
+
+        <!-- Páginas visíveis -->
+        @for (pagina of paginasVisiveis(); track pagina) {
+          <li hlmPaginationItem>
+            <button
+              hlmPaginationLink
+              [isActive]="pagina === paginaAtual()"
+              (click)="irPara(pagina)"
+            >
+              {{ pagina + 1 }}
+            </button>
+          </li>
+        }
+
+        <!-- Ellipsis + última página -->
+        @if (paginasVisiveis()[paginasVisiveis().length - 1] < totalPaginas() - 1) {
+
+          @if (paginasVisiveis()[paginasVisiveis().length - 1] < totalPaginas() - 2) {
+            <li hlmPaginationItem>
+              <hlm-pagination-ellipsis />
+            </li>
+          }
+
+          <li hlmPaginationItem>
+            <button
+              hlmPaginationLink
+              [isActive]="paginaAtual() === totalPaginas() - 1"
+              (click)="irPara(totalPaginas() - 1)"
+            >
+              {{ totalPaginas() }}
+            </button>
+          </li>
+        }
+
+        <!-- Próxima -->
+        <li hlmPaginationItem>
+          <hlm-pagination-next
+            iconOnly="true"
+            (click)="irPara(paginaAtual() + 1)"
+          />
+        </li>
+
+      </ul>
+    </nav>
+  }
+
+</div>

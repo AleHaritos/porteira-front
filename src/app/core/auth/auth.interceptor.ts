@@ -9,7 +9,6 @@ function isRotaPublica(req: HttpRequest<unknown>): boolean {
 
   return (
     (req.method === 'POST' && path === '/auth/login') ||
-    (req.method === 'POST' && path === '/usuario') ||
     (req.method === 'PUT' && path === '/usuario') ||
     (req.method === 'GET' && /^\/usuario\/[^/]+$/.test(path))
   );

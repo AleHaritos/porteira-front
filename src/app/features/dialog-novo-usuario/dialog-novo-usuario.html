@@ -1,0 +1,64 @@
+<hlm-dialog-header class="dialog-usuario__header">
+    <div class="dialog-usuario__title-row">
+        <span class="dialog-usuario__icon-badge">
+            <ng-icon name="lucideUserPlus" size="16" />
+        </span>
+        <h3 hlmDialogTitle>Novo Usuário</h3>
+    </div>
+    <p class="dialog-usuario__description">Preencha os dados para cadastrar um novo usuário.</p>
+</hlm-dialog-header>
+
+<form [formGroup]="form" (ngSubmit)="salvar()" class="flex flex-col gap-4 py-2">
+    <div class="flex flex-col gap-1.5">
+        <label hlmLabel for="nome">Nome</label>
+        <input hlmInput id="nome" type="text" formControlName="nome" class="w-full dialog-usuario__input" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+        <label hlmLabel>Administrador?</label>
+
+        <hlm-radio-group [value]="form.controls.admin.value ? 'true' : 'false'"
+            (valueChange)="form.controls.admin.setValue($event === 'true')" class="flex flex-row gap-6">
+            <div class="flex items-center gap-2">
+                <hlm-radio value="true" inputId="admin-sim" class="cursor-pointer">
+                    <hlm-radio-indicator indicator 
+                    class="border-2 border-[#008542] checked:bg-[#008542]"/>
+                </hlm-radio>
+
+                <label hlmLabel for="admin-sim" class="cursor-pointer">
+                    Sim
+                </label>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <hlm-radio value="false" inputId="admin-nao" class="cursor-pointer">
+                    <hlm-radio-indicator indicator 
+                    class="border-2 border-[#008542] checked:bg-[#008542]"/>
+                </hlm-radio>
+
+                <label hlmLabel for="admin-nao" class="cursor-pointer">
+                    Não
+                </label>
+            </div>
+        </hlm-radio-group>
+    </div>
+
+
+    <div class="flex flex-col gap-1.5">
+        <label hlmLabel for="numero">Número</label>
+        <input hlmInput id="numero" type="text" formControlName="numero" placeholder="11922223333"
+            class="w-full dialog-usuario__input" />
+    </div>
+
+    @if (erro()) {
+    <p class="text-sm text-red-600">{{ erro() }}</p>
+    }
+</form>
+
+<hlm-dialog-footer>
+    <button hlmBtn variant="outline" type="button" (click)="cancelar()" class="cursor-pointer">Cancelar</button>
+    <button hlmBtn type="submit" class="dialog-usuario__btn-salvar" [disabled]="form.invalid || loading()"
+        (click)="salvar()">
+        {{ loading() ? 'Salvando...' : 'Salvar' }}
+    </button>
+</hlm-dialog-footer>
