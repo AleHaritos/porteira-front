@@ -1,0 +1,72 @@
+<div hlmSidebarWrapper class="fazenda-home">
+  <hlm-sidebar collapsible="icon">
+    <div hlmSidebarHeader>
+      <div class="fazenda-home__header">
+        <span class="fazenda-home__header-icon">🌾</span>
+        <span class="fazenda-home__sidebar-nome">
+          {{ fazenda()?.nome ?? 'Carregando...' }}
+        </span>
+      </div>
+    </div>
+
+    <div hlmSidebarContent>
+      <div hlmSidebarGroup>
+        <div hlmSidebarGroupLabel>Menu</div>
+        <div hlmSidebarGroupContent>
+          <ul hlmSidebarMenu>
+            <li hlmSidebarMenuItem>
+              <a
+                hlmSidebarMenuButton
+                routerLink="negocios"
+                routerLinkActive
+                #rlaNegocios="routerLinkActive"
+                [isActive]="rlaNegocios.isActive"
+              >
+                <ng-icon name="lucideBriefcase" />
+                <span>Meus Negócios</span>
+              </a>
+            </li>
+            <li hlmSidebarMenuItem>
+              <a
+                hlmSidebarMenuButton
+                routerLink="financeiro"
+                routerLinkActive
+                #rlaFinanceiro="routerLinkActive"
+                [isActive]="rlaFinanceiro.isActive"
+              >
+                <ng-icon name="lucideWallet" />
+                <span>Financeiro</span>
+              </a>
+            </li>
+             <li hlmSidebarMenuItem>
+              <a
+                hlmSidebarMenuButton
+                routerLink="safra"
+                routerLinkActive
+                #rlaFinanceiro="routerLinkActive"
+                [isActive]="rlaFinanceiro.isActive"
+              >
+                <ng-icon name="lucideWheat" />
+                <span>Safra</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </hlm-sidebar>
+
+  <main hlmSidebarInset>
+    <div class="fazenda-home__topbar">
+      <button class="fazenda-home__trigger" (click)="sidebarService.toggleSidebar()">
+        <ng-icon name="lucidePanelLeft" />
+        @if (sidebarService.state() === 'expanded') {
+          <span>Menu</span>
+        }
+      </button>
+    </div>
+    <div class="fazenda-home__content">
+      <router-outlet />
+    </div>
+  </main>
+</div>

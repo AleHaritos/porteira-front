@@ -5,10 +5,10 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
-import { IFazenda } from '../../shared/intefaces/IFazenda';
-import { FazendaService } from '../../core/services/fazenda-service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideHousePlus, lucidePlus } from '@ng-icons/lucide';
+import { IFazenda } from '../../../shared/intefaces/IFazenda';
+import { FazendaService } from '../../../core/services/fazenda-service';
 
 @Component({
   imports: [ReactiveFormsModule, HlmDialogImports, HlmInputImports, HlmLabelImports, HlmButtonImports, NgIcon],

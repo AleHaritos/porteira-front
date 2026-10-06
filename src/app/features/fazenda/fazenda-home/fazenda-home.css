@@ -1,0 +1,64 @@
+.fazenda-home {
+  --sidebar: #f2f9f4;
+  --sidebar-foreground: #2f4d3a;
+  --sidebar-primary: #2f9e58;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e3f5e8;
+  --sidebar-accent-foreground: #278a4c;
+  --sidebar-border: #d8e6dc;
+  --sidebar-ring: #4fae70;
+}
+
+.fazenda-home__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.fazenda-home__header-icon {
+  font-size: 1.1rem;
+}
+
+.fazenda-home__sidebar-nome {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #2f4d3a;
+}
+
+.fazenda-home__topbar {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eef4f0;
+}
+
+.fazenda-home__content {
+  padding: 1.5rem;
+}
+
+.fazenda-home__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid #d8e6dc;
+  background: #f2f9f4;
+  color: #278a4c;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fazenda-home__trigger:hover {
+  background: #e3f5e8;
+  box-shadow: 0 2px 6px rgba(47, 158, 88, 0.2);
+}
+
+.fazenda-home__trigger:active {
+  transform: scale(0.97);
+}
+
+.fazenda-home__trigger ng-icon {
+  font-size: 1.1rem;
+}
