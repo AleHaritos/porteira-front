@@ -3,9 +3,11 @@
     <div hlmSidebarHeader>
       <div class="fazenda-home__header">
         <span class="fazenda-home__header-icon">🌾</span>
-        <span class="fazenda-home__sidebar-nome">
-          {{ fazenda()?.nome ?? 'Carregando...' }}
-        </span>
+        @if (sidebarService.state() === 'expanded') {
+          <span class="fazenda-home__sidebar-nome">
+            {{ fazenda()?.nome ?? 'Carregando...' }}
+          </span>
+        }
       </div>
     </div>
 

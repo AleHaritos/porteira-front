@@ -5,10 +5,8 @@ export interface ISafra {
     nome: string,
     cultura: string,
     anoAgricola: string,
-    dataInicio: string;
-    previsaoFim: string | null;
     areaTotal: number,
-    observacoes: string,
+    observacoes: string | null,
     fazendaId: number,
     fazendaNome: string,
     status: StatusSafra
@@ -18,10 +16,8 @@ export interface ISafraRequest {
     nome: string,
     cultura: string,
     anoAgricola: string,
-    dataInicio: string;
-    previsaoFim: string | null;
     status: StatusSafra,
     areaTotal: number,
-    observacoes: string,
+    observacoes: string | null,
     fazendaId: number,
 }

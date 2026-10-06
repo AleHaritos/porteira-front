@@ -4,7 +4,7 @@ import { lucideEllipsisVertical, lucideHousePlus } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmTableImports } from '@spartan-ng/helm/table';
-import { HlmPaginationEllipsis, HlmPaginationImports } from '@spartan-ng/helm/pagination';
+import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { IFazenda } from '../../../shared/intefaces/IFazenda';
 
 @Component({

@@ -4,10 +4,11 @@ import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { AuthService } from '../../core/auth/AuthService';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',
-  imports: [HlmAvatarImports, HlmButtonImports, HlmDropdownMenuImports],
+  imports: [HlmAvatarImports, HlmButtonImports, HlmDropdownMenuImports, RouterLink],
   templateUrl: './header.html',
 })
 export class Header implements OnInit {

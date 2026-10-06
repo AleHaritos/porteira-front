@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { UtilService } from './util-service';
 import { ISafra, ISafraRequest } from '../../shared/intefaces/ISafras';
 import { catchError, map, Observable } from 'rxjs';
+import { PageResponse } from '../../shared/intefaces/IPage';
 
 @Service()
 export class SafraService {
@@ -11,7 +12,7 @@ export class SafraService {
 
     private readonly API_URL = this.util.getUrlBase() + "/safra"
 
-    salvarFazenda(request: ISafraRequest): Observable<ISafra> {
+    salvarSafra(request: ISafraRequest): Observable<ISafra> {
         return this.http.post<ISafra>(this.API_URL, request).pipe(
             map((res) => res),
             catchError(e => {
@@ -20,13 +21,25 @@ export class SafraService {
         )
     }
 
-    buscarSafrasIdFazenda(fazendaId: number): Observable<ISafra[]> {
-        return this.http.get<ISafra[]>(this.API_URL + '/' + fazendaId).pipe(
-            map((res) => res),
+    buscarSafrasPorFazenda(
+        fazendaId: number,
+        page: number = 0,
+        size: number = 10,
+        anoAgricola?: string
+    ): Observable<PageResponse<ISafra>> {
+        let params = new HttpParams()
+            .set('page', page)
+            .set('size', size);
+
+        if (anoAgricola) {
+            params = params.set('anoAgricola', anoAgricola);
+        }
+
+        return this.http.get<PageResponse<ISafra>>(this.API_URL + '/' + fazendaId, { params }).pipe(
             catchError(e => {
-                return this.util.errorHandler(e)
+                return this.util.errorHandler(e);
             })
-        )
+        );
     }
 
 }

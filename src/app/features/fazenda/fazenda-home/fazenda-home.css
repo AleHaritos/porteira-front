@@ -14,16 +14,20 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem;
-}
-
-.fazenda-home__header-icon {
-  font-size: 1.1rem;
+  overflow: hidden;
 }
 
 .fazenda-home__sidebar-nome {
   font-weight: 700;
   font-size: 0.95rem;
   color: #2f4d3a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fazenda-home__header-icon {
+  font-size: 1.1rem;
 }
 
 .fazenda-home__topbar {

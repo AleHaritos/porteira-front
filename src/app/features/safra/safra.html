@@ -1,1 +1,128 @@
-<p>safra works!</p>
+<!-- features/fazenda-home/safra/safra.html -->
+<div class="safra-page">
+    <div class="safra-page__filtros">
+    <div class="safra-page__busca">
+      <input
+        hlmInput
+        type="text"
+        placeholder="Filtrar por ano agrícola (ex: 2025)"
+        [(ngModel)]="anoAgricola"
+        (keyup.enter)="pesquisar()"
+        class="safra-page__filtro-input"
+      />
+      <button hlmBtn variant="outline" (click)="pesquisar()" class="cursor-pointer">
+        <ng-icon name="lucideSearch" size="16" />
+        Pesquisar
+      </button>
+    </div>
+
+    <button hlmBtn class="safra-page__btn-nova" (click)="abrirNovaSafra()">
+      <ng-icon name="lucidePlus" size="16" />
+      Nova Safra
+    </button>
+  </div>
+
+  <div class="fazenda-table">
+    <div hlmTableContainer>
+      <table hlmTable>
+        <thead hlmTHead>
+          <tr hlmTr class="fazenda-table__head-row">
+            <th hlmTh>Nome</th>
+            <th hlmTh>Cultura</th>
+            <th hlmTh>Ano Agrícola</th>
+            <th hlmTh>Área (ha)</th>
+            <th hlmTh>Status</th>
+            <th hlmTh class="w-[60px] text-right">Ações</th>
+          </tr>
+        </thead>
+
+        <tbody hlmTBody>
+          @for (safra of safras(); track safra.id) {
+            <tr hlmTr class="fazenda-table__row cursor-pointer">
+              <td hlmTd class="fazenda-table__nome">{{ safra.nome }}</td>
+              <td hlmTd>{{ safra.cultura }}</td>
+              <td hlmTd>{{ safra.anoAgricola }}</td>
+              <td hlmTd>{{ safra.areaTotal }}</td>
+              <td hlmTd>
+                <span class="safra-table__badge" [ngClass]="statusClasse(safra.status)">
+                  {{ statusLabel(safra.status) }}
+                </span>
+              </td>
+              <td hlmTd class="text-right">
+                <button
+                  hlmBtn
+                  variant="ghost"
+                  size="icon"
+                  [hlmDropdownMenuTrigger]="menu"
+                  align="end"
+                  class="fazenda-table__action-btn"
+                >
+                  <ng-icon name="lucideEllipsisVertical" size="16" />
+                </button>
+
+                <ng-template #menu>
+                  <hlm-dropdown-menu>
+                    <button hlmDropdownMenuItem class="cursor-pointer">Ver detalhes</button>
+                    <button hlmDropdownMenuItem class="cursor-pointer">Editar</button>
+                  </hlm-dropdown-menu>
+                </ng-template>
+              </td>
+            </tr>
+          } @empty {
+            <tr hlmTr>
+              <td hlmTd [attr.colSpan]="6" class="fazenda-table__empty">
+                @if (carregando()) {
+                  Carregando safras...
+                } @else {
+                  Nenhuma safra encontrada
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPaginas() > 1) {
+      <nav hlmPagination class="fazenda-table__pagination">
+        <ul hlmPaginationContent>
+          <li hlmPaginationItem>
+            <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+          </li>
+
+          @if (paginasVisiveis()[0] > 0) {
+            <li hlmPaginationItem>
+              <button hlmPaginationLink [isActive]="paginaAtual() === 0" (click)="irPara(0)">1</button>
+            </li>
+            @if (paginasVisiveis()[0] > 1) {
+              <li hlmPaginationItem><hlm-pagination-ellipsis /></li>
+            }
+          }
+
+          @for (pagina of paginasVisiveis(); track pagina) {
+            <li hlmPaginationItem>
+              <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+                {{ pagina + 1 }}
+              </button>
+            </li>
+          }
+
+          @if (paginasVisiveis()[paginasVisiveis().length - 1] < totalPaginas() - 1) {
+            @if (paginasVisiveis()[paginasVisiveis().length - 1] < totalPaginas() - 2) {
+              <li hlmPaginationItem><hlm-pagination-ellipsis /></li>
+            }
+            <li hlmPaginationItem>
+              <button hlmPaginationLink [isActive]="paginaAtual() === totalPaginas() - 1" (click)="irPara(totalPaginas() - 1)">
+                {{ totalPaginas() }}
+              </button>
+            </li>
+          }
+
+          <li hlmPaginationItem>
+            <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+          </li>
+        </ul>
+      </nav>
+    }
+  </div>
+</div>
