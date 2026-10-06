@@ -1,0 +1,26 @@
+.safra-detalhes {
+  padding: 0.5rem 0;
+}
+
+.safra-detalhes__tabs-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 1000px;
+  margin-inline: auto;
+  margin-bottom: 1.5rem;
+}
+
+.safra-detalhes__content {
+  min-height: 200px;
+}
+
+::ng-deep [hlmTabsTrigger][data-state='active'] {
+  color: #278a4c;
+}
+
+::ng-deep [hlmTabsTrigger][data-state='active']::after {
+  background-color: #2f9e58 !important;
+}

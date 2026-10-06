@@ -1,24 +1,8 @@
-<!-- features/fazenda-home/safra/safra.html -->
-<div class="safra-page">
-    <div class="safra-page__filtros">
-    <div class="safra-page__busca">
-      <input
-        hlmInput
-        type="text"
-        placeholder="Filtrar por ano agrícola (ex: 2025)"
-        [(ngModel)]="anoAgricola"
-        (keyup.enter)="pesquisar()"
-        class="safra-page__filtro-input"
-      />
-      <button hlmBtn variant="outline" (click)="pesquisar()" class="cursor-pointer">
-        <ng-icon name="lucideSearch" size="16" />
-        Pesquisar
-      </button>
-    </div>
-
-    <button hlmBtn class="safra-page__btn-nova" (click)="abrirNovaSafra()">
+<div class="talhoes-page">
+  <div class="talhoes-page__header">
+    <button hlmBtn class="talhoes-page__btn-novo cursor-pointer" (click)="abrirNovoTalhao()">
       <ng-icon name="lucidePlus" size="16" />
-      Nova Safra
+      Adicionar Talhão
     </button>
   </div>
 
@@ -28,27 +12,19 @@
         <thead hlmTHead>
           <tr hlmTr class="fazenda-table__head-row">
             <th hlmTh>Nome</th>
-            <th hlmTh>Cultura</th>
-            <th hlmTh>Ano Agrícola</th>
             <th hlmTh>Área (ha)</th>
-            <th hlmTh>Status</th>
+            <th hlmTh>Localização</th>
             <th hlmTh class="w-[60px] text-right">Ações</th>
           </tr>
         </thead>
 
         <tbody hlmTBody>
-          @for (safra of safras(); track safra.id) {
-            <tr hlmTr class="fazenda-table__row cursor-pointer" (click)="verDetalhes(safra.id)">
-              <td hlmTd class="fazenda-table__nome">{{ safra.nome }}</td>
-              <td hlmTd>{{ safra.cultura }}</td>
-              <td hlmTd>{{ safra.anoAgricola }}</td>
-              <td hlmTd>{{ safra.areaTotal }}</td>
-              <td hlmTd>
-                <span class="safra-table__badge" [ngClass]="statusClasse(safra.status)">
-                  {{ statusLabel(safra.status) }}
-                </span>
-              </td>
-              <td hlmTd class="text-right" (click)="$event.stopPropagation()">
+          @for (talhao of talhoes(); track talhao.id) {
+            <tr hlmTr class="fazenda-table__row">
+              <td hlmTd class="fazenda-table__nome">{{ talhao.nome }}</td>
+              <td hlmTd>{{ talhao.areaHectares }}</td>
+              <td hlmTd>{{ talhao.localizacao || '—' }}</td>
+              <td hlmTd class="text-right">
                 <button
                   hlmBtn
                   variant="ghost"
@@ -62,7 +38,6 @@
 
                 <ng-template #menu>
                   <hlm-dropdown-menu>
-                    <button hlmDropdownMenuItem class="cursor-pointer" (click)="verDetalhes(safra.id)">Ver detalhes</button>
                     <button hlmDropdownMenuItem class="cursor-pointer">Editar</button>
                   </hlm-dropdown-menu>
                 </ng-template>
@@ -70,11 +45,11 @@
             </tr>
           } @empty {
             <tr hlmTr>
-              <td hlmTd [attr.colSpan]="6" class="fazenda-table__empty">
+              <td hlmTd [attr.colSpan]="4" class="fazenda-table__empty">
                 @if (carregando()) {
-                  Carregando safras...
+                  Carregando talhões...
                 } @else {
-                  Nenhuma safra encontrada
+                  Nenhum talhão cadastrado
                 }
               </td>
             </tr>

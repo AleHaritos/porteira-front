@@ -1,0 +1,33 @@
+<div class="safra-detalhes">
+  <hlm-tabs [tab]="abaAtiva()" class="w-full">
+    <hlm-tabs-list variant="line" class="safra-detalhes__tabs-list">
+      <button hlmTabsTrigger="talhoes" (click)="selecionarAba('talhoes')" class="cursor-pointer">
+        Talhões
+      </button>
+      <button hlmTabsTrigger="manejos" (click)="selecionarAba('manejos')" class="cursor-pointer">
+        Manejos
+      </button>
+      <button hlmTabsTrigger="produtos" (click)="selecionarAba('produtos')" class="cursor-pointer">
+        Produtos
+      </button>
+    </hlm-tabs-list>
+
+    <div hlmTabsContent="talhoes" class="safra-detalhes__content">
+      @if (abaAtiva() === 'talhoes') {
+        <app-talhoes-tab [safraId]="safraId" />
+      }
+    </div>
+
+    <div hlmTabsContent="manejos" class="safra-detalhes__content">
+      @if (abaAtiva() === 'manejos') {
+        <app-manejos-tab [safraId]="safraId" />
+      }
+    </div>
+
+    <div hlmTabsContent="produtos" class="safra-detalhes__content">
+      @if (abaAtiva() === 'produtos') {
+        <app-produtos-tab [safraId]="safraId" />
+      }
+    </div>
+  </hlm-tabs>
+</div>

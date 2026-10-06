@@ -4,9 +4,9 @@
       <div class="fazenda-home__header">
         <span class="fazenda-home__header-icon">🌾</span>
         @if (sidebarService.state() === 'expanded') {
-          <span class="fazenda-home__sidebar-nome">
-            {{ fazenda()?.nome ?? 'Carregando...' }}
-          </span>
+        <span class="fazenda-home__sidebar-nome">
+          {{ fazenda()?.nome ?? 'Carregando...' }}
+        </span>
         }
       </div>
     </div>
@@ -17,37 +17,22 @@
         <div hlmSidebarGroupContent>
           <ul hlmSidebarMenu>
             <li hlmSidebarMenuItem>
-              <a
-                hlmSidebarMenuButton
-                routerLink="negocios"
-                routerLinkActive
-                #rlaNegocios="routerLinkActive"
-                [isActive]="rlaNegocios.isActive"
-              >
+              <a hlmSidebarMenuButton routerLink="negocios" routerLinkActive #rlaNegocios="routerLinkActive"
+                [isActive]="rlaNegocios.isActive">
                 <ng-icon name="lucideBriefcase" />
                 <span>Meus Negócios</span>
               </a>
             </li>
             <li hlmSidebarMenuItem>
-              <a
-                hlmSidebarMenuButton
-                routerLink="financeiro"
-                routerLinkActive
-                #rlaFinanceiro="routerLinkActive"
-                [isActive]="rlaFinanceiro.isActive"
-              >
+              <a hlmSidebarMenuButton routerLink="financeiro" routerLinkActive #rlaFinanceiro="routerLinkActive"
+                [isActive]="rlaFinanceiro.isActive">
                 <ng-icon name="lucideWallet" />
                 <span>Financeiro</span>
               </a>
             </li>
-             <li hlmSidebarMenuItem>
-              <a
-                hlmSidebarMenuButton
-                routerLink="safra"
-                routerLinkActive
-                #rlaFinanceiro="routerLinkActive"
-                [isActive]="rlaFinanceiro.isActive"
-              >
+            <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="safra" routerLinkActive #rlaFinanceiro="routerLinkActive"
+                [isActive]="rlaFinanceiro.isActive">
                 <ng-icon name="lucideWheat" />
                 <span>Safra</span>
               </a>
@@ -63,8 +48,12 @@
       <button class="fazenda-home__trigger" (click)="sidebarService.toggleSidebar()">
         <ng-icon name="lucidePanelLeft" />
         @if (sidebarService.state() === 'expanded') {
-          <span>Menu</span>
+        <span>Menu</span>
         }
+      </button>
+      <button class="fazenda-home__voltar" (click)="voltar()">
+        <ng-icon name="lucideArrowLeft" size="16" />
+        Voltar
       </button>
     </div>
     <div class="fazenda-home__content">

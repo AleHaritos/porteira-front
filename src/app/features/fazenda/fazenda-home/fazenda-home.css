@@ -31,8 +31,31 @@
 }
 
 .fazenda-home__topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #eef4f0;
+}
+
+.fazenda-home__voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid #d8e6dc;
+  background: #f2f9f4;
+  color: #278a4c;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fazenda-home__voltar:hover {
+  background: #e3f5e8;
+  box-shadow: 0 2px 6px rgba(47, 158, 88, 0.2);
 }
 
 .fazenda-home__content {

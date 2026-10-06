@@ -1,6 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLinkWithHref } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideEllipsisVertical, lucidePlus, lucideSearch } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -25,7 +25,8 @@ import { HlmDialogService } from '@spartan-ng/helm/dialog';
     HlmButtonImports,
     HlmDropdownMenuImports,
     NgIcon,
-  ],
+    RouterLinkWithHref
+],
   providers: [provideIcons({ lucideEllipsisVertical, lucideSearch, lucidePlus })],
   styleUrl: './safra.css',
   templateUrl: './safra.html',
@@ -34,6 +35,7 @@ export class Safra implements OnInit {
   private safraService = inject(SafraService);
   private route = inject(ActivatedRoute);
   private dialogService = inject(HlmDialogService);
+  private router = inject(Router);
 
   private fazendaId!: number;
 
@@ -114,5 +116,9 @@ export class Safra implements OnInit {
       ENCERRADO: 'safra-table__badge--encerrado',
     };
     return classes[status];
+  }
+
+  verDetalhes(id: number) {
+    this.router.navigate(['safra', id], { relativeTo: this.route.parent });
   }
 }

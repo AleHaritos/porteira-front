@@ -41,6 +41,11 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/safra/safra').then((m) => m.Safra),
           },
+             {
+            path: 'safra/:safraId',
+            loadComponent: () =>
+              import('./features/safra/safra-detalhes/safra-detalhes').then((m) => m.SafraDetalhes),
+          },
         ],
       },
     ]

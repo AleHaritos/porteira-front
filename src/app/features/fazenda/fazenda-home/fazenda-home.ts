@@ -4,11 +4,12 @@ import { HlmSidebarImports, HlmSidebarService } from '@spartan-ng/helm/sidebar';
 import { FazendaService } from '../../../core/services/fazenda-service';
 import { IFazenda } from '../../../shared/intefaces/IFazenda';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideBriefcase, lucidePanelLeft, lucideWallet, lucideWheat } from '@ng-icons/lucide';
+import { lucideArrowLeft, lucideBriefcase, lucidePanelLeft, lucideWallet, lucideWheat } from '@ng-icons/lucide';
+import { Location } from '@angular/common';
 
 @Component({
   imports: [RouterOutlet, RouterLink, RouterLinkActive, HlmSidebarImports, NgIcon],
-  providers: [provideIcons({ lucideBriefcase, lucideWallet, lucidePanelLeft, lucideWheat })],
+  providers: [provideIcons({ lucideBriefcase, lucideWallet, lucidePanelLeft, lucideWheat, lucideArrowLeft  })],
   selector: 'app-fazenda-home',
   styleUrl: './fazenda-home.css',
   templateUrl: './fazenda-home.html',
@@ -17,6 +18,7 @@ export class FazendaHome implements OnInit {
   private fazendaService = inject(FazendaService);
   private route = inject(ActivatedRoute);
   protected sidebarService = inject(HlmSidebarService);
+  private location = inject(Location);
 
   fazenda = signal<IFazenda | null>(null);
 
@@ -27,5 +29,9 @@ export class FazendaHome implements OnInit {
         this.fazenda.set(res);
       });
     }
+  }
+
+   voltar() {
+    this.location.back();
   }
 }
