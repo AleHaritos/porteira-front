@@ -6,12 +6,16 @@ import { authInterceptor } from './core/auth/auth.interceptor';
 import { AuthService } from './core/auth/AuthService';
 import { catchError, firstValueFrom, of } from 'rxjs';
 import { provideSpartanHlm } from '@spartan-ng/helm/utils';
+import { provideHlmDatePickerConfig } from '@spartan-ng/helm/date-picker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideSpartanHlm(),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideBrowserGlobalErrorListeners(),
+    provideHlmDatePickerConfig({
+      formatDate: (date: Date) => date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+    }),
     provideRouter(routes),
      provideAppInitializer(() => {
       const auth = inject(AuthService);

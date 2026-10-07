@@ -1,0 +1,79 @@
+.custo-card {
+  border: 1px solid #d8e6dc;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.custo-card__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, #eafbf0, #ffffff);
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #eef4f0;
+}
+
+.custo-card__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4fae70, #278a4c);
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.custo-card__total {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1f7a3d;
+  letter-spacing: -0.02em;
+  margin-top: 0.15rem;
+}
+
+.custo-card__content {
+  padding: 1.5rem 1rem 1rem;
+}
+
+.custo-card__estado {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  padding: 2rem 0;
+  margin: 0;
+}
+
+.custo-card__grafico {
+  width: 100%;
+  height: 220px;
+  overflow: visible;
+}
+
+.custo-card__eixo {
+  stroke: #e5e7eb;
+  stroke-width: 1;
+}
+
+.custo-card__barra {
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+.custo-card__barra-grupo:hover .custo-card__barra {
+  opacity: 0.85;
+  filter: brightness(1.08);
+  cursor: pointer;
+}
+
+.custo-card__valor {
+  font-size: 11px;
+  font-weight: 700;
+  fill: #2f4d3a;
+}
+
+.custo-card__rotulo {
+  font-size: 11px;
+  font-weight: 500;
+  fill: #6b7280;
+}

@@ -1,0 +1,45 @@
+.novo-produto__title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.novo-produto__icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 8px;
+  background: #e3f5e8;
+  color: #278a4c;
+  flex-shrink: 0;
+}
+
+.novo-produto__description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.novo-produto__input {
+  border-radius: 4px !important;
+}
+
+.novo-produto__input:focus {
+  border-color: #2f9e58 !important;
+  box-shadow: 0 0 0 2px rgba(47, 174, 112, 0.25) !important;
+}
+
+.novo-produto__btn-salvar {
+  background: #2f9e58;
+  color: white;
+}
+
+.novo-produto__btn-salvar:hover:not(:disabled) {
+  background: #278a4c;
+}
+
+.novo-produto__btn-salvar:disabled {
+  opacity: 0.6;
+}

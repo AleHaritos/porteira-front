@@ -1,4 +1,3 @@
-// features/fazenda-home/safra/nova-safra/nova-safra.ts
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
@@ -9,11 +8,11 @@ import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
 import { ISafra, StatusSafra } from '../../../shared/intefaces/ISafras';
-import { SafraService } from '../../../core/services/safra-service';
 import { anoAgricolaValidator } from '../../../shared/validators/anoAgricolaValidator';
 import { lucideWheat } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { ToastService } from '../../../core/services/toast-service';
+import { SafraService } from '../../../core/services/safra/safra-service';
 
 @Component({
   imports: [

@@ -20,84 +20,86 @@
 
         <tbody hlmTBody>
           @for (talhao of talhoes(); track talhao.id) {
-            <tr hlmTr class="fazenda-table__row">
-              <td hlmTd class="fazenda-table__nome">{{ talhao.nome }}</td>
-              <td hlmTd>{{ talhao.areaHectares }}</td>
-              <td hlmTd>{{ talhao.localizacao || '—' }}</td>
-              <td hlmTd class="text-right">
-                <button
-                  hlmBtn
-                  variant="ghost"
-                  size="icon"
-                  [hlmDropdownMenuTrigger]="menu"
-                  align="end"
-                  class="fazenda-table__action-btn"
-                >
-                  <ng-icon name="lucideEllipsisVertical" size="16" />
-                </button>
+          <tr hlmTr class="fazenda-table__row talhoes-page__row"
+            [class.talhoes-page__row--selecionada]="talhaoSelecionado()?.id === talhao.id" (click)="selecionar(talhao)">
+            <td hlmTd class="fazenda-table__nome">{{ talhao.nome }}</td>
+            <td hlmTd>{{ talhao.areaHectares }}</td>
+            <td hlmTd>{{ talhao.localizacao || '—' }}</td>
+            <td hlmTd class="text-right" (click)="$event.stopPropagation()">
+              <button hlmBtn variant="ghost" size="icon" [hlmDropdownMenuTrigger]="menu" align="end"
+                class="fazenda-table__action-btn">
+                <ng-icon name="lucideEllipsisVertical" size="16" />
+              </button>
 
-                <ng-template #menu>
-                  <hlm-dropdown-menu>
-                    <button hlmDropdownMenuItem class="cursor-pointer">Editar</button>
-                  </hlm-dropdown-menu>
-                </ng-template>
-              </td>
-            </tr>
+              <ng-template #menu>
+                <hlm-dropdown-menu>
+                  <button hlmDropdownMenuItem class="cursor-pointer">Editar</button>
+                </hlm-dropdown-menu>
+              </ng-template>
+            </td>
+          </tr>
           } @empty {
-            <tr hlmTr>
-              <td hlmTd [attr.colSpan]="4" class="fazenda-table__empty">
-                @if (carregando()) {
-                  Carregando talhões...
-                } @else {
-                  Nenhum talhão cadastrado
-                }
-              </td>
-            </tr>
+          <tr hlmTr>
+            <td hlmTd [attr.colSpan]="4" class="fazenda-table__empty">
+              @if (carregando()) {
+              Carregando talhões...
+              } @else {
+              Nenhum talhão cadastrado
+              }
+            </td>
+          </tr>
           }
         </tbody>
       </table>
     </div>
 
     @if (totalPaginas() > 1) {
-      <nav hlmPagination class="fazenda-table__pagination">
-        <ul hlmPaginationContent>
+    <nav hlmPagination class="fazenda-table__pagination">
+      <ul hlmPaginationContent>
+        <li hlmPaginationItem>
+          <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+        </li>
+
+        @if (paginasVisiveis()[0] > 0) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="paginaAtual() === 0" (click)="irPara(0)">1</button>
+        </li>
+        @if (paginasVisiveis()[0] > 1) {
+        <li hlmPaginationItem><hlm-pagination-ellipsis /></li>
+        }
+        }
+
+        @for (pagina of paginasVisiveis(); track pagina) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+            {{ pagina + 1 }}
+          </button>
+        </li>
+        }
+
+        @if (paginasVisiveis()[paginasVisiveis().length - 1] < totalPaginas() - 1) { @if
+          (paginasVisiveis()[paginasVisiveis().length - 1] < totalPaginas() - 2) { <li hlmPaginationItem>
+          <hlm-pagination-ellipsis /></li>
+          }
           <li hlmPaginationItem>
-            <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+            <button hlmPaginationLink [isActive]="paginaAtual() === totalPaginas() - 1"
+              (click)="irPara(totalPaginas() - 1)">
+              {{ totalPaginas() }}
+            </button>
           </li>
-
-          @if (paginasVisiveis()[0] > 0) {
-            <li hlmPaginationItem>
-              <button hlmPaginationLink [isActive]="paginaAtual() === 0" (click)="irPara(0)">1</button>
-            </li>
-            @if (paginasVisiveis()[0] > 1) {
-              <li hlmPaginationItem><hlm-pagination-ellipsis /></li>
-            }
-          }
-
-          @for (pagina of paginasVisiveis(); track pagina) {
-            <li hlmPaginationItem>
-              <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
-                {{ pagina + 1 }}
-              </button>
-            </li>
-          }
-
-          @if (paginasVisiveis()[paginasVisiveis().length - 1] < totalPaginas() - 1) {
-            @if (paginasVisiveis()[paginasVisiveis().length - 1] < totalPaginas() - 2) {
-              <li hlmPaginationItem><hlm-pagination-ellipsis /></li>
-            }
-            <li hlmPaginationItem>
-              <button hlmPaginationLink [isActive]="paginaAtual() === totalPaginas() - 1" (click)="irPara(totalPaginas() - 1)">
-                {{ totalPaginas() }}
-              </button>
-            </li>
           }
 
           <li hlmPaginationItem>
             <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
           </li>
-        </ul>
-      </nav>
+      </ul>
+    </nav>
     }
   </div>
+  @if (talhaoSelecionado(); as talhao) {
+  <div class="custo-card-wrapper">
+    <app-custo-talhao-card [talhaoId]="talhao.id" [nomeTalhao]="talhao.nome" />
+  </div>
+
+  }
 </div>

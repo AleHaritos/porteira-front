@@ -1,6 +1,6 @@
 import { inject, Service } from '@angular/core';
 import { ToastService } from './toast-service';
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY, Observable, throwError } from 'rxjs';
 
 @Service()
 export class UtilService {
@@ -34,6 +34,6 @@ export class UtilService {
 
     errorHandler(e: any): Observable<any> {
         this.errorValidation(e);
-        return EMPTY;
+        return throwError(() => e);
     }
 }

@@ -1,9 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { UtilService } from './util-service';
-import { ISafra, ISafraRequest } from '../../shared/intefaces/ISafras';
 import { catchError, map, Observable } from 'rxjs';
-import { PageResponse } from '../../shared/intefaces/IPage';
+import { PageResponse } from '../../../shared/intefaces/IPage';
+import { ISafraRequest, ISafra } from '../../../shared/intefaces/ISafras';
+import { UtilService } from '../util-service';
+
 
 @Service()
 export class SafraService {

@@ -6,13 +6,14 @@ import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { HlmTableImports } from '@spartan-ng/helm/table';
-import { TalhaoService } from '../../../core/services/talhao-service';
 import { ITalhao } from '../../../shared/intefaces/ITalhao';
 import { NovoTalhao } from '../novo-talhao/novo-talhao';
+import { TalhaoService } from '../../../core/services/safra/talhao-service';
+import { CustoTalhaoCard } from '../custo-talhao-card/custo-talhao-card';
 
 @Component({
   selector: 'app-talhoes-tab',
-  imports: [HlmTableImports, HlmPaginationImports, HlmButtonImports, HlmDropdownMenuImports, NgIcon],
+  imports: [HlmTableImports, HlmPaginationImports, HlmButtonImports, HlmDropdownMenuImports, NgIcon, CustoTalhaoCard],
   providers: [provideIcons({ lucideEllipsisVertical, lucidePlus })],
   styleUrl: './talhoes-tab.css',
   templateUrl: './talhoes-tab.html',
@@ -24,6 +25,7 @@ export class TalhoesTab implements OnInit {
   safraId = input.required<number>();
 
   talhoes = signal<ITalhao[]>([]);
+  talhaoSelecionado = signal<ITalhao | null>(null);
   paginaAtual = signal(0);
   totalPaginas = signal(0);
   carregando = signal(false);
@@ -44,7 +46,7 @@ export class TalhoesTab implements OnInit {
 
   carregar() {
     this.carregando.set(true);
-    this.talhaoService.buscarTalhaoPorSafra(this.safraId(), this.paginaAtual(), 10).subscribe({
+    this.talhaoService.buscarTalhaoPorSafra(this.safraId(), this.paginaAtual(), 7).subscribe({
       next: (res) => {
         this.talhoes.set(res.content);
         this.totalPaginas.set(res.totalPages);
@@ -58,6 +60,11 @@ export class TalhoesTab implements OnInit {
     if (pagina < 0 || pagina > this.totalPaginas() - 1) return;
     this.paginaAtual.set(pagina);
     this.carregar();
+  }
+
+  selecionar(talhao: ITalhao) {
+    const jaSelecionado = this.talhaoSelecionado()?.id === talhao.id;
+    this.talhaoSelecionado.set(jaSelecionado ? null : talhao);
   }
 
   abrirNovoTalhao() {

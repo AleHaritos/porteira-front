@@ -8,8 +8,8 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
-import { TalhaoService } from '../../../core/services/talhao-service';
 import { ITalhao } from '../../../shared/intefaces/ITalhao';
+import { TalhaoService } from '../../../core/services/safra/talhao-service';
 
 @Component({
  imports: [
@@ -47,10 +47,11 @@ export class NovoTalhao {
   }
 
   salvar() {
-    if (this.form.invalid) return;
+  if (this.loading()) return;
+  if (this.form.invalid) return;
 
-    this.loading.set(true);
-    this.erro.set(null);
+  this.loading.set(true);
+  this.erro.set(null);
 
     this.talhaoService
       .salvar({

@@ -1,0 +1,81 @@
+<hlm-dialog-header>
+  <div class="novo-manejo__title-row">
+    <span class="novo-manejo__icon-badge">
+      <ng-icon name="lucideClipboardList" size="16" />
+    </span>
+    <h3 hlmDialogTitle>Novo manejo</h3>
+  </div>
+  <p class="novo-manejo__description">Preencha os dados para registrar um novo manejo.</p>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="flex flex-col gap-4 py-2">
+  <div class="flex flex-col gap-1.5">
+    <label hlmLabel for="tipo">Tipo</label>
+    <hlm-select [value]="form.value.tipo" (valueChange)="onTipoChange($event)" [itemToString]="itemToStringTipo"
+      class="novo-manejo__select">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (opcao of tipoOptions; track opcao.value) {
+        <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <label hlmLabel for="data">Data</label>
+    <hlm-date-picker formControlName="data" [minDate]="minDate" [maxDate]="maxDate" class="novo-manejo__date">
+      <hlm-date-picker-trigger buttonId="data" class="w-full">Selecione uma data</hlm-date-picker-trigger>
+    </hlm-date-picker>
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <label hlmLabel for="descricao">Descrição</label>
+    <input hlmInput id="descricao" type="text" formControlName="descricao" placeholder="Opcional"
+      class="w-full novo-manejo__input" />
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <label hlmLabel for="produtoSafraId">Produto utilizado</label>
+    <hlm-select [value]="form.value.produtoSafraId" (valueChange)="onProdutoChange($event)"
+      [itemToString]="itemToStringProduto" class="novo-manejo__select">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Nenhum" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-item [value]="null">Nenhum</hlm-select-item>
+        @for (produto of produtos(); track produto.id) {
+        <hlm-select-item [value]="produto.id">{{ produto.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+
+  @if (form.value.produtoSafraId != null) {
+  <div class="flex flex-col gap-1.5">
+    <label hlmLabel for="quantidadeProduto">Quantidade utilizada</label>
+    <input hlmInput id="quantidadeProduto" type="number" step="0.01" formControlName="quantidadeProduto"
+      placeholder="Ex: 2.5" class="w-full novo-manejo__input" />
+  </div>
+  }
+
+  <div class="flex flex-col gap-1.5">
+    <label hlmLabel for="observacoes">Observações</label>
+    <textarea hlmTextarea id="observacoes" formControlName="observacoes" placeholder="Opcional" rows="3"
+      class="w-full novo-manejo__input"></textarea>
+  </div>
+
+  @if (erro()) {
+  <p class="text-sm text-red-600">{{ erro() }}</p>
+  }
+</form>
+
+<hlm-dialog-footer>
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn type="button" class="novo-manejo__btn-salvar cursor-pointer" [disabled]="form.invalid || loading()"
+    (click)="salvar()">
+    {{ loading() ? 'Salvando...' : 'Salvar' }}
+  </button>
+</hlm-dialog-footer>

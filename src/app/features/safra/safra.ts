@@ -8,11 +8,11 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { HlmTableImports } from '@spartan-ng/helm/table';
-import { SafraService } from '../../core/services/safra-service';
 import { ISafra, StatusSafra } from '../../shared/intefaces/ISafras';
 import { CommonModule } from '@angular/common';
 import { NovaSafra } from './nova-safra/nova-safra';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
+import { SafraService } from '../../core/services/safra/safra-service';
 
 @Component({
   selector: 'app-safra',

@@ -27,6 +27,14 @@
   cursor: pointer;
 }
 
+.safra-titulo {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f7a3d;
+  margin-bottom: 1.5rem;
+}
+
 .safra-page__btn-nova:hover {
   background: #278a4c;
 }

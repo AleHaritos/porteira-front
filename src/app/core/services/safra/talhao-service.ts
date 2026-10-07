@@ -1,9 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { UtilService } from './util-service';
 import { Observable, catchError } from 'rxjs';
-import { PageResponse } from '../../shared/intefaces/IPage';
-import { TalhaoRequest, ITalhao } from '../../shared/intefaces/ITalhao';
+import { PageResponse } from '../../../shared/intefaces/IPage';
+import { TalhaoRequest, ITalhao } from '../../../shared/intefaces/ITalhao';
+import { UtilService } from '../util-service';
+
 
 @Service()
 export class TalhaoService {
@@ -18,7 +19,7 @@ export class TalhaoService {
         );
     }
 
-    buscarTalhaoPorSafra(safraId: number, page: number = 0, size: number = 10): Observable<PageResponse<ITalhao>> {
+    buscarTalhaoPorSafra(safraId: number, page: number = 0, size: number = 7): Observable<PageResponse<ITalhao>> {
         const params = new HttpParams()
             .set('page', page)
             .set('size', size);

@@ -1,1 +1,107 @@
-<p>Manejos da safra {{ safraId() }}</p>
+<div class="manejos-page">
+  <div class="manejos-page__header">
+    <div class="manejos-page__seletor">
+      <label hlmLabel for="talhaoSelect">Talhão</label>
+      <hlm-select [value]="talhaoSelecionadoId()" (valueChange)="onTalhaoChange($event)"
+        [itemToString]="itemToStringTalhao" class="manejos-page__select">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value placeholder="Selecione um talhão" />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (talhao of talhoes(); track talhao.id) {
+          <hlm-select-item [value]="talhao.id">{{ talhao.nome }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+
+    <button hlmBtn class="manejos-page__btn-novo cursor-pointer" [disabled]="talhaoSelecionadoId() == null"
+      (click)="abrirNovoManejo()">
+      <ng-icon name="lucideClipboardList" size="16" />
+      Adicionar Manejo
+    </button>
+  </div>
+
+  @if (talhaoSelecionadoId() != null) {
+  <div class="fazenda-table">
+    <div hlmTableContainer>
+      <table hlmTable>
+        <thead hlmTHead>
+          <tr hlmTr class="fazenda-table__head-row">
+            <th hlmTh>Tipo</th>
+            <th hlmTh>Data</th>
+            <th hlmTh>Produto</th>
+            <th hlmTh>Qtd.</th>
+            <th hlmTh>Custo</th>
+            <th hlmTh class="w-[60px] text-right">Ações</th>
+          </tr>
+        </thead>
+
+        <tbody hlmTBody>
+          @for (manejo of manejos(); track manejo.id) {
+          <tr hlmTr class="fazenda-table__row">
+            <td hlmTd>
+              <span class="fazenda-table__badge" [ngClass]="tipoClasse(manejo.tipo)">
+                {{ tipoLabel(manejo.tipo) }}
+              </span>
+            </td>
+            <td hlmTd>{{ manejo.data | date: 'dd/MM/yyyy' }}</td>
+            <td hlmTd>{{ manejo.produtoSafraNome || '—' }}</td>
+            <td hlmTd>{{ manejo.quantidadeProduto ?? '—' }}</td>
+            <td hlmTd>
+              <span class="fazenda-table__badge">R$ {{ manejo.custoTotal }}</span>
+            </td>
+            <td hlmTd class="text-right">
+              <button hlmBtn variant="ghost" size="icon" [hlmDropdownMenuTrigger]="menu" align="end"
+                class="fazenda-table__action-btn">
+                <ng-icon name="lucideEllipsisVertical" size="16" />
+              </button>
+
+              <ng-template #menu>
+                <hlm-dropdown-menu>
+                  <button hlmDropdownMenuItem class="cursor-pointer">Editar</button>
+                </hlm-dropdown-menu>
+              </ng-template>
+            </td>
+          </tr>
+          } @empty {
+          <tr hlmTr>
+            <td hlmTd [attr.colSpan]="6" class="fazenda-table__empty">
+              @if (carregando()) {
+              Carregando manejos...
+              } @else {
+              Nenhum manejo cadastrado para esse talhão
+              }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPaginas() > 1) {
+    <nav hlmPagination class="fazenda-table__pagination">
+      <ul hlmPaginationContent>
+        <li hlmPaginationItem>
+          <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+        </li>
+
+        @for (pagina of paginasVisiveis(); track pagina) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+            {{ pagina + 1 }}
+          </button>
+        </li>
+        }
+
+        <li hlmPaginationItem>
+          <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+        </li>
+      </ul>
+    </nav>
+    }
+  </div>
+  } @else {
+  <div class="manejos-page__vazio">Selecione um talhão para ver os manejos</div>
+  }
+</div>
