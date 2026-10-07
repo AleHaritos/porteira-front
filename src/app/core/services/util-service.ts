@@ -1,14 +1,14 @@
 import { inject, Service } from '@angular/core';
 import { ToastService } from './toast-service';
 import { EMPTY, Observable, throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Service()
-export class UtilService {
-    private URL_BASE: string = "http://localhost:8080"
+export class UtilService {;
     private toastService = inject(ToastService);
 
     getUrlBase(): string {
-        return this.URL_BASE;
+        return environment.apiUrl;
     }
 
     errorValidation(e: any) {
