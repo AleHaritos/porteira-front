@@ -6,9 +6,13 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideHousePlus, lucidePlus } from '@ng-icons/lucide';
+import { lucideHousePlus } from '@ng-icons/lucide';
 import { IFazenda } from '../../../shared/intefaces/IFazenda';
 import { FazendaService } from '../../../core/services/fazenda-service';
+
+interface DialogNovaFazendaContext {
+  fazenda?: IFazenda;
+}
 
 @Component({
   imports: [ReactiveFormsModule, HlmDialogImports, HlmInputImports, HlmLabelImports, HlmButtonImports, NgIcon],
@@ -20,17 +24,18 @@ import { FazendaService } from '../../../core/services/fazenda-service';
 export class DialogNovaFazenda {
 
   private readonly _dialogRef = inject<BrnDialogRef<IFazenda>>(BrnDialogRef);
+  private readonly _dialogContext = injectBrnDialogContext<DialogNovaFazendaContext>();
   private readonly fb = inject(FormBuilder);
   private readonly fazendaService = inject(FazendaService);
 
-
+  modoEdicao = !!this._dialogContext.fazenda?.id;
   loading = signal(false);
   erro = signal<string | null>(null);
 
   form = this.fb.group({
-    nome: ['', [Validators.required]],
-    hectares: [null as number | null, [Validators.required, Validators.min(0.01)]],
-    localizacao: [''],
+    nome: [this._dialogContext.fazenda?.nome ?? '', [Validators.required]],
+    hectares: [this._dialogContext.fazenda?.hectares ?? (null as number | null), [Validators.required, Validators.min(0.01)]],
+    localizacao: [this._dialogContext.fazenda?.localizacao ?? ''],
   });
 
   cancelar() {
@@ -43,21 +48,25 @@ export class DialogNovaFazenda {
     this.loading.set(true);
     this.erro.set(null);
 
-    this.fazendaService
-      .salvarFazenda({
-        nome: this.form.value.nome!,
-        hectares: this.form.value.hectares!,
-        localizacao: this.form.value.localizacao ?? "",
-      })
-      .subscribe({
-        next: (fazenda) => {
-          this.loading.set(false);
-          this._dialogRef.close(fazenda);
-        },
-        error: () => {
-          this.loading.set(false);
-          this.erro.set('Não foi possível salvar a fazenda');
-        },
-      });
+    const payload = {
+      nome: this.form.value.nome!,
+      hectares: this.form.value.hectares!,
+      localizacao: this.form.value.localizacao ?? '',
+    };
+
+    const request$ = this.modoEdicao
+      ? this.fazendaService.atualizar(this._dialogContext.fazenda!.id, payload)
+      : this.fazendaService.salvarFazenda(payload);
+
+    request$.subscribe({
+      next: (fazenda) => {
+        this.loading.set(false);
+        this._dialogRef.close(fazenda);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.erro.set(this.modoEdicao ? 'Não foi possível atualizar a fazenda' : 'Não foi possível salvar a fazenda');
+      },
+    });
   }
 }

@@ -42,7 +42,16 @@ export class FazendaService {
             )
     }
 
-    adicionarColaboradorFazenda(fazendaId: number, numeroColaborador: number): Observable<void> {
+    atualizar(id: number, request: IFazendaRequest): Observable<IFazenda> {
+        return this.http.put<IFazenda>(this.API_URL + '/' + id, request).pipe(
+            map((res) => res),
+            catchError(e => {
+                return this.util.errorHandler(e)
+            })
+        )
+    }
+
+    adicionarColaboradorFazenda(fazendaId: number, numeroColaborador: string): Observable<void> {
         return this.http.post<void>(this.API_URL + '/' + fazendaId + "/colaboradores", { numero: numeroColaborador }).pipe(
             map((res) => res),
             catchError(e => {
@@ -58,5 +67,17 @@ export class FazendaService {
                 return this.util.errorHandler(e)
             })
         )
+    }
+
+    desativar(id: number): Observable<void> {
+        return this.http
+            .patch<void>(`${this.API_URL}/${id}/desativar`, {})
+            .pipe(catchError((e) => this.util.errorHandler(e)));
+    }
+
+    reativar(id: number): Observable<void> {
+        return this.http
+            .patch<void>(`${this.API_URL}/${id}/reativar`, {})
+            .pipe(catchError((e) => this.util.errorHandler(e)));
     }
 }

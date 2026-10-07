@@ -1,3 +1,5 @@
+export type TalhaoUpdateRequest = Omit<TalhaoRequest, 'safraId'>;
+
 export interface TalhaoRequest {
   nome: string;
   areaHectares: number;

@@ -1,0 +1,47 @@
+<hlm-dialog-header>
+  <div class="compartilhar-fazenda__title-row">
+    <span class="compartilhar-fazenda__icon-badge">
+      <ng-icon name="lucideUserPlus" size="16" />
+    </span>
+    <h3 hlmDialogTitle>Compartilhar fazenda</h3>
+  </div>
+  <p class="compartilhar-fazenda__description">
+    Escolha um usuário cadastrado por você para dar acesso a "{{ context.fazenda.nome }}".
+  </p>
+</hlm-dialog-header>
+
+<div class="flex flex-col gap-1.5 py-2">
+  <label hlmLabel for="usuario">Usuário</label>
+
+  @if (carregando()) {
+    <p class="compartilhar-fazenda__estado">Carregando usuários...</p>
+  } @else if (usuarios().length === 0) {
+    <p class="compartilhar-fazenda__estado">
+      Você ainda não cadastrou nenhum usuário disponível para compartilhar essa fazenda.
+    </p>
+  } @else {
+    <hlm-select [value]="usuarioSelecionadoId()" (valueChange)="onUsuarioChange($event)"
+      [itemToString]="itemToStringUsuario" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Selecione um usuário" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (usuario of usuarios(); track usuario.id) {
+          <hlm-select-item [value]="usuario.id">{{ usuario.nome }} ({{ usuario.numero }})</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  }
+
+  @if (erro()) {
+    <p class="text-sm text-red-600">{{ erro() }}</p>
+  }
+</div>
+
+<hlm-dialog-footer>
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn type="button" class="compartilhar-fazenda__btn-salvar cursor-pointer"
+    [disabled]="usuarioSelecionadoId() == null || loading()" (click)="compartilhar()">
+    {{ loading() ? 'Compartilhando...' : 'Compartilhar' }}
+  </button>
+</hlm-dialog-footer>

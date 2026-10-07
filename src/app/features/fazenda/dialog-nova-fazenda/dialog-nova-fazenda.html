@@ -3,57 +3,41 @@
     <span class="dialog-fazenda__icon-badge">
       <ng-icon name="lucideHousePlus" size="16" />
     </span>
-    <h3 hlmDialogTitle>Nova fazenda</h3>
+    <h3 hlmDialogTitle>{{ modoEdicao ? 'Editar fazenda' : 'Nova fazenda' }}</h3>
   </div>
-  <p class="dialog-fazenda__description">Preencha os dados para cadastrar uma nova fazenda.</p>
+  <p class="dialog-fazenda__description">
+    {{ modoEdicao ? 'Atualize os dados da fazenda.' : 'Preencha os dados para cadastrar uma nova fazenda.' }}
+  </p>
 </hlm-dialog-header>
 
 <form [formGroup]="form" (ngSubmit)="salvar()" class="flex flex-col gap-4 py-2">
   <div class="flex flex-col gap-1.5">
     <label hlmLabel for="nome">Nome</label>
-    <input
-      hlmInput
-      id="nome"
-      type="text"
-      formControlName="nome"
-      placeholder="Ex: Fazenda ABC"
-      class="w-full dialog-fazenda__input"
-    />
+    <input hlmInput id="nome" type="text" formControlName="nome" placeholder="Ex: Fazenda ABC"
+      class="w-full dialog-fazenda__input" />
   </div>
 
   <div class="flex flex-col gap-1.5">
     <label hlmLabel for="hectares">Hectares</label>
-    <input
-      hlmInput
-      id="hectares"
-      type="number"
-      step="0.01"
-      formControlName="hectares"
-      placeholder="Ex: 55.55"
-      class="w-full dialog-fazenda__input"
-    />
+    <input hlmInput id="hectares" type="number" step="0.01" formControlName="hectares" placeholder="Ex: 55.55"
+      class="w-full dialog-fazenda__input" />
   </div>
 
   <div class="flex flex-col gap-1.5">
     <label hlmLabel for="localizacao">Localização</label>
-    <input
-      hlmInput
-      id="localizacao"
-      type="text"
-      formControlName="localizacao"
-      placeholder="Ex: Rua ABC 123"
-      class="w-full dialog-fazenda__input"
-    />
+    <input hlmInput id="localizacao" type="text" formControlName="localizacao" placeholder="Ex: Rua ABC 123"
+      class="w-full dialog-fazenda__input" />
   </div>
 
   @if (erro()) {
-    <p class="text-sm text-red-600">{{ erro() }}</p>
+  <p class="text-sm text-red-600">{{ erro() }}</p>
   }
 </form>
 
 <hlm-dialog-footer>
   <button hlmBtn variant="outline" type="button" (click)="cancelar()" class="cursor-pointer">Cancelar</button>
-  <button hlmBtn type="submit" class="dialog-fazenda__btn-salvar" [disabled]="form.invalid || loading()" (click)="salvar()">
-    {{ loading() ? 'Salvando...' : 'Salvar' }}
+  <button hlmBtn type="submit" class="dialog-fazenda__btn-salvar" [disabled]="form.invalid || loading()"
+    (click)="salvar()">
+    {{ loading() ? 'Salvando...' : (modoEdicao ? 'Salvar alterações' : 'Salvar') }}
   </button>
 </hlm-dialog-footer>

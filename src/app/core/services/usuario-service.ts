@@ -22,6 +22,12 @@ export class UsuarioService {
         )
     }
 
+    listarTodosMeusCadastros(): Observable<Usuario[]> {
+        return this.http.get<Usuario[]>(this.API_URL + '/meus-cadastros/todos').pipe(
+            catchError(e => this.util.errorHandler(e))
+        );
+    }
+
     listarUsuarios(page: number = 0, size: number = 5): Observable<PageResponse<Usuario>> {
         const params = new HttpParams().set('page', page).set('size', size);
         return this.http.get<PageResponse<Usuario>>(this.API_URL, { params })

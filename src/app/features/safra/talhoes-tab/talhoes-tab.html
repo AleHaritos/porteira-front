@@ -11,7 +11,7 @@
       <table hlmTable>
         <thead hlmTHead>
           <tr hlmTr class="fazenda-table__head-row">
-            <th hlmTh>Nome</th>
+            <th hlmTh>Talhão</th>
             <th hlmTh>Área (ha)</th>
             <th hlmTh>Localização</th>
             <th hlmTh>Status</th>
@@ -40,7 +40,7 @@
 
               <ng-template #menu>
                 <hlm-dropdown-menu>
-                  <button hlmDropdownMenuItem class="cursor-pointer">Editar</button>
+                  <button hlmDropdownMenuItem class="cursor-pointer" (click)="editar(talhao)">Editar</button>
                   @if (talhao.ativo) {
                   <button hlmDropdownMenuItem (click)="desativar(talhao)">Desativar</button>
                   } @else {

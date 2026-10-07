@@ -11,6 +11,11 @@ import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
 import { ITalhao } from '../../../shared/intefaces/ITalhao';
 import { TalhaoService } from '../../../core/services/safra/talhao-service';
 
+interface NovoTalhaoContext {
+  safraId: number;
+  talhao?: ITalhao;
+}
+
 @Component({
  imports: [
     ReactiveFormsModule,
@@ -28,18 +33,19 @@ import { TalhaoService } from '../../../core/services/safra/talhao-service';
 })
 export class NovoTalhao {
   private readonly _dialogRef = inject<BrnDialogRef<ITalhao>>(BrnDialogRef);
-  private readonly _dialogContext = injectBrnDialogContext<{ safraId: number }>();
+  private readonly _dialogContext = injectBrnDialogContext<NovoTalhaoContext>();
   private readonly fb = inject(FormBuilder);
   private readonly talhaoService = inject(TalhaoService);
 
+  modoEdicao = !!this._dialogContext.talhao;
   loading = signal(false);
   erro = signal<string | null>(null);
 
   form = this.fb.group({
-    nome: ['', [Validators.required]],
-    areaHectares: [null as number | null, [Validators.required, Validators.min(0.01)]],
-    localizacao: [''],
-    observacao: [''],
+    nome: [this._dialogContext.talhao?.nome ?? '', [Validators.required]],
+    areaHectares: [this._dialogContext.talhao?.areaHectares ?? (null as number | null), [Validators.required, Validators.min(0.01)]],
+    localizacao: [this._dialogContext.talhao?.localizacao ?? ''],
+    observacao: [this._dialogContext.talhao?.observacao ?? ''],
   });
 
   cancelar() {
@@ -47,29 +53,32 @@ export class NovoTalhao {
   }
 
   salvar() {
-  if (this.loading()) return;
-  if (this.form.invalid) return;
+    if (this.loading()) return;
+    if (this.form.invalid) return;
 
-  this.loading.set(true);
-  this.erro.set(null);
+    this.loading.set(true);
+    this.erro.set(null);
 
-    this.talhaoService
-      .salvar({
-        nome: this.form.value.nome!,
-        areaHectares: this.form.value.areaHectares!,
-        localizacao: this.form.value.localizacao || undefined,
-        observacao: this.form.value.observacao || undefined,
-        safraId: this._dialogContext.safraId,
-      })
-      .subscribe({
-        next: (talhao) => {
-          this.loading.set(false);
-          this._dialogRef.close(talhao);
-        },
-        error: () => {
-          this.loading.set(false);
-          this.erro.set('Não foi possível salvar o talhão');
-        },
-      });
+    const payload = {
+      nome: this.form.value.nome!,
+      areaHectares: this.form.value.areaHectares!,
+      localizacao: this.form.value.localizacao || undefined,
+      observacao: this.form.value.observacao || undefined,
+    };
+
+    const request$ = this.modoEdicao
+      ? this.talhaoService.atualizar(this._dialogContext.talhao!.id, payload)
+      : this.talhaoService.salvar({ ...payload, safraId: this._dialogContext.safraId });
+
+    request$.subscribe({
+      next: (talhao) => {
+        this.loading.set(false);
+        this._dialogRef.close(talhao);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.erro.set(this.modoEdicao ? 'Não foi possível atualizar o talhão' : 'Não foi possível salvar o talhão');
+      },
+    });
   }
 }

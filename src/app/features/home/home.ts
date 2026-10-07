@@ -15,6 +15,9 @@ import { DialogNovoUsuario } from '../dialog-novo-usuario/dialog-novo-usuario';
 import { Router } from '@angular/router';
 import { FazendaTable } from '../fazenda/fazenda-table/fazenda-table';
 import { DialogNovaFazenda } from '../fazenda/dialog-nova-fazenda/dialog-nova-fazenda';
+import { ConfirmDialog } from '../../shared/confirm-dialog/confirm-dialog';
+import { ToastService } from '../../core/services/toast-service';
+import { CompartilharFazendaDialog } from '../fazenda/compartilhar-fazenda-dialog/compartilhar-fazenda-dialog';
 
 @Component({
   imports: [HlmTabsImports, HlmCardImports, HlmButtonImports, FazendaTable, AdministracaoTable, NgIcon, CommonModule],
@@ -27,6 +30,7 @@ import { DialogNovaFazenda } from '../fazenda/dialog-nova-fazenda/dialog-nova-fa
 export class Home implements OnInit {
   private fazendaService = inject(FazendaService);
   private authService = inject(AuthService);
+  private toastService = inject(ToastService);
   private readonly _hlmDialogService = inject(HlmDialogService);
   private router = inject(Router);
   usuario = signal<UsuarioLogado | null>(this.authService.usuario());
@@ -58,15 +62,55 @@ export class Home implements OnInit {
   }
 
   onEditar(fazenda: IFazenda) {
+    const dialogRef = this._hlmDialogService.open(DialogNovaFazenda, {
+      context: { fazenda },
+      contentClass: 'sm:!max-w-[950px], sm:!min-w-[700px]',
+    });
 
+    dialogRef.closed$.subscribe((fazendaAtualizada) => {
+      if (fazendaAtualizada) {
+        this.carregar();
+      }
+    });
   }
 
   onExcluir(fazenda: IFazenda) {
+    const dialogRef = this._hlmDialogService.open(ConfirmDialog, {
+      context: {
+        titulo: 'Desativar fazenda',
+        mensagem: `Tem certeza que deseja desativar "${fazenda.nome}"? Ela deixará de aparecer na listagem, mas todos os dados (safras, talhões, manejos) continuam preservados. Você pode reativá-la depois.`,
+        textoConfirmar: 'Desativar',
+      },
+      contentClass: 'sm:!max-w-[420px]',
+    });
 
+    dialogRef.closed$.subscribe((confirmado) => {
+      if (confirmado) {
+        this.fazendaService.desativar(fazenda.id).subscribe({
+          next: () => {
+            this.toastService.showSuccess('Sucesso', 'Fazenda desativada com sucesso!');
+            this.carregar();
+          }
+        });
+      }
+    });
   }
 
   onVerDetalhes(fazenda: IFazenda) {
     this.router.navigate(['/fazenda', fazenda.id]);
+  }
+
+  compartilhar(fazenda: IFazenda) {
+    const dialogRef = this._hlmDialogService.open(CompartilharFazendaDialog, {
+      context: { fazenda },
+      contentClass: 'sm:!max-w-[950px], sm:!min-w-[680px]',
+    });
+
+    dialogRef.closed$.subscribe((compartilhado) => {
+      if (compartilhado) {
+        this.carregar();
+      }
+    });
   }
 
   adicionarFazenda() {

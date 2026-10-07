@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-talhoes-tab',
-  imports: [CommonModule ,HlmTableImports, HlmPaginationImports, HlmButtonImports, HlmDropdownMenuImports, NgIcon, CustoTalhaoCard],
+  imports: [CommonModule, HlmTableImports, HlmPaginationImports, HlmButtonImports, HlmDropdownMenuImports, NgIcon, CustoTalhaoCard],
   providers: [provideIcons({ lucideEllipsisVertical, lucidePlus })],
   styleUrl: './talhoes-tab.css',
   templateUrl: './talhoes-tab.html',
@@ -90,6 +90,19 @@ export class TalhoesTab implements OnInit {
   reativar(talhao: ITalhao) {
     this.talhaoService.reativar(talhao.id).subscribe({
       next: () => this.carregar(),
+    });
+  }
+
+  editar(talhao: ITalhao) {
+    const dialogRef = this.dialogService.open(NovoTalhao, {
+      context: { safraId: this.safraId(), talhao },
+      contentClass: 'sm:!max-w-[950px], sm:!min-w-[680px]',
+    });
+
+    dialogRef.closed$.subscribe((talhaoAtualizado) => {
+      if (talhaoAtualizado) {
+        this.carregar();
+      }
     });
   }
 }

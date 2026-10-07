@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { PageResponse } from '../../../shared/intefaces/IPage';
-import { TalhaoRequest, ITalhao } from '../../../shared/intefaces/ITalhao';
+import { TalhaoRequest, ITalhao, TalhaoUpdateRequest } from '../../../shared/intefaces/ITalhao';
 import { UtilService } from '../util-service';
 
 
@@ -47,4 +47,9 @@ export class TalhaoService {
             .pipe(catchError((e) => this.util.errorHandler(e)));
     }
 
+    atualizar(id: number, request: TalhaoUpdateRequest): Observable<ITalhao> {
+    return this.http
+        .put<ITalhao>(`${this.API_URL}/${id}`, request)
+        .pipe(catchError((e) => this.util.errorHandler(e)));
+}
 }

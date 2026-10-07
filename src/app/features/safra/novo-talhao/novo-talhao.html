@@ -3,9 +3,11 @@
     <span class="nova-talhao__icon-badge">
       <ng-icon name="lucideMapPin" size="16" />
     </span>
-    <h3 hlmDialogTitle>Novo Talhão</h3>
+    <h3 hlmDialogTitle>{{ modoEdicao ? 'Editar talhão' : 'Novo Talhão' }}</h3>
   </div>
-  <p class="nova-talhao__description">Preencha os dados para cadastrar um novo talhão.</p>
+  <p class="nova-talhao__description">
+    {{ modoEdicao ? 'Atualize os dados do talhão.' : 'Preencha os dados para cadastrar um novo talhão.' }}
+  </p>
 </hlm-dialog-header>
 
 <form [formGroup]="form" (ngSubmit)="salvar()" class="flex flex-col gap-4 py-2">
@@ -42,6 +44,6 @@
   <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
   <button hlmBtn type="button" class="nova-talhao__btn-salvar cursor-pointer" [disabled]="form.invalid || loading()"
     (click)="salvar()">
-    {{ loading() ? 'Salvando...' : 'Salvar' }}
+    {{ loading() ? 'Salvando...' : (modoEdicao ? 'Salvar alterações' : 'Salvar') }}
   </button>
 </hlm-dialog-footer>

@@ -20,6 +20,7 @@ export class FazendaTable {
   totalPaginas = input.required<number>();
 
   editar = output<IFazenda>();
+  compartilhar = output<IFazenda>();
   excluir = output<IFazenda>();
   verDetalhes = output<IFazenda>();
   mudarPagina = output<number>();
