@@ -26,7 +26,7 @@ import { SafraService } from '../../core/services/safra/safra-service';
     HlmDropdownMenuImports,
     NgIcon,
     RouterLinkWithHref
-],
+  ],
   providers: [provideIcons({ lucideEllipsisVertical, lucideSearch, lucidePlus })],
   styleUrl: './safra.css',
   templateUrl: './safra.html',
@@ -103,6 +103,19 @@ export class Safra implements OnInit {
 
     dialogRef.closed$.subscribe((safraCriada) => {
       if (safraCriada) {
+        this.carregar();
+      }
+    });
+  }
+
+  editar(safra: ISafra) {
+    const dialogRef = this.dialogService.open(NovaSafra, {
+      context: { safra },
+      contentClass: 'sm:!max-w-[950px], sm:!min-w-[680px]',
+    });
+
+    dialogRef.closed$.subscribe((resultado) => {
+      if (resultado) {
         this.carregar();
       }
     });

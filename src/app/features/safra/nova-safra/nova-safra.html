@@ -3,9 +3,11 @@
         <span class="nova-safra__icon-badge">
             <ng-icon name="lucideWheat" size="16" />
         </span>
-        <h3 hlmDialogTitle>Nova safra</h3>
+        <h3 hlmDialogTitle>{{ modoEdicao ? 'Editar safra' : 'Nova safra' }}</h3>
     </div>
-    <p class="nova-safra__description">Preencha os dados para cadastrar uma nova safra.</p>
+    <p class="nova-safra__description">
+        {{ modoEdicao ? 'Atualize os dados da safra.' : 'Preencha os dados para cadastrar uma nova safra.' }}
+    </p>
 </hlm-dialog-header>
 <form [formGroup]="form" (ngSubmit)="salvar()" class="flex flex-col gap-4 py-2">
     <div class="flex flex-col gap-1.5">
@@ -20,27 +22,22 @@
             class="w-full nova-safra__input" />
     </div>
 
-<div class="nova-safra__row">
-  <div class="flex flex-col gap-1.5">
-    <label hlmLabel for="anoAgricola">Ano agrícola</label>
-    <input
-      hlmInput
-      id="anoAgricola"
-      type="text"
-      formControlName="anoAgricola"
-      placeholder="2025 ou 2025/2026"
-      class="w-full nova-safra__input"
-    />
-    @if (form.get('anoAgricola')?.touched && form.get('anoAgricola')?.hasError('anoAgricolaInvalido')) {
-      <span class="nova-safra__erro-campo">Use o formato 2025 ou 2025/2026</span>
-    }
-  </div>
+    <div class="nova-safra__row">
+        <div class="flex flex-col gap-1.5">
+            <label hlmLabel for="anoAgricola">Ano agrícola</label>
+            <input hlmInput id="anoAgricola" type="text" formControlName="anoAgricola" placeholder="2025 ou 2025/2026"
+                class="w-full nova-safra__input" />
+            @if (form.get('anoAgricola')?.touched && form.get('anoAgricola')?.hasError('anoAgricolaInvalido')) {
+            <span class="nova-safra__erro-campo">Use o formato 2025 ou 2025/2026</span>
+            }
+        </div>
 
-  <div class="flex flex-col gap-1.5">
-    <label hlmLabel for="areaTotal">Área (ha)</label>
-    <input hlmInput id="areaTotal" type="number" step="0.01" formControlName="areaTotal" placeholder="Ex: 50.55" class="w-full nova-safra__input" />
-  </div>
-</div>
+        <div class="flex flex-col gap-1.5">
+            <label hlmLabel for="areaTotal">Área (ha)</label>
+            <input hlmInput id="areaTotal" type="number" step="0.01" formControlName="areaTotal" placeholder="Ex: 50.55"
+                class="w-full nova-safra__input" />
+        </div>
+    </div>
 
     <div class="flex flex-col gap-1.5">
         <label hlmLabel for="status">Status</label>
@@ -73,6 +70,6 @@
         class="nova-safra__btn-cancelar cursor-pointer">Cancelar</button>
     <button hlmBtn type="submit" class="nova-safra__btn-salvar cursor-pointer" [disabled]="form.invalid || loading()"
         (click)="salvar()">
-        {{ loading() ? 'Salvando...' : 'Salvar' }}
+        {{ loading() ? 'Salvando...' : (modoEdicao ? 'Salvar alterações' : 'Salvar') }}
     </button>
 </hlm-dialog-footer>

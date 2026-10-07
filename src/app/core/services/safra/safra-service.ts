@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
 import { PageResponse } from '../../../shared/intefaces/IPage';
-import { ISafraRequest, ISafra } from '../../../shared/intefaces/ISafras';
+import { ISafraRequest, ISafra, ISafraUpdateRequest } from '../../../shared/intefaces/ISafras';
 import { UtilService } from '../util-service';
 
 
@@ -20,6 +20,12 @@ export class SafraService {
                 return this.util.errorHandler(e)
             })
         )
+    }
+
+    atualizar(id: number, req: ISafraUpdateRequest): Observable<ISafra> {
+        return this.http
+            .put<ISafra>(`${this.API_URL}/${id}`, req)
+            .pipe(catchError((e) => this.util.errorHandler(e)));
     }
 
     buscarSafrasPorFazenda(

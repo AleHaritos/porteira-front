@@ -21,3 +21,12 @@ export interface ISafraRequest {
     observacoes: string | null,
     fazendaId: number,
 }
+
+export interface ISafraUpdateRequest {
+    nome: string,
+    cultura: string,
+    anoAgricola: string,
+    status: StatusSafra,
+    areaTotal: number,
+    observacoes: string | null,
+}
