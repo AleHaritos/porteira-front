@@ -2,7 +2,7 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLinkWithHref } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideEllipsisVertical, lucidePlus, lucideSearch } from '@ng-icons/lucide';
+import { lucideEllipsisVertical, lucideExternalLink, lucidePencil, lucidePlus, lucideSearch } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmInputImports } from '@spartan-ng/helm/input';
@@ -29,7 +29,7 @@ import { CustoSafraCard } from './custo-safra-card/custo-safra-card';
     RouterLinkWithHref,
     CustoSafraCard
   ],
-  providers: [provideIcons({ lucideEllipsisVertical, lucideSearch, lucidePlus })],
+  providers: [provideIcons({ lucideEllipsisVertical, lucideSearch, lucidePlus, lucideExternalLink, lucidePencil  })],
   styleUrl: './safra.css',
   templateUrl: './safra.html',
 })

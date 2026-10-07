@@ -13,6 +13,7 @@ import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
 import { ISafra, StatusSafra } from '../../../shared/intefaces/ISafras';
 import { SafraService } from '../../../core/services/safra/safra-service';
 import { anoAgricolaValidator } from '../../../shared/validators/anoAgricolaValidator';
+import { ToastService } from '../../../core/services/toast-service';
 
 interface NovaSafraContext {
   fazendaId?: number;
@@ -41,6 +42,7 @@ export class NovaSafra {
   private fb = inject(FormBuilder);
   private safraService = inject(SafraService);
   private dialogRef = inject(BrnDialogRef);
+  private toastService = inject(ToastService);
   private context = injectBrnDialogContext<NovaSafraContext>();
 
   modoEdicao = !!this.context.safra;
@@ -90,6 +92,7 @@ export class NovaSafra {
     request$.subscribe({
       next: (safra) => {
         this.loading.set(false);
+        this.toastService.showSuccess("Sucesso", "Safra salva com sucesso!")
         this.dialogRef.close(safra);
       },
       error: () => {

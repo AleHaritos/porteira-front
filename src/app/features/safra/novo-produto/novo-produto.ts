@@ -9,6 +9,7 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { ProdutoSafraService } from '../../../core/services/safra/produto-safra-service';
 import { IProdutoSafra } from '../../../shared/intefaces/IProdutoSafra';
+import { ToastService } from '../../../core/services/toast-service';
 
 @Component({
   imports: [ReactiveFormsModule, HlmDialogImports, HlmInputImports, HlmLabelImports, HlmButtonImports, NgIcon],
@@ -22,6 +23,7 @@ export class NovoProduto {
   private readonly _dialogContext = injectBrnDialogContext<{ safraId: number }>();
   private readonly fb = inject(FormBuilder);
   private readonly produtoSafraService = inject(ProdutoSafraService);
+  private toastService = inject(ToastService);
 
   loading = signal(false);
   erro = signal<string | null>(null);
@@ -50,6 +52,7 @@ export class NovoProduto {
       .subscribe({
         next: (produto) => {
           this.loading.set(false);
+          this.toastService.showSuccess("Sucesso", "Produto salvo com sucesso!")
           this._dialogRef.close(produto);
         },
         error: () => {

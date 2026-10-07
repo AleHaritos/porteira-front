@@ -26,7 +26,7 @@
             <th hlmTh>Ano Agrícola</th>
             <th hlmTh>Área (ha)</th>
             <th hlmTh>Status</th>
-            <th hlmTh class="w-[60px] text-right">Ações</th>
+            <th hlmTh class="w-[60px] text-right pr-7">Ações</th>
           </tr>
         </thead>
 
@@ -44,18 +44,17 @@
               </span>
             </td>
             <td hlmTd class="text-right" (click)="$event.stopPropagation()">
-              <button hlmBtn variant="ghost" size="icon" [hlmDropdownMenuTrigger]="menu" align="end"
-                class="fazenda-table__action-btn">
-                <ng-icon name="lucideEllipsisVertical" size="16" />
-              </button>
+              <div class="produtos-table__acoes">
+                <button hlmBtn variant="ghost" size="icon"
+                  class="fazenda-table__action-btn fazenda-table__action-btn--editar" (click)="editar(safra)">
+                  <ng-icon name="lucidePencil" size="16" />
+                </button>
 
-              <ng-template #menu>
-                <hlm-dropdown-menu>
-                  <button hlmDropdownMenuItem class="cursor-pointer" (click)="verDetalhes(safra.id)">Ver
-                    detalhes</button>
-                  <button hlmDropdownMenuItem class="cursor-pointer" (click)="editar(safra)">Editar</button>
-                </hlm-dropdown-menu>
-              </ng-template>
+                <button hlmBtn variant="ghost" size="icon"
+                  class="fazenda-table__action-btn fazenda-table__action-btn--detalhes" (click)="verDetalhes(safra.id)">
+                  <ng-icon name="lucideExternalLink" size="16" />
+                </button>
+              </div>
             </td>
           </tr>
           } @empty {
@@ -117,9 +116,9 @@
     }
   </div>
 
-     @if (safraSelecionada(); as safra) {
-    <div class="custo-card-wrapper">
-      <app-custo-safra-card [safraId]="safra.id" [nomeSafra]="safra.nome" />
-    </div>
-    }
+  @if (safraSelecionada(); as safra) {
+  <div class="custo-card-wrapper">
+    <app-custo-safra-card [safraId]="safra.id" [nomeSafra]="safra.nome" />
+  </div>
+  }
 </div>

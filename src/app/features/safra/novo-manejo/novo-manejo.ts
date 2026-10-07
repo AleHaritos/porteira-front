@@ -14,6 +14,7 @@ import { ManejoService } from '../../../core/services/manejo-service';
 import { ProdutoSafraService } from '../../../core/services/safra/produto-safra-service';
 import { IProdutoSafra } from '../../../shared/intefaces/IProdutoSafra';
 import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
+import { ToastService } from '../../../core/services/toast-service';
 
 @Component({
   imports: [
@@ -38,6 +39,7 @@ export class NovoManejo implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly manejoService = inject(ManejoService);
   private readonly produtoSafraService = inject(ProdutoSafraService);
+  private toastService = inject(ToastService);
 
   loading = signal(false);
   erro = signal<string | null>(null);
@@ -131,6 +133,7 @@ export class NovoManejo implements OnInit {
       .subscribe({
         next: (manejo) => {
           this.loading.set(false);
+          this.toastService.showSuccess("Sucesso", "Manejo registrado com sucesso!")
           this._dialogRef.close(manejo);
         },
         error: () => {

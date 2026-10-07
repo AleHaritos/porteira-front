@@ -150,7 +150,35 @@
   font-weight: 600;
   text-decoration: none;
 }
+.produtos-table__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
 
-.safra-table__nome-link:hover {
-  text-decoration: underline;
+.fazenda-table__action-btn--editar {
+  color: #278a4c;
+}
+
+.fazenda-table__action-btn.fazenda-table__action-btn--editar:hover {
+  background: #e3f5e8;
+  color: #1f7a3d;
+}
+
+.fazenda-table__action-btn--detalhes {
+  color: #1d4ed8;
+}
+
+.fazenda-table__action-btn.fazenda-table__action-btn--detalhes:hover {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.fazenda-table__action-btn--excluir {
+  color: #dc2626;
+}
+
+.fazenda-table__action-btn.fazenda-table__action-btn--excluir:hover {
+  background: #fee2e2;
+  color: #b91c1c;
 }
