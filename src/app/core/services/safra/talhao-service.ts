@@ -35,4 +35,16 @@ export class TalhaoService {
         );
     }
 
+    desativar(id: number): Observable<void> {
+        return this.http
+            .patch<void>(`${this.API_URL}/${id}/desativar`, {})
+            .pipe(catchError((e) => this.util.errorHandler(e)));
+    }
+
+    reativar(id: number): Observable<void> {
+        return this.http
+            .patch<void>(`${this.API_URL}/${id}/reativar`, {})
+            .pipe(catchError((e) => this.util.errorHandler(e)));
+    }
+
 }

@@ -10,10 +10,11 @@ import { ITalhao } from '../../../shared/intefaces/ITalhao';
 import { NovoTalhao } from '../novo-talhao/novo-talhao';
 import { TalhaoService } from '../../../core/services/safra/talhao-service';
 import { CustoTalhaoCard } from '../custo-talhao-card/custo-talhao-card';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-talhoes-tab',
-  imports: [HlmTableImports, HlmPaginationImports, HlmButtonImports, HlmDropdownMenuImports, NgIcon, CustoTalhaoCard],
+  imports: [CommonModule ,HlmTableImports, HlmPaginationImports, HlmButtonImports, HlmDropdownMenuImports, NgIcon, CustoTalhaoCard],
   providers: [provideIcons({ lucideEllipsisVertical, lucidePlus })],
   styleUrl: './talhoes-tab.css',
   templateUrl: './talhoes-tab.html',
@@ -77,6 +78,18 @@ export class TalhoesTab implements OnInit {
       if (talhaoCriado) {
         this.carregar();
       }
+    });
+  }
+
+  desativar(talhao: ITalhao) {
+    this.talhaoService.desativar(talhao.id).subscribe({
+      next: () => this.carregar(),
+    });
+  }
+
+  reativar(talhao: ITalhao) {
+    this.talhaoService.reativar(talhao.id).subscribe({
+      next: () => this.carregar(),
     });
   }
 }

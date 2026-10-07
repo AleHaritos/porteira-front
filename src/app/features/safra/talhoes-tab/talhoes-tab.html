@@ -14,6 +14,7 @@
             <th hlmTh>Nome</th>
             <th hlmTh>Área (ha)</th>
             <th hlmTh>Localização</th>
+            <th hlmTh>Status</th>
             <th hlmTh class="w-[60px] text-right">Ações</th>
           </tr>
         </thead>
@@ -25,6 +26,12 @@
             <td hlmTd class="fazenda-table__nome">{{ talhao.nome }}</td>
             <td hlmTd>{{ talhao.areaHectares }}</td>
             <td hlmTd>{{ talhao.localizacao || '—' }}</td>
+            <td hlmTd>
+              <span class="talhoes-table__badge"
+                [ngClass]="talhao.ativo ? 'talhoes-table__badge--ativo' : 'talhoes-table__badge--inativo'">
+                {{ talhao.ativo ? 'Ativo' : 'Inativo' }}
+              </span>
+            </td>
             <td hlmTd class="text-right" (click)="$event.stopPropagation()">
               <button hlmBtn variant="ghost" size="icon" [hlmDropdownMenuTrigger]="menu" align="end"
                 class="fazenda-table__action-btn">
@@ -34,6 +41,11 @@
               <ng-template #menu>
                 <hlm-dropdown-menu>
                   <button hlmDropdownMenuItem class="cursor-pointer">Editar</button>
+                  @if (talhao.ativo) {
+                  <button hlmDropdownMenuItem (click)="desativar(talhao)">Desativar</button>
+                  } @else {
+                  <button hlmDropdownMenuItem (click)="reativar(talhao)">Reativar</button>
+                  }
                 </hlm-dropdown-menu>
               </ng-template>
             </td>
@@ -97,9 +109,10 @@
     }
   </div>
   @if (talhaoSelecionado(); as talhao) {
+  @if (talhao.ativo) {
   <div class="custo-card-wrapper">
     <app-custo-talhao-card [talhaoId]="talhao.id" [nomeTalhao]="talhao.nome" />
   </div>
-
+  }
   }
 </div>

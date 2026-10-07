@@ -14,4 +14,5 @@ export interface ITalhao {
   observacao: string | null;
   safraId: number;
   safraNome: string;
+  ativo: boolean;
 }

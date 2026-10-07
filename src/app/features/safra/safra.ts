@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { NovaSafra } from './nova-safra/nova-safra';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { SafraService } from '../../core/services/safra/safra-service';
+import { CustoSafraCard } from './custo-safra-card/custo-safra-card';
 
 @Component({
   selector: 'app-safra',
@@ -25,7 +26,8 @@ import { SafraService } from '../../core/services/safra/safra-service';
     HlmButtonImports,
     HlmDropdownMenuImports,
     NgIcon,
-    RouterLinkWithHref
+    RouterLinkWithHref,
+    CustoSafraCard
   ],
   providers: [provideIcons({ lucideEllipsisVertical, lucideSearch, lucidePlus })],
   styleUrl: './safra.css',
@@ -38,6 +40,7 @@ export class Safra implements OnInit {
   private router = inject(Router);
 
   private fazendaId!: number;
+  safraSelecionada = signal<ISafra | null>(null);
 
   safras = signal<ISafra[]>([]);
   paginaAtual = signal(0);
@@ -95,6 +98,11 @@ export class Safra implements OnInit {
     return labels[status];
   }
 
+  selecionar(safra: ISafra) {
+    const jaSelecionada = this.safraSelecionada()?.id === safra.id;
+    this.safraSelecionada.set(jaSelecionada ? null : safra);
+  }
+
   abrirNovaSafra() {
     const dialogRef = this.dialogService.open(NovaSafra, {
       context: { fazendaId: this.fazendaId },
@@ -119,6 +127,11 @@ export class Safra implements OnInit {
         this.carregar();
       }
     });
+  }
+
+  verDados(safra: ISafra) {
+    const jaSelecionada = this.safraSelecionada()?.id === safra.id;
+    this.safraSelecionada.set(jaSelecionada ? null : safra);
   }
 
   statusClasse(status: StatusSafra): string {

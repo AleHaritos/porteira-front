@@ -92,3 +92,21 @@
 .custo-card-wrapper {
   margin-top: 2rem;
 }
+
+.talhoes-table__badge {
+  display: inline-flex;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.talhoes-table__badge--ativo {
+  background: #e3f5e8;
+  color: #278a4c;
+}
+
+.talhoes-table__badge--inativo {
+  background: #fee2e2;
+  color: #b91c1c;
+}

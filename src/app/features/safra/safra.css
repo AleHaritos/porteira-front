@@ -27,6 +27,10 @@
   cursor: pointer;
 }
 
+.custo-card-wrapper {
+  margin-top: 3rem;
+}
+
 .safra-titulo {
   text-align: center;
   font-size: 1.5rem;
@@ -126,4 +130,27 @@
 .safra-table__badge--encerrado {
   background: #f3f4f6;
   color: #6b7280;
+}
+
+.safra-table__row {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.safra-table__row:hover {
+  background: #f7fdf9;
+}
+
+.safra-table__row--selecionada {
+  background: #e3f5e8;
+}
+
+.safra-table__nome-link {
+  color: #1f7a3d;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.safra-table__nome-link:hover {
+  text-decoration: underline;
 }
