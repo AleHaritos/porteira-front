@@ -82,3 +82,21 @@
   padding: 1rem;
   border-top: 1px solid #eef4f0;
 }
+
+.fazenda-table__action-btn--editar {
+  color: #278a4c;
+}
+
+.fazenda-table__action-btn.fazenda-table__action-btn--editar:hover {
+  background: #e3f5e8;
+  color: #1f7a3d;
+}
+
+.fazenda-table__action-btn--excluir {
+  color: #dc2626;
+}
+
+.fazenda-table__action-btn.fazenda-table__action-btn--excluir:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}

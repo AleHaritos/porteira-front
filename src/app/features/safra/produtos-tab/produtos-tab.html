@@ -13,91 +13,87 @@
           <tr hlmTr class="fazenda-table__head-row">
             <th hlmTh>Nome</th>
             <th hlmTh>Custo unitário</th>
-            <th hlmTh class="w-[60px] text-right">Ações</th>
+            <th hlmTh class="w-[60px] text-right pr-6">Ações</th>
           </tr>
         </thead>
 
         <tbody hlmTBody>
           @for (produto of produtos(); track produto.id) {
-            <tr hlmTr class="fazenda-table__row">
-              <td hlmTd class="fazenda-table__nome">{{ produto.nome }}</td>
-              <td hlmTd>
-                <span class="fazenda-table__badge">R$ {{ produto.custo }}</span>
-              </td>
-              <td hlmTd class="text-right">
-                <button
-                  hlmBtn
-                  variant="ghost"
-                  size="icon"
-                  [hlmDropdownMenuTrigger]="menu"
-                  align="end"
-                  class="fazenda-table__action-btn"
-                >
-                  <ng-icon name="lucideEllipsisVertical" size="16" />
+          <tr hlmTr class="fazenda-table__row">
+            <td hlmTd class="fazenda-table__nome">{{ produto.nome }}</td>
+            <td hlmTd>
+              <span class="fazenda-table__badge">R$ {{ produto.custo }}</span>
+            </td>
+            <td hlmTd class="text-right">
+              <div class="produtos-table__acoes">
+                <button hlmBtn variant="ghost" size="icon"
+                  class="fazenda-table__action-btn fazenda-table__action-btn--editar" (click)="editar(produto)">
+                  <ng-icon name="lucidePencil" size="16" />
                 </button>
 
-                <ng-template #menu>
-                  <hlm-dropdown-menu>
-                    <button hlmDropdownMenuItem class="cursor-pointer">Editar</button>
-                  </hlm-dropdown-menu>
-                </ng-template>
-              </td>
-            </tr>
+                <button hlmBtn variant="ghost" size="icon"
+                  class="fazenda-table__action-btn fazenda-table__action-btn--excluir" (click)="excluir(produto)">
+                  <ng-icon name="lucideTrash2" size="16" />
+                </button>
+              </div>
+            </td>
+          </tr>
           } @empty {
-            <tr hlmTr>
-              <td hlmTd [attr.colSpan]="3" class="fazenda-table__empty">
-                @if (carregando()) {
-                  Carregando produtos...
-                } @else {
-                  Nenhum produto cadastrado
-                }
-              </td>
-            </tr>
+          <tr hlmTr>
+            <td hlmTd [attr.colSpan]="3" class="fazenda-table__empty">
+              @if (carregando()) {
+              Carregando produtos...
+              } @else {
+              Nenhum produto cadastrado
+              }
+            </td>
+          </tr>
           }
         </tbody>
       </table>
     </div>
 
     @if (totalPaginas() > 1) {
-      <nav hlmPagination class="fazenda-table__pagination">
-        <ul hlmPaginationContent>
+    <nav hlmPagination class="fazenda-table__pagination">
+      <ul hlmPaginationContent>
+        <li hlmPaginationItem>
+          <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+        </li>
+
+        @if (paginasVisiveis()[0] > 0) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="paginaAtual() === 0" (click)="irPara(0)">1</button>
+        </li>
+        @if (paginasVisiveis()[0] > 1) {
+        <li hlmPaginationItem><hlm-pagination-ellipsis /></li>
+        }
+        }
+
+        @for (pagina of paginasVisiveis(); track pagina) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+            {{ pagina + 1 }}
+          </button>
+        </li>
+        }
+
+        @if (paginasVisiveis()[paginasVisiveis().length - 1] < totalPaginas() - 1) { @if
+          (paginasVisiveis()[paginasVisiveis().length - 1] < totalPaginas() - 2) { <li hlmPaginationItem>
+          <hlm-pagination-ellipsis /></li>
+          }
           <li hlmPaginationItem>
-            <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+            <button hlmPaginationLink [isActive]="paginaAtual() === totalPaginas() - 1"
+              (click)="irPara(totalPaginas() - 1)">
+              {{ totalPaginas() }}
+            </button>
           </li>
-
-          @if (paginasVisiveis()[0] > 0) {
-            <li hlmPaginationItem>
-              <button hlmPaginationLink [isActive]="paginaAtual() === 0" (click)="irPara(0)">1</button>
-            </li>
-            @if (paginasVisiveis()[0] > 1) {
-              <li hlmPaginationItem><hlm-pagination-ellipsis /></li>
-            }
-          }
-
-          @for (pagina of paginasVisiveis(); track pagina) {
-            <li hlmPaginationItem>
-              <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
-                {{ pagina + 1 }}
-              </button>
-            </li>
-          }
-
-          @if (paginasVisiveis()[paginasVisiveis().length - 1] < totalPaginas() - 1) {
-            @if (paginasVisiveis()[paginasVisiveis().length - 1] < totalPaginas() - 2) {
-              <li hlmPaginationItem><hlm-pagination-ellipsis /></li>
-            }
-            <li hlmPaginationItem>
-              <button hlmPaginationLink [isActive]="paginaAtual() === totalPaginas() - 1" (click)="irPara(totalPaginas() - 1)">
-                {{ totalPaginas() }}
-              </button>
-            </li>
           }
 
           <li hlmPaginationItem>
             <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
           </li>
-        </ul>
-      </nav>
+      </ul>
+    </nav>
     }
   </div>
 </div>

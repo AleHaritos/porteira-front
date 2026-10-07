@@ -1,6 +1,6 @@
 import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideEllipsisVertical, lucidePlus } from '@ng-icons/lucide';
+import { lucideEllipsisVertical, lucidePencil, lucidePlus, lucideTrash2 } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
@@ -13,7 +13,7 @@ import { NovoProduto } from '../novo-produto/novo-produto';
 @Component({
   selector: 'app-produtos-tab',
   imports: [HlmTableImports, HlmPaginationImports, HlmButtonImports, HlmDropdownMenuImports, NgIcon],
-  providers: [provideIcons({ lucideEllipsisVertical, lucidePlus })],
+  providers: [provideIcons({ lucidePlus, lucideEllipsisVertical, lucidePencil, lucideTrash2 })],
   styleUrl: './produtos-tab.css',
   templateUrl: './produtos-tab.html',
 })
@@ -71,5 +71,13 @@ export class ProdutosTab implements OnInit {
         this.carregar();
       }
     });
+  }
+
+  editar(produto: IProdutoSafra) {
+    // abre o dialog de edição do produto, igual fizemos na Safra
+  }
+
+  excluir(produto: IProdutoSafra) {
+    // confirmação + chamada do service pra deletar, e recarrega a lista
   }
 }
