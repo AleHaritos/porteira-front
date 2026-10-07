@@ -6,7 +6,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideWallet } from '@ng-icons/lucide';
 import { TipoManejo } from '../../../shared/intefaces/IManejo';
 import { TalhaoService } from '../../../core/services/safra/talhao-service';
-import { ManejoService } from '../../../core/services/manejo-service';
+import { ManejoService } from '../../../core/services/safra/manejo-service';
 
 interface CustoPorTipoDatum {
   tipo: TipoManejo;

@@ -3,9 +3,11 @@
     <span class="novo-manejo__icon-badge">
       <ng-icon name="lucideClipboardList" size="16" />
     </span>
-    <h3 hlmDialogTitle>Novo manejo</h3>
+    <h3 hlmDialogTitle>{{ modoEdicao ? 'Editar manejo' : 'Novo manejo' }}</h3>
   </div>
-  <p class="novo-manejo__description">Preencha os dados para registrar um novo manejo.</p>
+  <p class="novo-manejo__description">
+    {{ modoEdicao ? 'Atualize os dados do manejo.' : 'Preencha os dados para registrar um novo manejo.' }}
+  </p>
 </hlm-dialog-header>
 
 <form [formGroup]="form" class="flex flex-col gap-4 py-2">
@@ -76,6 +78,6 @@
   <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
   <button hlmBtn type="button" class="novo-manejo__btn-salvar cursor-pointer" [disabled]="form.invalid || loading()"
     (click)="salvar()">
-    {{ loading() ? 'Salvando...' : 'Salvar' }}
+    {{ loading() ? 'Salvando...' : (modoEdicao ? 'Salvar alterações' : 'Salvar') }}
   </button>
 </hlm-dialog-footer>

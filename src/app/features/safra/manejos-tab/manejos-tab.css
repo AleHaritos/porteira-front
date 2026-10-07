@@ -114,6 +114,30 @@
   border-top: 1px solid #eef4f0;
 }
 
+.manejos-table__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.fazenda-table__action-btn--editar {
+  color: #278a4c;
+}
+
+.fazenda-table__action-btn.fazenda-table__action-btn--editar:hover {
+  background: #e3f5e8;
+  color: #1f7a3d;
+}
+
+.fazenda-table__action-btn--excluir {
+  color: #dc2626;
+}
+
+.fazenda-table__action-btn.fazenda-table__action-btn--excluir:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
 .manejos-table__badge--solo { background: #f3e8d9; color: #92631a; }
 .manejos-table__badge--plantio { background: #e3f5e8; color: #278a4c; }
 .manejos-table__badge--adubacao { background: #fef3c7; color: #b45309; }

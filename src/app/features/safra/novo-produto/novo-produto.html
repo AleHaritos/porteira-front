@@ -3,9 +3,11 @@
     <span class="novo-produto__icon-badge">
       <ng-icon name="lucidePackage" size="16" />
     </span>
-    <h3 hlmDialogTitle>Novo produto</h3>
+    <h3 hlmDialogTitle>{{ modoEdicao ? 'Editar produto' : 'Novo produto' }}</h3>
   </div>
-  <p class="novo-produto__description">Preencha os dados para cadastrar um novo produto.</p>
+  <p class="novo-produto__description">
+    {{ modoEdicao ? 'Atualize os dados do produto.' : 'Preencha os dados para cadastrar um novo produto.' }}
+  </p>
 </hlm-dialog-header>
 
 <form [formGroup]="form" (ngSubmit)="salvar()" class="flex flex-col gap-4 py-2">
@@ -27,6 +29,6 @@
 <hlm-dialog-footer>
   <button hlmBtn variant="outline" type="button" (click)="cancelar()" class="cursor-pointer">Cancelar</button>
   <button hlmBtn type="submit" class="novo-produto__btn-salvar cursor-pointer" [disabled]="form.invalid || loading()" (click)="salvar()">
-    {{ loading() ? 'Salvando...' : 'Salvar' }}
+    {{ loading() ? 'Salvando...' : (modoEdicao ? 'Salvar alterações' : 'Salvar') }}
   </button>
 </hlm-dialog-footer>

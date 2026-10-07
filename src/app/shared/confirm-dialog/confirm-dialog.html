@@ -1,0 +1,19 @@
+<div class="confirm-dialog__body">
+  <div class="confirm-dialog__icon-wrapper">
+    <ng-icon name="lucideTriangleAlert" size="28" />
+  </div>
+
+  <hlm-dialog-header class="confirm-dialog__header">
+    <h3 hlmDialogTitle class="confirm-dialog__titulo">{{ context.titulo }}</h3>
+    <p hlmDialogDescription class="confirm-dialog__mensagem">{{ context.mensagem }}</p>
+  </hlm-dialog-header>
+</div>
+
+<hlm-dialog-footer class="confirm-dialog__footer">
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">
+    {{ context.textoCancelar ?? 'Cancelar' }}
+  </button>
+  <button hlmBtn type="button" class="confirm-dialog__btn-confirmar cursor-pointer" (click)="confirmar()">
+    {{ context.textoConfirmar ?? 'Confirmar' }}
+  </button>
+</hlm-dialog-footer>

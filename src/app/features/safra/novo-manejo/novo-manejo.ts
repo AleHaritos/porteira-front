@@ -10,11 +10,17 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
-import { ManejoService } from '../../../core/services/manejo-service';
 import { ProdutoSafraService } from '../../../core/services/safra/produto-safra-service';
 import { IProdutoSafra } from '../../../shared/intefaces/IProdutoSafra';
 import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { ToastService } from '../../../core/services/toast-service';
+import { ManejoService } from '../../../core/services/safra/manejo-service';
+
+interface NovoManejoContext {
+  talhaoId: number;
+  safraId: number;
+  manejo?: IManejo;
+}
 
 @Component({
   imports: [
@@ -35,12 +41,13 @@ import { ToastService } from '../../../core/services/toast-service';
 })
 export class NovoManejo implements OnInit {
   private readonly _dialogRef = inject<BrnDialogRef<IManejo>>(BrnDialogRef);
-  private readonly _dialogContext = injectBrnDialogContext<{ talhaoId: number; safraId: number }>();
+  private readonly _dialogContext = injectBrnDialogContext<NovoManejoContext>();
   private readonly fb = inject(FormBuilder);
   private readonly manejoService = inject(ManejoService);
   private readonly produtoSafraService = inject(ProdutoSafraService);
   private toastService = inject(ToastService);
 
+  modoEdicao = !!this._dialogContext.manejo;
   loading = signal(false);
   erro = signal<string | null>(null);
   produtos = signal<IProdutoSafra[]>([]);
@@ -66,13 +73,20 @@ export class NovoManejo implements OnInit {
     return this.produtos().find((p) => p.id === value)?.nome || '';
   };
 
+  private parseData(data: string): Date {
+    return new Date(`${data}T00:00:00`);
+  }
+
   form = this.fb.group({
-    tipo: ['PLANTIO' as TipoManejo, [Validators.required]],
-    data: [null as Date | null, [Validators.required]],
-    descricao: [''],
-    observacoes: [''],
-    produtoSafraId: [null as number | null],
-    quantidadeProduto: [null as number | null],
+    tipo: [(this._dialogContext.manejo?.tipo ?? 'PLANTIO') as TipoManejo, [Validators.required]],
+    data: [
+      this._dialogContext.manejo ? this.parseData(this._dialogContext.manejo.data) : (null as Date | null),
+      [Validators.required],
+    ],
+    descricao: [this._dialogContext.manejo?.descricao ?? ''],
+    observacoes: [this._dialogContext.manejo?.observacoes ?? ''],
+    produtoSafraId: [(this._dialogContext.manejo as any)?.produtoSafraId ?? (null as number | null)],
+    quantidadeProduto: [this._dialogContext.manejo?.quantidadeProduto ?? (null as number | null)],
   });
 
   ngOnInit() {
@@ -120,28 +134,32 @@ export class NovoManejo implements OnInit {
     this.loading.set(true);
     this.erro.set(null);
 
-    this.manejoService
-      .salvar({
-        tipo: this.form.value.tipo!,
-        data: this.formatarData(this.form.value.data!),
-        descricao: this.form.value.descricao || undefined,
-        observacoes: this.form.value.observacoes || undefined,
-        talhaoId: this._dialogContext.talhaoId,
-        produtoSafraId: this.form.value.produtoSafraId ?? undefined,
-        quantidadeProduto: this.form.value.quantidadeProduto ?? undefined,
-      })
-      .subscribe({
-        next: (manejo) => {
-          this.loading.set(false);
-          this.toastService.showSuccess("Sucesso", "Manejo registrado com sucesso!")
-          this._dialogRef.close(manejo);
-        },
-        error: () => {
-          this.loading.set(false);
-          this.erro.set('Não foi possível salvar o manejo');
-        },
-      });
+    const payload = {
+      tipo: this.form.value.tipo!,
+      data: this.formatarData(this.form.value.data!),
+      descricao: this.form.value.descricao || undefined,
+      observacoes: this.form.value.observacoes || undefined,
+      produtoSafraId: this.form.value.produtoSafraId ?? undefined,
+      quantidadeProduto: this.form.value.quantidadeProduto ?? undefined,
+    };
+
+    const request$ = this.modoEdicao
+      ? this.manejoService.atualizar(this._dialogContext.manejo!.id, payload)
+      : this.manejoService.salvar({ ...payload, talhaoId: this._dialogContext.talhaoId });
+
+    request$.subscribe({
+      next: (manejo) => {
+        this.loading.set(false);
+        this.toastService.showSuccess(
+          'Sucesso',
+          this.modoEdicao ? 'Manejo atualizado com sucesso!' : 'Manejo registrado com sucesso!',
+        );
+        this._dialogRef.close(manejo);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.erro.set(this.modoEdicao ? 'Não foi possível atualizar o manejo' : 'Não foi possível salvar o manejo');
+      },
+    });
   }
-
-
 }

@@ -33,7 +33,7 @@
             <th hlmTh>Produto</th>
             <th hlmTh>Qtd.</th>
             <th hlmTh>Custo</th>
-            <th hlmTh class="w-[60px] text-right">Ações</th>
+            <th hlmTh class="w-[60px] text-right pr-7">Ações</th>
           </tr>
         </thead>
 
@@ -52,16 +52,17 @@
               <span class="fazenda-table__badge">R$ {{ manejo.custoTotal }}</span>
             </td>
             <td hlmTd class="text-right">
-              <button hlmBtn variant="ghost" size="icon" [hlmDropdownMenuTrigger]="menu" align="end"
-                class="fazenda-table__action-btn">
-                <ng-icon name="lucideEllipsisVertical" size="16" />
-              </button>
+              <div class="manejos-table__acoes">
+                <button hlmBtn variant="ghost" size="icon"
+                  class="fazenda-table__action-btn fazenda-table__action-btn--editar" (click)="editar(manejo)">
+                  <ng-icon name="lucidePencil" size="16" />
+                </button>
 
-              <ng-template #menu>
-                <hlm-dropdown-menu>
-                  <button hlmDropdownMenuItem class="cursor-pointer">Editar</button>
-                </hlm-dropdown-menu>
-              </ng-template>
+                <button hlmBtn variant="ghost" size="icon"
+                  class="fazenda-table__action-btn fazenda-table__action-btn--excluir" (click)="excluir(manejo)">
+                  <ng-icon name="lucideTrash2" size="16" />
+                </button>
+              </div>
             </td>
           </tr>
           } @empty {

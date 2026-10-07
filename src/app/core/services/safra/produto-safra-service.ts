@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { PageResponse } from '../../../shared/intefaces/IPage';
-import { ProdutoSafraRequest, IProdutoSafra } from '../../../shared/intefaces/IProdutoSafra';
+import { ProdutoSafraRequest, ProdutoSafraUpdateRequest, IProdutoSafra } from '../../../shared/intefaces/IProdutoSafra';
 import { UtilService } from '../util-service';
 
 @Service()
@@ -14,6 +14,18 @@ export class ProdutoSafraService {
 
   salvar(request: ProdutoSafraRequest): Observable<IProdutoSafra> {
     return this.http.post<IProdutoSafra>(this.API_URL, request).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
+  atualizar(id: number, request: ProdutoSafraUpdateRequest): Observable<IProdutoSafra> {
+    return this.http.put<IProdutoSafra>(`${this.API_URL}/${id}`, request).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
+  excluir(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/${id}`).pipe(
       catchError(e => this.util.errorHandler(e))
     );
   }

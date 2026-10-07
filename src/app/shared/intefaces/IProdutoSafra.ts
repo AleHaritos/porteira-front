@@ -11,3 +11,10 @@ export interface IProdutoSafra {
   safraId: number;
   safraNome: string;
 }
+
+export interface IProdutoSafraUpdateRequest {
+  id: number;
+  nome: string;
+}
+
+export type ProdutoSafraUpdateRequest = Omit<ProdutoSafraRequest, 'safraId'>;

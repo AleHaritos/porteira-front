@@ -9,6 +9,8 @@ import { HlmTableImports } from '@spartan-ng/helm/table';
 import { ProdutoSafraService } from '../../../core/services/safra/produto-safra-service';
 import { IProdutoSafra } from '../../../shared/intefaces/IProdutoSafra';
 import { NovoProduto } from '../novo-produto/novo-produto';
+import { ToastService } from '../../../core/services/toast-service';
+import { ConfirmDialog } from '../../../shared/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-produtos-tab',
@@ -20,6 +22,7 @@ import { NovoProduto } from '../novo-produto/novo-produto';
 export class ProdutosTab implements OnInit {
   private produtoSafraService = inject(ProdutoSafraService);
   private dialogService = inject(HlmDialogService);
+  private toastService = inject(ToastService);
 
   safraId = input.required<number>();
 
@@ -74,10 +77,36 @@ export class ProdutosTab implements OnInit {
   }
 
   editar(produto: IProdutoSafra) {
-    // abre o dialog de edição do produto, igual fizemos na Safra
+    const dialogRef = this.dialogService.open(NovoProduto, {
+      context: { safraId: this.safraId(), produto },
+    });
+
+    dialogRef.closed$.subscribe((produtoAtualizado) => {
+      if (produtoAtualizado) {
+        this.carregar();
+      }
+    });
   }
 
   excluir(produto: IProdutoSafra) {
-    // confirmação + chamada do service pra deletar, e recarrega a lista
+    const dialogRef = this.dialogService.open(ConfirmDialog, {
+      context: {
+        titulo: 'Excluir produto',
+        mensagem: `Tem certeza que deseja excluir "${produto.nome}"? Essa ação não pode ser desfeita.`,
+        textoConfirmar: 'Excluir',
+      },
+      contentClass: 'sm:!max-w-[420px]',
+    });
+
+    dialogRef.closed$.subscribe((confirmado) => {
+      if (confirmado) {
+        this.produtoSafraService.excluir(produto.id).subscribe({
+          next: () => {
+            this.toastService.showSuccess('Sucesso', 'Produto excluído com sucesso!');
+            this.carregar();
+          }
+        });
+      }
+    });
   }
 }
