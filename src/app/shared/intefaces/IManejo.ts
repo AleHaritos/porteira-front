@@ -1,5 +1,18 @@
 export type TipoManejo = 'PREPARO_DO_SOLO' | 'PLANTIO' | 'ADUBACAO' | 'PULVERIZACAO' | 'IRRIGACAO' | 'COLHEITA' | 'OUTROS';
-export type ManejoUpdateRequest = Omit<ManejoRequest, 'talhaoId'>;
+
+export interface IItemManejo {
+  id: number;
+  produtoSafraId: number;
+  produtoSafraNome: string;
+  quantidade: number;
+  custoUnitario: number;
+  custoTotal: number;
+}
+
+export interface IItemManejoRequest {
+  produtoSafraId: number;
+  quantidade: number;
+}
 
 export interface IManejo {
   id: number;
@@ -9,9 +22,7 @@ export interface IManejo {
   observacoes: string | null;
   talhaoId: number;
   talhaoNome: string;
-  produtoSafraId: number | null;
-  produtoSafraNome: string | null;
-  quantidadeProduto: number | null;
+  itens: IItemManejo[];
   custoTotal: number;
 }
 
@@ -21,16 +32,7 @@ export interface ManejoRequest {
   descricao?: string;
   observacoes?: string;
   talhaoId: number;
-  produtoSafraId?: number;
-  quantidadeProduto?: number;
+  itens: IItemManejoRequest[];
 }
 
-export interface IManejoUpdateRequest {
-  quantidadeProduto?: number;
-  tipo: TipoManejo;
-  data: string;
-  descricao?: string;
-  observacoes?: string;
-  produtoSafraId?: number;
-}
-
+export type ManejoUpdateRequest = Omit<ManejoRequest, 'talhaoId'>;

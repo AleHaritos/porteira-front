@@ -138,6 +138,21 @@
   color: #b91c1c;
 }
 
+.manejos-table__produtos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.manejos-table__produto-item {
+  font-size: 0.82rem;
+  color: #2f4d3a;
+}
+
+.manejos-table__produtos-vazio {
+  color: #9ca3af;
+}
+
 .manejos-table__badge--solo { background: #f3e8d9; color: #92631a; }
 .manejos-table__badge--plantio { background: #e3f5e8; color: #278a4c; }
 .manejos-table__badge--adubacao { background: #fef3c7; color: #b45309; }

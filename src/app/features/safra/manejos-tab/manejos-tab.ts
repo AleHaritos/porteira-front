@@ -183,4 +183,8 @@ export class ManejosTab implements OnInit {
       }
     });
   }
+
+  produtosResumo(manejo: IManejo): string {
+    return manejo.itens.map(i => `${i.produtoSafraNome} (${i.quantidade})`).join(', ');
+  }
 }

@@ -66,3 +66,63 @@
   border-radius: 4px;
   width: 100%;
 }
+
+.novo-manejo__itens-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.novo-manejo__itens-vazio {
+  font-size: 0.875rem;
+  color: var(--muted-foreground, #6b7280);
+  padding: 0.5rem 0;
+}
+
+.novo-manejo__item-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 0.5rem;
+}
+
+.novo-manejo__item-produto {
+  flex: 1;
+}
+
+.novo-manejo__item-quantidade {
+  width: 120px;
+}
+
+.novo-manejo__item-remover {
+  color: #6b7280;
+}
+
+.novo-manejo__item-remover:hover {
+  color: #dc2626;
+  background: #fef2f2;
+}
+
+.novo-manejo__itens-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 0.4rem;
+}
+
+.novo-manejo__itens-lista::-webkit-scrollbar {
+  width: 6px;
+}
+
+.novo-manejo__itens-lista::-webkit-scrollbar-thumb {
+  background: #c5d9cb;
+  border-radius: 999px;
+}
+
+.novo-manejo__itens-lista::-webkit-scrollbar-track {
+  background: transparent;
+}
