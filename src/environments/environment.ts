@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'porteira-back-production.up.railway.app',
+  apiUrl: 'https://porteira-back-production.up.railway.app',
 };
