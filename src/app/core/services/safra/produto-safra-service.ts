@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { PageResponse } from '../../../shared/intefaces/IPage';
-import { ProdutoSafraRequest, ProdutoSafraUpdateRequest, IProdutoSafra } from '../../../shared/intefaces/IProdutoSafra';
+import { PageResponse } from '../../../shared/interfaces/IPage';
+import { ProdutoSafraRequest, ProdutoSafraUpdateRequest, IProdutoSafra } from '../../../shared/interfaces/IProdutoSafra';
 import { UtilService } from '../util-service';
 
 @Service()

@@ -6,7 +6,7 @@ import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { HlmTableImports } from '@spartan-ng/helm/table';
-import { ITalhao } from '../../../shared/intefaces/ITalhao';
+import { ITalhao } from '../../../shared/interfaces/ITalhao';
 import { NovoTalhao } from '../novo-talhao/novo-talhao';
 import { TalhaoService } from '../../../core/services/safra/talhao-service';
 import { CustoTalhaoCard } from '../custo-talhao-card/custo-talhao-card';

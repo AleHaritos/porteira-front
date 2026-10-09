@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
-import { Usuario } from '../../shared/intefaces/IUsuario';
+import { Usuario } from '../../shared/interfaces/IUsuario';
 import { BrnDialogRef } from '@spartan-ng/brain/dialog';
 import { UsuarioService } from '../../core/services/usuario-service';
 import { NgIcon, provideIcons } from '@ng-icons/core';

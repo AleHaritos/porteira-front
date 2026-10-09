@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
-import { UsuarioRequest, Usuario, SenhaRequest } from '../../shared/intefaces/IUsuario';
+import { UsuarioRequest, Usuario, SenhaRequest } from '../../shared/interfaces/IUsuario';
 import { UtilService } from './util-service';
-import { PageResponse } from '../../shared/intefaces/IPage';
+import { PageResponse } from '../../shared/interfaces/IPage';
 
 @Service()
 export class UsuarioService {

@@ -8,7 +8,7 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { ProdutoSafraService } from '../../../core/services/safra/produto-safra-service';
-import { IProdutoSafra } from '../../../shared/intefaces/IProdutoSafra';
+import { IProdutoSafra } from '../../../shared/interfaces/IProdutoSafra';
 import { ToastService } from '../../../core/services/toast-service';
 
 interface NovoProdutoContext {

@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { ManejoRequest, IManejo, ManejoUpdateRequest } from '../../../shared/intefaces/IManejo';
-import { PageResponse } from '../../../shared/intefaces/IPage';
+import { ManejoRequest, IManejo, ManejoUpdateRequest } from '../../../shared/interfaces/IManejo';
+import { PageResponse } from '../../../shared/interfaces/IPage';
 import { UtilService } from '../util-service';
 
 @Service()

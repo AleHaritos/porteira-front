@@ -4,8 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UtilService } from './util-service';
-import { ITransacao, TransacaoRequest, TransacaoUpdateRequest } from '../../shared/intefaces/ITransacao';
-import { PageResponse } from '../../shared/intefaces/IPage';
+import { ITransacao, ResumoFinanceiro, TransacaoRequest, TransacaoUpdateRequest } from '../../shared/interfaces/ITransacao';
+import { PageResponse } from '../../shared/interfaces/IPage';
 
 @Service()
 export class TransacoesService {
@@ -51,6 +51,16 @@ export class TransacoesService {
     reativar(id: number): Observable<void> {
         return this.http
             .patch<void>(`${this.utilService.getUrlBase()}/transacao/${id}/reativar`, {})
+            .pipe(catchError(this.utilService.errorHandler));
+    }
+
+    buscarResumo(fazendaId: number, dataInicio?: string | null, dataFim?: string | null): Observable<ResumoFinanceiro> {
+        let params = '';
+        if (dataInicio) params += `dataInicio=${dataInicio}`;
+        if (dataFim) params += `${params ? '&' : ''}dataFim=${dataFim}`;
+
+        return this.http
+            .get<ResumoFinanceiro>(`${this.utilService.getUrlBase()}/transacao/fazenda/${fazendaId}/resumo${params ? '?' + params : ''}`)
             .pipe(catchError(this.utilService.errorHandler));
     }
 }

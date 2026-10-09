@@ -136,4 +136,44 @@
     </nav>
     }
   </div>
+
+  <div class="financeiro-resumo">
+    <div class="financeiro-resumo__card">
+      <span class="financeiro-resumo__icone financeiro-resumo__icone--receita">
+        <ng-icon name="lucideTrendingUp" size="20" />
+      </span>
+      <div>
+        <p class="financeiro-resumo__label">Receitas do Mês</p>
+        <p class="financeiro-resumo__valor financeiro-resumo__valor--receita">
+          {{ formatarValor(resumo().totalReceitas) }}
+        </p>
+      </div>
+    </div>
+
+    <div class="financeiro-resumo__card">
+      <span class="financeiro-resumo__icone financeiro-resumo__icone--gasto">
+        <ng-icon name="lucideTrendingDown" size="20" />
+      </span>
+      <div>
+        <p class="financeiro-resumo__label">Gastos do Mês</p>
+        <p class="financeiro-resumo__valor financeiro-resumo__valor--gasto">
+          {{ formatarValor(resumo().totalGastos) }}
+        </p>
+      </div>
+    </div>
+
+    <div class="financeiro-resumo__card">
+      <span class="financeiro-resumo__icone" [class.financeiro-resumo__icone--receita]="resumo().saldo >= 0"
+        [class.financeiro-resumo__icone--gasto]="resumo().saldo < 0">
+        <ng-icon [name]="resumo().saldo >= 0 ? 'lucideTrendingUp' : 'lucideTriangleAlert'" size="20" />
+      </span>
+      <div>
+        <p class="financeiro-resumo__label">Saldo do Mês</p>
+        <p class="financeiro-resumo__valor" [class.financeiro-resumo__valor--receita]="resumo().saldo >= 0"
+          [class.financeiro-resumo__valor--gasto]="resumo().saldo < 0">
+          {{ formatarValor(resumo().saldo) }}
+        </p>
+      </div>
+    </div>
+  </div>
 </div>

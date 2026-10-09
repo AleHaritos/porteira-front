@@ -16,6 +16,12 @@ export interface ITransacao {
   safraNome: string | null;
 }
 
+export interface ResumoFinanceiro {
+  totalReceitas: number;
+  totalGastos: number;
+  saldo: number;
+}
+
 export interface TransacaoRequest {
   data: string;
   valor: number;

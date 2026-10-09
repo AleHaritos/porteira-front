@@ -212,3 +212,60 @@
 .financeiro-page__btn-pesquisar:hover {
   background-color: #278a4c;
 }
+
+.financeiro-resumo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.financeiro-resumo__card {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.1rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.financeiro-resumo__icone {
+  width: 42px;
+  height: 42px;
+  border-radius: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.financeiro-resumo__icone--receita {
+  background-color: #e3f5e8;
+  color: #278a4c;
+}
+
+.financeiro-resumo__icone--gasto {
+  background-color: #fde8e8;
+  color: #c0392b;
+}
+
+.financeiro-resumo__label {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 0.15rem;
+}
+
+.financeiro-resumo__valor {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.financeiro-resumo__valor--receita {
+  color: #278a4c;
+}
+
+.financeiro-resumo__valor--gasto {
+  color: #c0392b;
+}

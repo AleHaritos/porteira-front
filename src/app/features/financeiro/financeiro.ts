@@ -3,7 +3,15 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucidePlus, lucidePencil, lucideTrash2, lucideTrendingUp, lucideTrendingDown, lucideSearch } from '@ng-icons/lucide';
+import {
+  lucidePlus,
+  lucidePencil,
+  lucideTrash2,
+  lucideTrendingUp,
+  lucideTrendingDown,
+  lucideSearch,
+  lucideTriangleAlert,
+} from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
@@ -14,7 +22,7 @@ import { HlmTableImports } from '@spartan-ng/helm/table';
 
 import { TransacoesService } from '../../core/services/transacoes-service';
 import { ToastService } from '../../core/services/toast-service';
-import { ITransacao, TipoTransacao } from '../../shared/intefaces/ITransacao';
+import { ITransacao, TipoTransacao, ResumoFinanceiro } from '../../shared/interfaces/ITransacao';
 import { NovaTransacao } from './nova-transacao/nova-transacao';
 import { ConfirmDialog } from '../../shared/confirm-dialog/confirm-dialog';
 import { TruncarPipe } from '../../shared/pipes/TruncarPipe';
@@ -32,9 +40,19 @@ import { TruncarPipe } from '../../shared/pipes/TruncarPipe';
     HlmLabelImports,
     NgIcon,
     DatePipe,
-    TruncarPipe
+    TruncarPipe,
   ],
-  providers: [provideIcons({ lucidePlus, lucidePencil, lucideTrash2, lucideTrendingUp, lucideTrendingDown, lucideSearch })],
+  providers: [
+    provideIcons({
+      lucidePlus,
+      lucidePencil,
+      lucideTrash2,
+      lucideTrendingUp,
+      lucideTrendingDown,
+      lucideSearch,
+      lucideTriangleAlert,
+    }),
+  ],
   styleUrl: './financeiro.css',
   templateUrl: './financeiro.html',
 })
@@ -51,6 +69,8 @@ export class Financeiro implements OnInit {
   paginaAtual = signal(0);
   totalPaginas = signal(0);
   carregando = signal(false);
+
+  resumo = signal<ResumoFinanceiro>({ totalReceitas: 0, totalGastos: 0, saldo: 0 });
 
   tipoFiltro = signal<TipoTransacao | 'TODOS'>('TODOS');
   maxDate = new Date();
@@ -85,6 +105,7 @@ export class Financeiro implements OnInit {
       this.fazendaId.set(id ? Number(id) : null);
       this.paginaAtual.set(0);
       this.carregar();
+      this.carregarResumo();
     });
   }
 
@@ -95,6 +116,7 @@ export class Financeiro implements OnInit {
   pesquisar() {
     this.paginaAtual.set(0);
     this.carregar();
+    this.carregarResumo();
   }
 
   limparFiltros() {
@@ -102,6 +124,7 @@ export class Financeiro implements OnInit {
     this.filtroForm.reset({ dataInicio: null, dataFim: null });
     this.paginaAtual.set(0);
     this.carregar();
+    this.carregarResumo();
   }
 
   private formatarDataIso(data: Date): string {
@@ -109,6 +132,16 @@ export class Financeiro implements OnInit {
     const mes = String(data.getMonth() + 1).padStart(2, '0');
     const dia = String(data.getDate()).padStart(2, '0');
     return `${ano}-${mes}-${dia}`;
+  }
+
+  private primeiroDiaDoMes(): string {
+    const hoje = new Date();
+    return this.formatarDataIso(new Date(hoje.getFullYear(), hoje.getMonth(), 1));
+  }
+
+  private ultimoDiaDoMes(): string {
+    const hoje = new Date();
+    return this.formatarDataIso(new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0));
   }
 
   carregar() {
@@ -141,6 +174,20 @@ export class Financeiro implements OnInit {
       });
   }
 
+  carregarResumo() {
+    const fazendaId = this.fazendaId();
+    if (fazendaId == null) return;
+
+    const { dataInicio, dataFim } = this.filtroForm.value;
+    const inicio = dataInicio ? this.formatarDataIso(dataInicio) : this.primeiroDiaDoMes();
+    const fim = dataFim ? this.formatarDataIso(dataFim) : this.ultimoDiaDoMes();
+
+    this.transacoesService.buscarResumo(fazendaId, inicio, fim).subscribe({
+      next: (res) => this.resumo.set(res),
+      error: () => this.toastService.showError('Erro', 'Não foi possível carregar o resumo financeiro'),
+    });
+  }
+
   irPara(pagina: number) {
     if (pagina < 0 || pagina > this.totalPaginas() - 1) return;
     this.paginaAtual.set(pagina);
@@ -157,7 +204,10 @@ export class Financeiro implements OnInit {
     });
 
     dialogRef.closed$.subscribe((criada) => {
-      if (criada) this.carregar();
+      if (criada) {
+        this.carregar();
+        this.carregarResumo();
+      }
     });
   }
 
@@ -171,7 +221,10 @@ export class Financeiro implements OnInit {
     });
 
     dialogRef.closed$.subscribe((atualizada) => {
-      if (atualizada) this.carregar();
+      if (atualizada) {
+        this.carregar();
+        this.carregarResumo();
+      }
     });
   }
 
@@ -191,6 +244,7 @@ export class Financeiro implements OnInit {
           next: () => {
             this.toastService.showSuccess('Sucesso', 'Transação excluída com sucesso!');
             this.carregar();
+            this.carregarResumo();
           },
           error: () => {
             this.toastService.showError('Erro', 'Não foi possível excluir a transação');

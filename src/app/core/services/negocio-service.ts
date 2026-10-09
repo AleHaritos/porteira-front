@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { NegocioRequest, INegocio, NegocioUpdateRequest } from '../../shared/intefaces/INegocio';
-import { PageResponse } from '../../shared/intefaces/IPage';
+import { NegocioRequest, INegocio, NegocioUpdateRequest } from '../../shared/interfaces/INegocio';
+import { PageResponse } from '../../shared/interfaces/IPage';
 import { UtilService } from './util-service';
 
 @Service()

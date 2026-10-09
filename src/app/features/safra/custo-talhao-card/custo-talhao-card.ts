@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, si
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideWallet } from '@ng-icons/lucide';
 import { HlmCardImports } from '@spartan-ng/helm/card';
-import { TipoManejo } from '../../../shared/intefaces/IManejo';
+import { TipoManejo } from '../../../shared/interfaces/IManejo';
 import { ManejoService } from '../../../core/services/safra/manejo-service';
 
 

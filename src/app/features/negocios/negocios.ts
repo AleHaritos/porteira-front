@@ -7,7 +7,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
-import { INegocio } from '../../shared/intefaces/INegocio';
+import { INegocio } from '../../shared/interfaces/INegocio';
 import { NovoNegocio } from './novo-negocio/novo-negocio';
 import { ConfirmDialog } from '../../shared/confirm-dialog/confirm-dialog';
 import { ToastService } from '../../core/services/toast-service';

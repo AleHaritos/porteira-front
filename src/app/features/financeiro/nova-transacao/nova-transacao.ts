@@ -15,8 +15,8 @@ import { TransacoesService } from '../../../core/services/transacoes-service';
 import { NegocioService } from '../../../core/services/negocio-service';
 import { SafraService } from '../../../core/services/safra/safra-service';
 import { ToastService } from '../../../core/services/toast-service';
-import { ITransacao, TipoTransacao } from '../../../shared/intefaces/ITransacao';
-import { INegocio } from '../../../shared/intefaces/INegocio';
+import { ITransacao, TipoTransacao } from '../../../shared/interfaces/ITransacao';
+import { INegocio } from '../../../shared/interfaces/INegocio';
 
 interface NovaTransacaoContext {
   fazendaId: number;

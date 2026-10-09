@@ -9,8 +9,8 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideUserPlus } from '@ng-icons/lucide';
 import { FazendaService } from '../../../core/services/fazenda-service';
 import { UsuarioService } from '../../../core/services/usuario-service';
-import { Usuario } from '../../../shared/intefaces/IUsuario';
-import { IFazenda } from '../../../shared/intefaces/IFazenda';
+import { Usuario } from '../../../shared/interfaces/IUsuario';
+import { IFazenda } from '../../../shared/interfaces/IFazenda';
 import { ToastService } from '../../../core/services/toast-service';
 
 interface CompartilharFazendaContext {

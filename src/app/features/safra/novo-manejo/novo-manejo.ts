@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { IManejo, TipoManejo } from '../../../shared/intefaces/IManejo';
+import { IManejo, TipoManejo } from '../../../shared/interfaces/IManejo';
 import { ReactiveFormsModule, FormBuilder, FormArray, FormGroup, Validators } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideClipboardList, lucidePlus, lucideTrash2 } from '@ng-icons/lucide';
@@ -11,7 +11,7 @@ import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
 import { ProdutoSafraService } from '../../../core/services/safra/produto-safra-service';
-import { IProdutoSafra } from '../../../shared/intefaces/IProdutoSafra';
+import { IProdutoSafra } from '../../../shared/interfaces/IProdutoSafra';
 import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { ToastService } from '../../../core/services/toast-service';
 import { ManejoService } from '../../../core/services/safra/manejo-service';

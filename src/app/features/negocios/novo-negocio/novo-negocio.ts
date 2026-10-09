@@ -10,7 +10,7 @@ import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
 import { NegocioService } from '../../../core/services/negocio-service';
 import { ToastService } from '../../../core/services/toast-service';
-import { INegocio } from '../../../shared/intefaces/INegocio';
+import { INegocio } from '../../../shared/interfaces/INegocio';
 
 interface NovoNegocioContext {
   fazendaId: number;

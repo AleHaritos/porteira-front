@@ -7,7 +7,7 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideHousePlus } from '@ng-icons/lucide';
-import { IFazenda } from '../../../shared/intefaces/IFazenda';
+import { IFazenda } from '../../../shared/interfaces/IFazenda';
 import { FazendaService } from '../../../core/services/fazenda-service';
 
 interface DialogNovaFazendaContext {

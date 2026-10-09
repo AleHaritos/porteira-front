@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
-import { PageResponse } from '../../../shared/intefaces/IPage';
-import { ISafraRequest, ISafra, ISafraUpdateRequest } from '../../../shared/intefaces/ISafras';
+import { PageResponse } from '../../../shared/interfaces/IPage';
+import { ISafraRequest, ISafra, ISafraUpdateRequest } from '../../../shared/interfaces/ISafras';
 import { UtilService } from '../util-service';
 
 
