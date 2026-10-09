@@ -1,0 +1,46 @@
+.nova-transacao__title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.nova-transacao__icon-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 0.5rem;
+  background-color: #e3f5e8;
+  color: #278a4c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nova-transacao__description {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.nova-transacao__vinculo-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nova-transacao__vinculo-toggle button {
+  flex: 1;
+}
+
+.nova-transacao__vinculo-ativo {
+  background-color: #e3f5e8 !important;
+  border-color: #278a4c !important;
+  color: #278a4c !important;
+}
+
+.nova-transacao__btn-salvar {
+  background-color: #2f9e58;
+  color: #fff;
+}
+
+.nova-transacao__btn-salvar:hover {
+  background-color: #278a4c;
+}

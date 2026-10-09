@@ -1,1 +1,139 @@
-<p>financeiro works!</p>
+<div class="financeiro-page">
+  <div class="financeiro-page__header">
+    <h2 class="financeiro-page__titulo">Financeiro</h2>
+
+    <button hlmBtn class="financeiro-page__btn-novo cursor-pointer" (click)="abrirNovaTransacao()">
+      <ng-icon name="lucidePlus" size="16" />
+      Nova Transação
+    </button>
+  </div>
+
+  <div class="financeiro-page__filtros" [formGroup]="filtroForm">
+    <div class="financeiro-page__filtro-campo">
+      <label hlmLabel for="dataInicio">De</label>
+      <hlm-date-picker formControlName="dataInicio" [maxDate]="maxDate" class="financeiro-page__date">
+        <hlm-date-picker-trigger buttonId="dataInicio" class="w-full">Data inicial</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <div class="financeiro-page__filtro-campo">
+      <label hlmLabel for="dataFim">Até</label>
+      <hlm-date-picker formControlName="dataFim" [maxDate]="maxDate" class="financeiro-page__date">
+        <hlm-date-picker-trigger buttonId="dataFim" class="w-full">Data final</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <div class="financeiro-page__filtro-campo">
+      <label hlmLabel for="tipoFiltro">Tipo</label>
+      <hlm-select [value]="tipoFiltro()" (valueChange)="onTipoFiltroChange($event)"
+        [itemToString]="itemToStringTipoFiltro" class="financeiro-page__select">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (opcao of tipoFiltroOptions; track opcao.label) {
+          <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+
+    <button hlmBtn class="financeiro-page__btn-pesquisar cursor-pointer" (click)="pesquisar()">
+      <ng-icon name="lucideSearch" size="16" />
+      Pesquisar
+    </button>
+
+    <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="limparFiltros()">
+      Limpar filtros
+    </button>
+  </div>
+
+  <div class="fazenda-table">
+    <div hlmTableContainer>
+      <table hlmTable>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh>Data</th>
+            <th hlmTh class="pl-9">Tipo</th>
+            <th hlmTh>Descrição</th>
+            <th hlmTh>Vínculo</th>
+            <th hlmTh class="pl-7">Valor</th>
+            <th hlmTh class="w-[60px] text-right pr-7">Ações</th>
+          </tr>
+        </thead>
+
+        <tbody hlmTBody>
+          @for (transacao of transacoes(); track transacao.id) {
+          <tr hlmTr class="fazenda-table__row" [class.fazenda-table__row--receita]="transacao.tipo === 'RECEITA'"
+            [class.fazenda-table__row--gasto]="transacao.tipo === 'GASTO'">
+            <td hlmTd>{{ transacao.data | date: 'dd/MM/yyyy' }}</td>
+            <td hlmTd>
+              <span class="fazenda-table__badge" [ngClass]="tipoClasse(transacao.tipo)">
+                <ng-icon [name]="transacao.tipo === 'RECEITA' ? 'lucideTrendingUp' : 'lucideTrendingDown'" size="12" />
+                {{ tipoLabel(transacao.tipo) }}
+              </span>
+            </td>
+            <td hlmTd [title]="transacao.descricao || ''">
+              {{ (transacao.descricao | truncar: 30) || '-' }}
+            </td>
+            <td hlmTd>{{ vinculo(transacao) }}</td>
+            <td hlmTd>
+              <span class="financeiro-table__valor" [ngClass]="valorClasse(transacao.tipo)">
+                {{ formatarValor(transacao.valor) }}
+              </span>
+            </td>
+            <td hlmTd class="text-right">
+              <div class="financeiro-table__acoes">
+                <button hlmBtn variant="ghost" size="icon"
+                  class="fazenda-table__action-btn fazenda-table__action-btn--editar cursor-pointer"
+                  (click)="editar(transacao)">
+                  <ng-icon name="lucidePencil" size="16" />
+                </button>
+
+                <button hlmBtn variant="ghost" size="icon"
+                  class="fazenda-table__action-btn fazenda-table__action-btn--excluir cursor-pointer"
+                  (click)="excluir(transacao)">
+                  <ng-icon name="lucideTrash2" size="16" />
+                </button>
+              </div>
+            </td>
+          </tr>
+          } @empty {
+          <tr hlmTr>
+            <td hlmTd [attr.colSpan]="6" class="fazenda-table__empty">
+              @if (carregando()) {
+              Carregando transações...
+              } @else {
+              Nenhuma transação encontrada
+              }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPaginas() > 1) {
+    <nav hlmPagination class="fazenda-table__pagination">
+      <ul hlmPaginationContent>
+        <li hlmPaginationItem>
+          <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+        </li>
+
+        @for (pagina of paginasVisiveis(); track pagina) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="pagina === paginaAtual()"
+            [class.fazenda-table__pagination-btn--ativo]="pagina === paginaAtual()" (click)="irPara(pagina)">
+            {{ pagina + 1 }}
+          </button>
+        </li>
+        }
+
+        <li hlmPaginationItem>
+          <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+        </li>
+      </ul>
+    </nav>
+    }
+  </div>
+</div>
