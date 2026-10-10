@@ -208,7 +208,7 @@ export class Financeiro implements OnInit {
       .buscarPorFazenda(
         fazendaId,
         this.paginaAtual(),
-        10,
+        6,
         dataInicio ? this.formatarDataIso(dataInicio) : null,
         dataFim ? this.formatarDataIso(dataFim) : null,
         tipo === 'TODOS' ? null : tipo,

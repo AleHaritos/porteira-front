@@ -122,8 +122,7 @@
 
         @for (pagina of paginasVisiveis(); track pagina) {
         <li hlmPaginationItem>
-          <button hlmPaginationLink [isActive]="pagina === paginaAtual()"
-            [class.fazenda-table__pagination-btn--ativo]="pagina === paginaAtual()" (click)="irPara(pagina)">
+          <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
             {{ pagina + 1 }}
           </button>
         </li>
