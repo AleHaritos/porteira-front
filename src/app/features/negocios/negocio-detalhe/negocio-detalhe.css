@@ -1,0 +1,172 @@
+.negocio-detalhe-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.negocio-detalhe-page__filtros {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background-color: #f3faf6;
+  border: 1px solid #d9f0e1;
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.negocio-detalhe-page__filtro-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 180px;
+}
+
+.negocio-detalhe-page__filtro-campo label {
+  color: #278a4c;
+  font-weight: 600;
+}
+
+.negocio-detalhe-page__date {
+  width: 100%;
+}
+
+.negocio-detalhe-page__btn-pesquisar {
+  background-color: #2f9e58;
+  color: #fff;
+}
+
+.negocio-detalhe-page__btn-pesquisar:hover {
+  background-color: #278a4c;
+}
+
+.negocio-detalhe-resumo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.negocio-detalhe-resumo__card {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.1rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.negocio-detalhe-resumo__icone {
+  width: 42px;
+  height: 42px;
+  border-radius: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.negocio-detalhe-resumo__icone--receita {
+  background-color: #e3f5e8;
+  color: #278a4c;
+}
+
+.negocio-detalhe-resumo__icone--gasto {
+  background-color: #fde8e8;
+  color: #c0392b;
+}
+
+.negocio-detalhe-resumo__label {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 0.15rem;
+}
+
+.negocio-detalhe-resumo__valor {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.negocio-detalhe-resumo__valor--receita {
+  color: #278a4c;
+}
+
+.negocio-detalhe-resumo__valor--gasto {
+  color: #c0392b;
+}
+
+.negocio-detalhe-grafico {
+  grid-column: 1 / -1;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.negocio-detalhe-grafico__header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+}
+
+.negocio-detalhe-grafico__icone {
+  width: 32px;
+  height: 32px;
+  border-radius: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e3f5e8;
+  color: #278a4c;
+  flex-shrink: 0;
+}
+
+.negocio-detalhe-grafico__titulo {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.negocio-detalhe-grafico__svg {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  height: auto;
+}
+
+.negocio-detalhe-grafico__eixo {
+  stroke: #e5e7eb;
+  stroke-width: 1;
+}
+
+.negocio-detalhe-grafico__barra {
+  transition: opacity 0.15s ease;
+}
+
+.negocio-detalhe-grafico__barra-grupo:hover .negocio-detalhe-grafico__barra {
+  opacity: 0.85;
+}
+
+.negocio-detalhe-grafico__valor {
+  font-size: 13px;
+  font-weight: 700;
+  fill: #1f2937;
+}
+
+.negocio-detalhe-grafico__rotulo {
+  font-size: 13px;
+  font-weight: 500;
+  fill: #4b5563;
+}
+
+.negocio-detalhe-grafico__estado {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 1.5rem 0;
+}

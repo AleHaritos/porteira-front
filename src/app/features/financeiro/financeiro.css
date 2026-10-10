@@ -198,12 +198,6 @@
   list-style: none;
 }
 
-.fazenda-table__pagination-btn--ativo {
-  background-color: #2f9e58 !important;
-  color: #fff !important;
-  box-shadow: 0 1px 3px rgba(47, 158, 88, 0.4);
-}
-
 .financeiro-page__btn-pesquisar {
   background-color: #2f9e58;
   color: #fff;

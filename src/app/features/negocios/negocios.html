@@ -21,7 +21,7 @@
 
         <tbody hlmTBody>
           @for (negocio of negocios(); track negocio.id) {
-          <tr hlmTr class="fazenda-table__row">
+          <tr hlmTr class="fazenda-table__row cursor-pointer" (click)="abrirNegocio(negocio)">
             <td hlmTd class="fazenda-table__nome">{{ negocio.nome }}</td>
             <td hlmTd>{{ negocio.descricao || '—' }}</td>
             <td hlmTd>{{ negocio.observacoes || '—' }}</td>
