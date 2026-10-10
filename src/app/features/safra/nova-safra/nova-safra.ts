@@ -10,7 +10,7 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
-import { ISafra, StatusSafra } from '../../../shared/intefaces/ISafras';
+import { ISafra, StatusSafra } from '../../../shared/interfaces/ISafras';
 import { SafraService } from '../../../core/services/safra/safra-service';
 import { anoAgricolaValidator } from '../../../shared/validators/anoAgricolaValidator';
 import { ToastService } from '../../../core/services/toast-service';

@@ -55,3 +55,8 @@
 .confirm-dialog__btn-confirmar:hover {
   background: #b91c1c;
 }
+
+.confirm-dialog__mensagem {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}

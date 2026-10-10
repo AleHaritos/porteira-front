@@ -5,7 +5,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
-import { IFazenda } from '../../../shared/intefaces/IFazenda';
+import { IFazenda } from '../../../shared/interfaces/IFazenda';
 
 @Component({
   selector: 'app-fazenda-table',

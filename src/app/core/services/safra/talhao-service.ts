@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { PageResponse } from '../../../shared/intefaces/IPage';
-import { TalhaoRequest, ITalhao, TalhaoUpdateRequest } from '../../../shared/intefaces/ITalhao';
+import { PageResponse } from '../../../shared/interfaces/IPage';
+import { TalhaoRequest, ITalhao, TalhaoUpdateRequest } from '../../../shared/interfaces/ITalhao';
 import { UtilService } from '../util-service';
 
 

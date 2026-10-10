@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, input, OnInit, signal, untracked } from '@angular/core';
 import { UsuarioService } from '../../core/services/usuario-service';
-import { Usuario } from '../../shared/intefaces/IUsuario';
+import { Usuario } from '../../shared/interfaces/IUsuario';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideEllipsisVertical } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';

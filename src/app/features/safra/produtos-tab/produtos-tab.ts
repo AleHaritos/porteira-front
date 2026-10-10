@@ -7,7 +7,7 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import { ProdutoSafraService } from '../../../core/services/safra/produto-safra-service';
-import { IProdutoSafra } from '../../../shared/intefaces/IProdutoSafra';
+import { IProdutoSafra } from '../../../shared/interfaces/IProdutoSafra';
 import { NovoProduto } from '../novo-produto/novo-produto';
 import { ToastService } from '../../../core/services/toast-service';
 import { ConfirmDialog } from '../../../shared/confirm-dialog/confirm-dialog';

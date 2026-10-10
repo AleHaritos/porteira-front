@@ -1,0 +1,43 @@
+<hlm-dialog-header>
+  <div class="novo-negocio__title-row">
+    <span class="novo-negocio__icon-badge">
+      <ng-icon name="lucideBriefcase" size="16" />
+    </span>
+    <h3 hlmDialogTitle>{{ modoEdicao ? 'Editar negócio' : 'Novo negócio' }}</h3>
+  </div>
+  <p class="novo-negocio__description">
+    {{ modoEdicao ? 'Atualize os dados do negócio.' : 'Preencha os dados para registrar um novo negócio.' }}
+  </p>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="flex flex-col gap-4 py-2">
+  <div class="flex flex-col gap-1.5">
+    <label hlmLabel for="nome">Nome</label>
+    <input hlmInput id="nome" type="text" formControlName="nome" placeholder="Ex: Venda de soja"
+      class="w-full novo-negocio__input" />
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <label hlmLabel for="descricao">Descrição</label>
+    <input hlmInput id="descricao" type="text" formControlName="descricao" placeholder="Opcional"
+      class="w-full novo-negocio__input" />
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <label hlmLabel for="observacoes">Observações</label>
+    <textarea hlmTextarea id="observacoes" formControlName="observacoes" placeholder="Opcional" rows="3"
+      class="w-full novo-negocio__input"></textarea>
+  </div>
+
+  @if (erro()) {
+  <p class="text-sm text-red-600">{{ erro() }}</p>
+  }
+</form>
+
+<hlm-dialog-footer>
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn type="button" class="novo-negocio__btn-salvar cursor-pointer" [disabled]="form.invalid || loading()"
+    (click)="salvar()">
+    {{ loading() ? 'Salvando...' : (modoEdicao ? 'Salvar alterações' : 'Salvar') }}
+  </button>
+</hlm-dialog-footer>

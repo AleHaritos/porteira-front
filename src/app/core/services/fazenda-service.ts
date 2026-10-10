@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { UtilService } from './util-service';
-import { IFazenda, IFazendaRequest } from '../../shared/intefaces/IFazenda';
+import { IFazenda, IFazendaRequest } from '../../shared/interfaces/IFazenda';
 import { catchError, map, Observable } from 'rxjs';
-import { PageResponse } from '../../shared/intefaces/IPage';
+import { PageResponse } from '../../shared/interfaces/IPage';
 
 @Service()
 export class FazendaService {

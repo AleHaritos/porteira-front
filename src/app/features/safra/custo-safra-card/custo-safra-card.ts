@@ -4,7 +4,7 @@ import { catchError } from 'rxjs/operators';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideWallet } from '@ng-icons/lucide';
-import { TipoManejo } from '../../../shared/intefaces/IManejo';
+import { TipoManejo } from '../../../shared/interfaces/IManejo';
 import { TalhaoService } from '../../../core/services/safra/talhao-service';
 import { ManejoService } from '../../../core/services/safra/manejo-service';
 

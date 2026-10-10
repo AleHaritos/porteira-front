@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { HlmSidebarImports, HlmSidebarService } from '@spartan-ng/helm/sidebar';
 import { FazendaService } from '../../../core/services/fazenda-service';
-import { IFazenda } from '../../../shared/intefaces/IFazenda';
+import { IFazenda } from '../../../shared/interfaces/IFazenda';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideArrowLeft, lucideBriefcase, lucidePanelLeft, lucideWallet, lucideWheat } from '@ng-icons/lucide';
 import { Location } from '@angular/common';

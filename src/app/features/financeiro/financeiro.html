@@ -1,1 +1,217 @@
-<p>financeiro works!</p>
+<div class="financeiro-page">
+  <div class="financeiro-page__header">
+    <h2 class="financeiro-page__titulo">Financeiro</h2>
+
+    <button hlmBtn class="financeiro-page__btn-novo cursor-pointer" (click)="abrirNovaTransacao()">
+      <ng-icon name="lucidePlus" size="16" />
+      Nova Transação
+    </button>
+  </div>
+
+  <div class="financeiro-page__filtros" [formGroup]="filtroForm">
+    <div class="financeiro-page__filtro-campo">
+      <label hlmLabel for="dataInicio">De</label>
+      <hlm-date-picker formControlName="dataInicio" [maxDate]="maxDate" class="financeiro-page__date">
+        <hlm-date-picker-trigger buttonId="dataInicio" class="w-full">Data inicial</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <div class="financeiro-page__filtro-campo">
+      <label hlmLabel for="dataFim">Até</label>
+      <hlm-date-picker formControlName="dataFim" [maxDate]="maxDate" class="financeiro-page__date">
+        <hlm-date-picker-trigger buttonId="dataFim" class="w-full">Data final</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <div class="financeiro-page__filtro-campo">
+      <label hlmLabel for="tipoFiltro">Tipo</label>
+      <hlm-select [value]="tipoFiltro()" (valueChange)="onTipoFiltroChange($event)"
+        [itemToString]="itemToStringTipoFiltro" class="financeiro-page__select">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (opcao of tipoFiltroOptions; track opcao.label) {
+          <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+
+    <button hlmBtn class="financeiro-page__btn-pesquisar cursor-pointer" (click)="pesquisar()">
+      <ng-icon name="lucideSearch" size="16" />
+      Pesquisar
+    </button>
+
+    <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="limparFiltros()">
+      Limpar filtros
+    </button>
+  </div>
+
+  <div class="fazenda-table">
+    <div hlmTableContainer>
+      <table hlmTable>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh>Data</th>
+            <th hlmTh class="pl-9">Tipo</th>
+            <th hlmTh>Descrição</th>
+            <th hlmTh>Vínculo</th>
+            <th hlmTh class="pl-7">Valor</th>
+            <th hlmTh class="w-[60px] text-right pr-7">Ações</th>
+          </tr>
+        </thead>
+
+        <tbody hlmTBody>
+          @for (transacao of transacoes(); track transacao.id) {
+          <tr hlmTr class="fazenda-table__row" [class.fazenda-table__row--receita]="transacao.tipo === 'RECEITA'"
+            [class.fazenda-table__row--gasto]="transacao.tipo === 'GASTO'">
+            <td hlmTd>{{ transacao.data | date: 'dd/MM/yyyy' }}</td>
+            <td hlmTd>
+              <span class="fazenda-table__badge" [ngClass]="tipoClasse(transacao.tipo)">
+                <ng-icon [name]="transacao.tipo === 'RECEITA' ? 'lucideTrendingUp' : 'lucideTrendingDown'" size="12" />
+                {{ tipoLabel(transacao.tipo) }}
+              </span>
+            </td>
+            <td hlmTd [title]="transacao.descricao || ''">
+              {{ (transacao.descricao | truncar: 30) || '-' }}
+            </td>
+            <td hlmTd>{{ vinculo(transacao) }}</td>
+            <td hlmTd>
+              <span class="financeiro-table__valor" [ngClass]="valorClasse(transacao.tipo)">
+                {{ formatarValor(transacao.valor) }}
+              </span>
+            </td>
+            <td hlmTd class="text-right">
+              <div class="financeiro-table__acoes">
+                <button hlmBtn variant="ghost" size="icon"
+                  class="fazenda-table__action-btn fazenda-table__action-btn--editar cursor-pointer"
+                  (click)="editar(transacao)">
+                  <ng-icon name="lucidePencil" size="16" />
+                </button>
+
+                <button hlmBtn variant="ghost" size="icon"
+                  class="fazenda-table__action-btn fazenda-table__action-btn--excluir cursor-pointer"
+                  (click)="excluir(transacao)">
+                  <ng-icon name="lucideTrash2" size="16" />
+                </button>
+              </div>
+            </td>
+          </tr>
+          } @empty {
+          <tr hlmTr>
+            <td hlmTd [attr.colSpan]="6" class="fazenda-table__empty">
+              @if (carregando()) {
+              Carregando transações...
+              } @else {
+              Nenhuma transação encontrada
+              }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPaginas() > 1) {
+    <nav hlmPagination class="fazenda-table__pagination">
+      <ul hlmPaginationContent>
+        <li hlmPaginationItem>
+          <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+        </li>
+
+        @for (pagina of paginasVisiveis(); track pagina) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="pagina === paginaAtual()"
+            [class.fazenda-table__pagination-btn--ativo]="pagina === paginaAtual()" (click)="irPara(pagina)">
+            {{ pagina + 1 }}
+          </button>
+        </li>
+        }
+
+        <li hlmPaginationItem>
+          <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+        </li>
+      </ul>
+    </nav>
+    }
+  </div>
+
+  <div class="financeiro-resumo">
+    <div class="financeiro-resumo__card">
+      <span class="financeiro-resumo__icone financeiro-resumo__icone--receita">
+        <ng-icon name="lucideTrendingUp" size="20" />
+      </span>
+      <div>
+        <p class="financeiro-resumo__label">Receitas do Mês</p>
+        <p class="financeiro-resumo__valor financeiro-resumo__valor--receita">
+          {{ formatarValor(resumo().totalReceitas) }}
+        </p>
+      </div>
+    </div>
+
+    <div class="financeiro-resumo__card">
+      <span class="financeiro-resumo__icone financeiro-resumo__icone--gasto">
+        <ng-icon name="lucideTrendingDown" size="20" />
+      </span>
+      <div>
+        <p class="financeiro-resumo__label">Gastos do Mês</p>
+        <p class="financeiro-resumo__valor financeiro-resumo__valor--gasto">
+          {{ formatarValor(resumo().totalGastos) }}
+        </p>
+      </div>
+    </div>
+
+    <div class="financeiro-resumo__card">
+      <span class="financeiro-resumo__icone" [class.financeiro-resumo__icone--receita]="resumo().saldo >= 0"
+        [class.financeiro-resumo__icone--gasto]="resumo().saldo < 0">
+        <ng-icon [name]="resumo().saldo >= 0 ? 'lucideTrendingUp' : 'lucideTriangleAlert'" size="20" />
+      </span>
+      <div>
+        <p class="financeiro-resumo__label">Saldo do Mês</p>
+        <p class="financeiro-resumo__valor" [class.financeiro-resumo__valor--receita]="resumo().saldo >= 0"
+          [class.financeiro-resumo__valor--gasto]="resumo().saldo < 0">
+          {{ formatarValor(resumo().saldo) }}
+        </p>
+      </div>
+    </div>
+
+    <div class="financeiro-grafico">
+      <div class="financeiro-grafico__header">
+        <span class="financeiro-grafico__icone">
+          <ng-icon name="lucideChartColumn" size="18" />
+        </span>
+        <h3 class="financeiro-grafico__titulo">Receitas x Gastos do Mês</h3>
+      </div>
+
+      @if (resumo().totalReceitas === 0 && resumo().totalGastos === 0) {
+      <p class="financeiro-grafico__estado">Nenhuma movimentação registrada no período</p>
+      } @else {
+      <svg class="financeiro-grafico__svg" [attr.viewBox]="'0 0 ' + larguraViewBoxGrafico() + ' 210'"
+        preserveAspectRatio="xMidYMid meet">
+        <line x1="0" [attr.x2]="larguraViewBoxGrafico()" [attr.y1]="baselineGrafico" [attr.y2]="baselineGrafico"
+          class="financeiro-grafico__eixo" />
+
+        @for (barra of geometriaGrafico(); track barra.chave) {
+        <g class="financeiro-grafico__barra-grupo">
+          <title>{{ barra.label }}: {{ barra.valorFormatado }}</title>
+
+          <text [attr.x]="barra.x + barra.width / 2" [attr.y]="barra.y - 10" text-anchor="middle"
+            class="financeiro-grafico__valor">
+            {{ barra.valorFormatado }}
+          </text>
+
+          <rect [attr.x]="barra.x" [attr.y]="barra.y" [attr.width]="barra.width" [attr.height]="barra.height"
+            rx="10" [attr.fill]="barra.cor" class="financeiro-grafico__barra" />
+
+          <text [attr.x]="barra.x + barra.width / 2" [attr.y]="baselineGrafico + 22" text-anchor="middle"
+            class="financeiro-grafico__rotulo">
+            {{ barra.label }}
+          </text>
+        </g>
+        }
+      </svg>
+      }
+    </div>
+  </div>
+</div>

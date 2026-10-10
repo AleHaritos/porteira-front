@@ -8,7 +8,7 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
-import { ITalhao } from '../../../shared/intefaces/ITalhao';
+import { ITalhao } from '../../../shared/interfaces/ITalhao';
 import { TalhaoService } from '../../../core/services/safra/talhao-service';
 
 interface NovoTalhaoContext {
