@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -12,6 +12,7 @@ import {
   lucideSearch,
   lucideTriangleAlert,
   lucideChartColumn,
+  lucideClock,
 } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
@@ -73,6 +74,7 @@ const GRAFICO_BASELINE = 170;
       lucideSearch,
       lucideTriangleAlert,
       lucideChartColumn,
+      lucideClock
     }),
   ],
   styleUrl: './financeiro.css',
@@ -85,6 +87,7 @@ export class Financeiro implements OnInit {
   private transacoesService = inject(TransacoesService);
   private dialogService = inject(HlmDialogService);
   private toastService = inject(ToastService);
+  private router = inject(Router);
 
   fazendaId = signal<number | null>(null);
 
@@ -261,6 +264,13 @@ export class Financeiro implements OnInit {
         this.carregarResumo();
       }
     });
+  }
+
+  abrirContasPendentes() {
+    const fazendaId = this.fazendaId();
+    if (fazendaId == null) return;
+
+    this.router.navigate(['/fazenda', fazendaId, 'contas-pendentes']);
   }
 
   editar(transacao: ITransacao) {

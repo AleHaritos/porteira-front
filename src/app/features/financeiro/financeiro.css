@@ -337,3 +337,15 @@
   text-align: center;
   padding: 1.5rem 0;
 }
+
+.financeiro-page__btn-pendentes {
+  border-color: #f59e0b;
+  color: #b45309;
+  background-color: #fffbeb;
+}
+
+.financeiro-page__btn-pendentes:hover {
+  background-color: #fef3c7;
+  border-color: #d97706;
+  color: #92400e;
+}

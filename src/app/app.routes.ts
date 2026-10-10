@@ -31,7 +31,7 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/negocios/negocios').then((m) => m.Negocios),
           },
-           {
+          {
             path: 'negocios/:negocioId',
             loadComponent: () =>
               import('./features/negocios/negocio-detalhe/negocio-detalhe').then((m) => m.NegocioDetalhe),
@@ -41,12 +41,17 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/financeiro/financeiro').then((m) => m.Financeiro),
           },
-           {
+          {
+            path: 'contas-pendentes',
+            loadComponent: () =>
+              import('./features/financeiro/contas-pendentes/contas-pendentes').then((m) => m.ContasPendentes),
+          },
+          {
             path: 'safra',
             loadComponent: () =>
               import('./features/safra/safra').then((m) => m.Safra),
           },
-             {
+          {
             path: 'safra/:safraId',
             loadComponent: () =>
               import('./features/safra/safra-detalhes/safra-detalhes').then((m) => m.SafraDetalhes),
