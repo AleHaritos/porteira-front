@@ -1,6 +1,6 @@
 import { Service } from '@angular/core';
 import { inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UtilService } from './util-service';
@@ -34,6 +34,15 @@ export class TransacoesService {
         return this.http
             .get<PageResponse<ITransacao>>(`${this.utilService.getUrlBase()}/transacao/fazenda/${fazendaId}?${params}`)
             .pipe(catchError(this.utilService.errorHandler));
+    }
+
+
+    buscarResumoPorNegocio(negocioId: number, dataInicio?: string | null, dataFim?: string | null): Observable<ResumoFinanceiro> {
+        let params = new HttpParams();
+        if (dataInicio) params = params.set('dataInicio', dataInicio);
+        if (dataFim) params = params.set('dataFim', dataFim);
+
+        return this.http.get<ResumoFinanceiro>(`${this.utilService.getUrlBase()}/transacao/negocio/${negocioId}/resumo`, { params });
     }
 
     atualizar(id: number, request: TransacaoUpdateRequest): Observable<ITransacao> {

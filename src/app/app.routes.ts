@@ -31,6 +31,11 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/negocios/negocios').then((m) => m.Negocios),
           },
+           {
+            path: 'negocios/:negocioId',
+            loadComponent: () =>
+              import('./features/negocios/negocio-detalhe/negocio-detalhe').then((m) => m.NegocioDetalhe),
+          },
           {
             path: 'financeiro',
             loadComponent: () =>

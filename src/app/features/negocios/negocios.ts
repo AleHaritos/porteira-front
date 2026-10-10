@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideBriefcase, lucidePencil, lucideTrash2 } from '@ng-icons/lucide';
@@ -28,6 +28,7 @@ import { NegocioService } from '../../core/services/negocio-service';
 })
 export class Negocios implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private negocioService = inject(NegocioService);
   private dialogService = inject(HlmDialogService);
   private toastService = inject(ToastService);
@@ -93,6 +94,13 @@ export class Negocios implements OnInit {
         this.carregar();
       }
     });
+  }
+
+  abrirNegocio(negocio: INegocio) {
+    const fazendaId = this.fazendaId();
+    if (fazendaId == null) return;
+
+    this.router.navigate(['/fazenda', fazendaId, 'negocios', negocio.id]);
   }
 
   editar(negocio: INegocio) {
