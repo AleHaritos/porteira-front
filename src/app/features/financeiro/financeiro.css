@@ -269,3 +269,77 @@
 .financeiro-resumo__valor--gasto {
   color: #c0392b;
 }
+
+.financeiro-grafico {
+  grid-column: 1 / -1;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.financeiro-grafico__header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+}
+
+.financeiro-grafico__icone {
+  width: 32px;
+  height: 32px;
+  border-radius: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e3f5e8;
+  color: #278a4c;
+  flex-shrink: 0;
+}
+
+.financeiro-grafico__titulo {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.financeiro-grafico__svg {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  height: auto;
+}
+
+.financeiro-grafico__eixo {
+  stroke: #e5e7eb;
+  stroke-width: 1;
+}
+
+.financeiro-grafico__barra {
+  transition: opacity 0.15s ease;
+}
+
+.financeiro-grafico__barra-grupo:hover .financeiro-grafico__barra {
+  opacity: 0.85;
+}
+
+.financeiro-grafico__valor {
+  font-size: 13px;
+  font-weight: 700;
+  fill: #1f2937;
+}
+
+.financeiro-grafico__rotulo {
+  font-size: 13px;
+  font-weight: 500;
+  fill: #4b5563;
+}
+
+.financeiro-grafico__estado {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 1.5rem 0;
+}

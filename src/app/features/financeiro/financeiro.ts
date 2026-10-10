@@ -11,6 +11,7 @@ import {
   lucideTrendingDown,
   lucideSearch,
   lucideTriangleAlert,
+  lucideChartColumn,
 } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
@@ -26,6 +27,26 @@ import { ITransacao, TipoTransacao, ResumoFinanceiro } from '../../shared/interf
 import { NovaTransacao } from './nova-transacao/nova-transacao';
 import { ConfirmDialog } from '../../shared/confirm-dialog/confirm-dialog';
 import { TruncarPipe } from '../../shared/pipes/TruncarPipe';
+
+interface ResumoBarraDatum {
+  chave: 'receitas' | 'gastos';
+  label: string;
+  valor: number;
+  cor: string;
+}
+
+interface ResumoBarraGeometria extends ResumoBarraDatum {
+  valorFormatado: string;
+  x: number;
+  width: number;
+  height: number;
+  y: number;
+}
+
+const GRAFICO_ALTURA_MAXIMA = 150;
+const GRAFICO_LARGURA_BARRA = 64;
+const GRAFICO_ESPACO_ENTRE = 48;
+const GRAFICO_BASELINE = 170;
 
 @Component({
   selector: 'app-financeiro',
@@ -51,11 +72,13 @@ import { TruncarPipe } from '../../shared/pipes/TruncarPipe';
       lucideTrendingDown,
       lucideSearch,
       lucideTriangleAlert,
+      lucideChartColumn,
     }),
   ],
   styleUrl: './financeiro.css',
   templateUrl: './financeiro.html',
 })
+
 export class Financeiro implements OnInit {
   private route = inject(ActivatedRoute);
   private fb = inject(FormBuilder);
@@ -74,6 +97,35 @@ export class Financeiro implements OnInit {
 
   tipoFiltro = signal<TipoTransacao | 'TODOS'>('TODOS');
   maxDate = new Date();
+
+  readonly baselineGrafico = GRAFICO_BASELINE;
+
+  dadosGrafico = computed<ResumoBarraDatum[]>(() => [
+    { chave: 'receitas', label: 'Receitas', valor: this.resumo().totalReceitas, cor: '#2f9e58' },
+    { chave: 'gastos', label: 'Gastos', valor: this.resumo().totalGastos, cor: '#c0392b' },
+  ]);
+
+  geometriaGrafico = computed<ResumoBarraGeometria[]>(() => {
+    const dados = this.dadosGrafico();
+    const maxValor = Math.max(dados[0]?.valor ?? 0, dados[1]?.valor ?? 0, 1);
+
+    return dados.map((d, i) => {
+      const altura = (d.valor / maxValor) * GRAFICO_ALTURA_MAXIMA;
+      return {
+        ...d,
+        valorFormatado: this.formatarValor(d.valor),
+        x: i * (GRAFICO_LARGURA_BARRA + GRAFICO_ESPACO_ENTRE) + GRAFICO_ESPACO_ENTRE / 2,
+        width: GRAFICO_LARGURA_BARRA,
+        height: altura,
+        y: GRAFICO_BASELINE - altura,
+      };
+    });
+  });
+
+  larguraViewBoxGrafico = computed(() => {
+    const n = this.dadosGrafico().length;
+    return n * (GRAFICO_LARGURA_BARRA + GRAFICO_ESPACO_ENTRE) + GRAFICO_ESPACO_ENTRE / 2;
+  });
 
   filtroForm = this.fb.group({
     dataInicio: [null as Date | null],
@@ -282,4 +334,5 @@ export class Financeiro implements OnInit {
   formatarValor(valor: number): string {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
+
 }

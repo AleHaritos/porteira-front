@@ -175,5 +175,43 @@
         </p>
       </div>
     </div>
+
+    <div class="financeiro-grafico">
+      <div class="financeiro-grafico__header">
+        <span class="financeiro-grafico__icone">
+          <ng-icon name="lucideChartColumn" size="18" />
+        </span>
+        <h3 class="financeiro-grafico__titulo">Receitas x Gastos do Mês</h3>
+      </div>
+
+      @if (resumo().totalReceitas === 0 && resumo().totalGastos === 0) {
+      <p class="financeiro-grafico__estado">Nenhuma movimentação registrada no período</p>
+      } @else {
+      <svg class="financeiro-grafico__svg" [attr.viewBox]="'0 0 ' + larguraViewBoxGrafico() + ' 210'"
+        preserveAspectRatio="xMidYMid meet">
+        <line x1="0" [attr.x2]="larguraViewBoxGrafico()" [attr.y1]="baselineGrafico" [attr.y2]="baselineGrafico"
+          class="financeiro-grafico__eixo" />
+
+        @for (barra of geometriaGrafico(); track barra.chave) {
+        <g class="financeiro-grafico__barra-grupo">
+          <title>{{ barra.label }}: {{ barra.valorFormatado }}</title>
+
+          <text [attr.x]="barra.x + barra.width / 2" [attr.y]="barra.y - 10" text-anchor="middle"
+            class="financeiro-grafico__valor">
+            {{ barra.valorFormatado }}
+          </text>
+
+          <rect [attr.x]="barra.x" [attr.y]="barra.y" [attr.width]="barra.width" [attr.height]="barra.height"
+            rx="10" [attr.fill]="barra.cor" class="financeiro-grafico__barra" />
+
+          <text [attr.x]="barra.x + barra.width / 2" [attr.y]="baselineGrafico + 22" text-anchor="middle"
+            class="financeiro-grafico__rotulo">
+            {{ barra.label }}
+          </text>
+        </g>
+        }
+      </svg>
+      }
+    </div>
   </div>
 </div>
