@@ -1,0 +1,138 @@
+<div class="contas-pendentes-page">
+  <div class="contas-pendentes-page__header">
+    <h2 class="contas-pendentes-page__titulo">Contas Pendentes</h2>
+
+    <button hlmBtn class="contas-pendentes-page__btn-novo cursor-pointer" (click)="abrirNovaContaPendente()">
+      <ng-icon name="lucidePlus" size="16" />
+      Nova Conta
+    </button>
+  </div>
+
+  <div class="contas-pendentes-page__filtros">
+    <div class="contas-pendentes-page__filtro-campo">
+      <label hlmLabel for="tipoFiltro">Tipo</label>
+      <hlm-select [value]="tipoFiltro()" (valueChange)="onTipoFiltroChange($event)"
+        [itemToString]="itemToStringTipoFiltro" class="contas-pendentes-page__select">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (opcao of tipoFiltroOptions; track opcao.label) {
+          <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+
+    <div class="contas-pendentes-page__filtro-campo">
+      <label hlmLabel for="statusFiltro">Status</label>
+      <hlm-select [value]="statusFiltro()" (valueChange)="onStatusFiltroChange($event)"
+        [itemToString]="itemToStringStatusFiltro" class="contas-pendentes-page__select">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (opcao of statusFiltroOptions; track opcao.label) {
+          <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+
+    <button hlmBtn class="contas-pendentes-page__btn-pesquisar cursor-pointer" (click)="pesquisar()">
+      Pesquisar
+    </button>
+
+    <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="limparFiltros()">
+      Limpar filtros
+    </button>
+  </div>
+
+  <div class="fazenda-table">
+    <div hlmTableContainer>
+      <table hlmTable>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh>Vencimento</th>
+            <th hlmTh class="pl-9">Tipo</th>
+            <th hlmTh>Descrição</th>
+            <th hlmTh>Vínculo</th>
+            <th hlmTh class="pl-7">Valor</th>
+            <th hlmTh>Status</th>
+            <th hlmTh class="w-[80px] text-right pr-7">Ações</th>
+          </tr>
+        </thead>
+
+        <tbody hlmTBody>
+          @for (parcela of parcelas(); track parcela.id) {
+          <tr hlmTr class="fazenda-table__row">
+            <td hlmTd>{{ parcela.dataVencimento | date: 'dd/MM/yyyy' }}</td>
+            <td hlmTd>
+              <span class="fazenda-table__badge" [ngClass]="tipoClasse(parcela.tipo)">
+                <ng-icon [name]="parcela.tipo === 'RECEITA' ? 'lucideTrendingUp' : 'lucideTrendingDown'" size="12" />
+                {{ tipoLabel(parcela.tipo) }}
+              </span>
+            </td>
+            <td hlmTd [title]="parcela.descricao || ''">
+              {{ (parcela.descricao | truncar: 30) || '-' }}
+              <span class="contas-pendentes-page__parcela-numero">({{ parcela.numeroParcela }}/{{ parcela.totalParcelas }})</span>
+            </td>
+            <td hlmTd>{{ vinculo(parcela) }}</td>
+            <td hlmTd>
+              <span class="financeiro-table__valor" [ngClass]="valorClasse(parcela.tipo)">
+                {{ formatarValor(parcela.valor) }}
+              </span>
+            </td>
+            <td hlmTd>
+              <span class="contas-pendentes-page__status" [ngClass]="statusClasse(parcela.status)">
+                {{ statusLabel(parcela.status) }}
+              </span>
+            </td>
+            <td hlmTd class="text-right">
+              @if (parcela.status === 'PENDENTE') {
+              <button hlmBtn variant="ghost" size="icon"
+                class="fazenda-table__action-btn fazenda-table__action-btn--editar cursor-pointer"
+                (click)="darBaixa(parcela)" [title]="parcela.tipo === 'RECEITA' ? 'Marcar como recebido' : 'Marcar como pago'">
+                <ng-icon name="lucideCheck" size="16" />
+              </button>
+              }
+            </td>
+          </tr>
+          } @empty {
+          <tr hlmTr>
+            <td hlmTd [attr.colSpan]="7" class="fazenda-table__empty">
+              @if (carregando()) {
+              Carregando contas pendentes...
+              } @else {
+              Nenhuma conta pendente encontrada
+              }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPaginas() > 1) {
+    <nav hlmPagination class="fazenda-table__pagination">
+      <ul hlmPaginationContent>
+        <li hlmPaginationItem>
+          <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+        </li>
+
+        @for (pagina of paginasVisiveis(); track pagina) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+            {{ pagina + 1 }}
+          </button>
+        </li>
+        }
+
+        <li hlmPaginationItem>
+          <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+        </li>
+      </ul>
+    </nav>
+    }
+  </div>
+</div>

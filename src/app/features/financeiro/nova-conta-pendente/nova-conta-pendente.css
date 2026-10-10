@@ -1,0 +1,101 @@
+.nova-conta-pendente__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.25rem 0;
+}
+
+.nova-conta-pendente__linha {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.nova-conta-pendente__linha .nova-conta-pendente__campo {
+  flex: 1;
+  min-width: 160px;
+}
+
+.nova-conta-pendente__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.nova-conta-pendente__campo label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.nova-conta-pendente__tipo-toggle,
+.nova-conta-pendente__vinculo-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nova-conta-pendente__tipo-toggle button,
+.nova-conta-pendente__vinculo-toggle button {
+  flex: 1;
+}
+
+.nova-conta-pendente__toggle-btn--ativo {
+  background-color: #2f9e58 !important;
+  border-color: #2f9e58 !important;
+  color: #fff !important;
+}
+
+.nova-conta-pendente__toggle-btn--ativo-receita {
+  background-color: #2f9e58 !important;
+  border-color: #2f9e58 !important;
+  color: #fff !important;
+}
+
+.nova-conta-pendente__toggle-btn--ativo-gasto {
+  background-color: #c0392b !important;
+  border-color: #c0392b !important;
+  color: #fff !important;
+}
+
+.nova-conta-pendente__btn-salvar {
+  background-color: #2f9e58;
+  color: #fff;
+}
+
+.nova-conta-pendente__btn-salvar:hover {
+  background-color: #278a4c;
+}
+
+.nova-conta-pendente__parcelas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nova-conta-pendente__parcelas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 130px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.nova-conta-pendente__parcela-campo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.nova-conta-pendente__parcela-numero {
+  min-width: 48px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.nova-conta-pendente__parcelas-total {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #278a4c;
+  text-align: right;
+}

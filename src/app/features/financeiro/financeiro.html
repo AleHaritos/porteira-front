@@ -2,10 +2,18 @@
   <div class="financeiro-page__header">
     <h2 class="financeiro-page__titulo">Financeiro</h2>
 
-    <button hlmBtn class="financeiro-page__btn-novo cursor-pointer" (click)="abrirNovaTransacao()">
-      <ng-icon name="lucidePlus" size="16" />
-      Nova Transação
-    </button>
+    <div class="financeiro-page__header-acoes">
+      <button hlmBtn variant="outline" class="financeiro-page__btn-pendentes cursor-pointer mr-2"
+        (click)="abrirContasPendentes()">
+        <ng-icon name="lucideClock" size="16" />
+        Contas Pendentes
+      </button>
+
+      <button hlmBtn class="financeiro-page__btn-novo cursor-pointer" (click)="abrirNovaTransacao()">
+        <ng-icon name="lucidePlus" size="16" />
+        Nova Transação
+      </button>
+    </div>
   </div>
 
   <div class="financeiro-page__filtros" [formGroup]="filtroForm">
@@ -200,8 +208,8 @@
             {{ barra.valorFormatado }}
           </text>
 
-          <rect [attr.x]="barra.x" [attr.y]="barra.y" [attr.width]="barra.width" [attr.height]="barra.height"
-            rx="10" [attr.fill]="barra.cor" class="financeiro-grafico__barra" />
+          <rect [attr.x]="barra.x" [attr.y]="barra.y" [attr.width]="barra.width" [attr.height]="barra.height" rx="10"
+            [attr.fill]="barra.cor" class="financeiro-grafico__barra" />
 
           <text [attr.x]="barra.x + barra.width / 2" [attr.y]="baselineGrafico + 22" text-anchor="middle"
             class="financeiro-grafico__rotulo">

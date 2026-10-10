@@ -1,0 +1,189 @@
+.contas-pendentes-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.contas-pendentes-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.contas-pendentes-page__titulo {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.contas-pendentes-page__btn-novo {
+  background-color: #2f9e58;
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(47, 158, 88, 0.35);
+}
+
+.contas-pendentes-page__btn-novo:hover {
+  background-color: #278a4c;
+}
+
+.contas-pendentes-page__filtros {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background-color: #f3faf6;
+  border: 1px solid #d9f0e1;
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.contas-pendentes-page__filtro-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 180px;
+}
+
+.contas-pendentes-page__filtro-campo label {
+  color: #278a4c;
+  font-weight: 600;
+}
+
+.contas-pendentes-page__select {
+  width: 100%;
+}
+
+.contas-pendentes-page__btn-pesquisar {
+  background-color: #2f9e58;
+  color: #fff;
+}
+
+.contas-pendentes-page__btn-pesquisar:hover {
+  background-color: #278a4c;
+}
+
+.fazenda-table {
+  background-color: #f3faf6;
+  border: 1px solid #d9f0e1;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.fazenda-table__row td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #e3f0e7;
+  color: #1f2937;
+  font-size: 0.9rem;
+  vertical-align: middle;
+  background-color: #fbfefc;
+}
+
+.fazenda-table__row:hover td {
+  background-color: #e8f5ec;
+}
+
+.fazenda-table__row:last-child td {
+  border-bottom: none;
+}
+
+.fazenda-table__empty {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  background-color: #fbfefc;
+}
+
+.fazenda-table__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background-color: #f3f4f6;
+  color: #4b5563;
+  white-space: nowrap;
+}
+
+.fazenda-table__badge--receita {
+  background-color: #e3f5e8;
+  color: #278a4c;
+}
+
+.fazenda-table__badge--gasto {
+  background-color: #fde8e8;
+  color: #c0392b;
+}
+
+.financeiro-table__valor {
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.financeiro-table__valor--receita {
+  color: #278a4c;
+}
+
+.financeiro-table__valor--gasto {
+  color: #c0392b;
+}
+
+.fazenda-table__action-btn {
+  border-radius: 0.6rem;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.fazenda-table__action-btn--editar {
+  background-color: #e3f5e8;
+  color: #278a4c;
+}
+
+.fazenda-table__action-btn--editar:hover {
+  background-color: #cdebd7;
+  transform: translateY(-1px);
+}
+
+.fazenda-table__pagination {
+  padding: 0.85rem 1rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: center;
+}
+
+.fazenda-table__pagination ul {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+}
+
+.contas-pendentes-page__status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.contas-pendentes-page__status--pendente {
+  background-color: #fffbeb;
+  color: #b45309;
+}
+
+.contas-pendentes-page__status--baixado {
+  background-color: #e3f5e8;
+  color: #278a4c;
+}
+
+.contas-pendentes-page__parcela-numero {
+  color: #9ca3af;
+  font-size: 0.8rem;
+  margin-left: 0.25rem;
+}

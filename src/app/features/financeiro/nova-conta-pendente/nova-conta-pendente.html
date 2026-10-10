@@ -1,0 +1,117 @@
+<hlm-dialog-header>
+  <h3 hlmDialogTitle>Nova Conta Pendente</h3>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="nova-conta-pendente__form">
+  <div class="nova-conta-pendente__tipo-toggle">
+    <button type="button" hlmBtn variant="outline"
+      class="nova-conta-pendente__toggle-btn cursor-pointer"
+      [class.nova-conta-pendente__toggle-btn--ativo-receita]="tipo() === 'RECEITA'"
+      (click)="onTipoChange('RECEITA')">
+      <ng-icon name="lucideTrendingUp" size="16" />
+      A Receber
+    </button>
+    <button type="button" hlmBtn variant="outline"
+      class="nova-conta-pendente__toggle-btn cursor-pointer"
+      [class.nova-conta-pendente__toggle-btn--ativo-gasto]="tipo() === 'GASTO'"
+      (click)="onTipoChange('GASTO')">
+      <ng-icon name="lucideTrendingDown" size="16" />
+      A Pagar
+    </button>
+  </div>
+
+  <div class="nova-conta-pendente__campo">
+    <label hlmLabel for="descricao">Descrição</label>
+    <input hlmInput id="descricao" formControlName="descricao" placeholder="Ex: Venda de boi gordo" />
+  </div>
+
+  <div class="nova-conta-pendente__linha">
+    <div class="nova-conta-pendente__campo">
+      <label hlmLabel for="numeroParcelas">Número de Parcelas</label>
+      <input hlmInput id="numeroParcelas" type="number" min="1" [value]="numeroParcelas()"
+        (input)="onNumeroParcelasChange($any($event.target).value)" />
+    </div>
+
+    <div class="nova-conta-pendente__campo">
+      <label hlmLabel for="primeiraDataVencimento">1ª Data de Vencimento</label>
+      <hlm-date-picker formControlName="primeiraDataVencimento" [maxDate]="maxDate" class="w-full">
+        <hlm-date-picker-trigger buttonId="primeiraDataVencimento" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+  </div>
+
+  <div class="nova-conta-pendente__parcelas">
+    <label hlmLabel>Valor de cada parcela</label>
+
+    <div class="nova-conta-pendente__parcelas-lista">
+      @for (valor of valoresParcelas(); track $index) {
+      <div class="nova-conta-pendente__parcela-campo">
+        <span class="nova-conta-pendente__parcela-numero">{{ $index + 1 }}/{{ valoresParcelas().length }}</span>
+        <input hlmInput type="number" step="0.01" placeholder="0,00" [value]="valor || ''"
+          (input)="onValorParcelaChange($index, $any($event.target).value)" />
+      </div>
+      }
+    </div>
+
+    <p class="nova-conta-pendente__parcelas-total">Total: {{ formatarValor(totalParcelas()) }}</p>
+  </div>
+
+  <div class="nova-conta-pendente__vinculo-toggle">
+    <button type="button" hlmBtn variant="outline"
+      class="nova-conta-pendente__toggle-btn cursor-pointer"
+      [class.nova-conta-pendente__toggle-btn--ativo]="vinculo() === 'NEGOCIO'"
+      (click)="onVinculoChange('NEGOCIO')">
+      Negócio
+    </button>
+    <button type="button" hlmBtn variant="outline"
+      class="nova-conta-pendente__toggle-btn cursor-pointer"
+      [class.nova-conta-pendente__toggle-btn--ativo]="vinculo() === 'SAFRA'"
+      (click)="onVinculoChange('SAFRA')">
+      Safra
+    </button>
+  </div>
+
+  @if (vinculo() === 'NEGOCIO') {
+  <div class="nova-conta-pendente__campo">
+    <label hlmLabel for="negocio">Negócio</label>
+    <hlm-select [value]="negocioSelecionado()" (valueChange)="onNegocioChange($event)"
+      [itemToString]="itemToStringNegocio" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (negocio of negocios(); track negocio.id) {
+        <hlm-select-item [value]="negocio.id">{{ negocio.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  } @else {
+  <div class="nova-conta-pendente__campo">
+    <label hlmLabel for="safra">Safra</label>
+    <hlm-select [value]="safraSelecionada()" (valueChange)="onSafraChange($event)"
+      [itemToString]="itemToStringSafra" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (safra of safras(); track safra.id) {
+        <hlm-select-item [value]="safra.id">{{ safra.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  }
+
+  <div class="nova-conta-pendente__campo">
+    <label hlmLabel for="observacao">Observação</label>
+    <textarea hlmTextarea id="observacao" formControlName="observacao" rows="3"></textarea>
+  </div>
+</form>
+
+<hlm-dialog-footer>
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn class="nova-conta-pendente__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
+    {{ salvando() ? 'Salvando...' : 'Salvar' }}
+  </button>
+</hlm-dialog-footer>
