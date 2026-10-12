@@ -42,6 +42,16 @@ export const routes: Routes = [
               import('./features/financeiro/financeiro').then((m) => m.Financeiro),
           },
           {
+            path: 'veiculo',
+            loadComponent: () =>
+              import('./features/veiculo/veiculo').then((m) => m.Veiculo),
+          },
+          {
+            path: 'abastecimento',
+            loadComponent: () =>
+              import('./features/abastecimento/abastecimento').then((m) => m.Abastecimento),
+          },
+          {
             path: 'contas-pendentes',
             loadComponent: () =>
               import('./features/financeiro/contas-pendentes/contas-pendentes').then((m) => m.ContasPendentes),

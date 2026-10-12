@@ -1,0 +1,80 @@
+<hlm-dialog-header>
+  <div class="nova-veiculo__header-linha">
+    <div class="nova-veiculo__header-icone">
+      <ng-icon name="lucideCar" size="20" />
+    </div>
+    <div class="nova-veiculo__header-textos">
+      <h3 hlmDialogTitle>{{ editando ? 'Editar Veículo' : 'Novo Veículo' }}</h3>
+      <p hlmDialogDescription class="nova-veiculo__header-subtitulo">
+        {{ editando ? 'Atualize os dados do veículo.' : 'Preencha os dados para cadastrar um novo veículo.' }}
+      </p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="nova-veiculo__form">
+  <div class="nova-veiculo__campo">
+    <label hlmLabel for="nome">Nome</label>
+    <input hlmInput id="nome" formControlName="nome" placeholder="Ex: Caminhão Mercedes 710" />
+  </div>
+
+  <div class="nova-veiculo__linha">
+    <div class="nova-veiculo__campo">
+      <label hlmLabel for="placa">Placa</label>
+      <input hlmInput id="placa" formControlName="placa" placeholder="ABC1D23" />
+    </div>
+
+    <div class="nova-veiculo__campo">
+      <label hlmLabel for="tipo">Tipo</label>
+      <hlm-select [value]="tipoSelecionado()" (valueChange)="onTipoChange($event)"
+        [itemToString]="itemToStringTipo" class="w-full">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (opcao of tipoOptions; track opcao.value) {
+            <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+  </div>
+
+  <div class="nova-veiculo__linha">
+    <div class="nova-veiculo__campo">
+      <label hlmLabel for="ano">Ano</label>
+      <input hlmInput type="number" id="ano" formControlName="ano" placeholder="2020" />
+    </div>
+
+    <div class="nova-veiculo__campo">
+      <label hlmLabel for="kmInicial">Km Inicial</label>
+      <input hlmInput type="number" id="kmInicial" formControlName="kmInicial" placeholder="0" />
+    </div>
+  </div>
+
+  <div class="nova-veiculo__linha">
+    <div class="nova-veiculo__campo">
+      <label hlmLabel for="valorCompra">Valor de Compra</label>
+      <input hlmInput type="number" step="0.01" id="valorCompra" formControlName="valorCompra" placeholder="0,00" />
+    </div>
+
+    <div class="nova-veiculo__campo">
+      <label hlmLabel for="dataCompra">Data de Compra</label>
+      <hlm-date-picker formControlName="dataCompra" [maxDate]="maxDate" class="w-full">
+        <hlm-date-picker-trigger buttonId="dataCompra" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+  </div>
+
+  <div class="nova-veiculo__campo">
+    <label hlmLabel for="observacao">Observação</label>
+    <textarea hlmTextarea id="observacao" formControlName="observacao" rows="2"></textarea>
+  </div>
+</form>
+
+<hlm-dialog-footer>
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn class="nova-veiculo__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
+    {{ salvando() ? 'Salvando...' : 'Salvar' }}
+  </button>
+</hlm-dialog-footer>

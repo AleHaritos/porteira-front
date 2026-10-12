@@ -31,6 +31,20 @@
               </a>
             </li>
             <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="veiculo" routerLinkActive #rlaVeiculo="routerLinkActive"
+                [isActive]="rlaVeiculo.isActive">
+                <ng-icon name="lucideCar" />
+                <span>Veículos</span>
+              </a>
+            </li>
+            <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="abastecimento" routerLinkActive #rlaAbastecimento="routerLinkActive"
+                [isActive]="rlaAbastecimento.isActive">
+                <ng-icon name="lucideFuel" />
+                <span>Abastecimento</span>
+              </a>
+            </li>
+            <li hlmSidebarMenuItem>
               <a hlmSidebarMenuButton routerLink="safra" routerLinkActive #rlaSafra="routerLinkActive"
                 [isActive]="rlaSafra.isActive">
                 <ng-icon name="lucideWheat" />

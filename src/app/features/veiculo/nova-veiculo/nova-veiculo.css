@@ -1,0 +1,100 @@
+.nova-veiculo__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.nova-veiculo__header-linha {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.nova-veiculo__header-icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background-color: #eafaf1;
+  color: #2f9e58;
+  flex-shrink: 0;
+}
+
+.nova-veiculo__header-textos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nova-veiculo__header-subtitulo {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.nova-veiculo__form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px 2px 4px;
+}
+
+.nova-veiculo__linha {
+  display: flex;
+  gap: 16px;
+}
+
+.nova-veiculo__linha .nova-veiculo__campo {
+  flex: 1;
+  min-width: 0;
+}
+
+.nova-veiculo__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nova-veiculo__campo label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.nova-veiculo__form input,
+.nova-veiculo__form textarea {
+  border-color: #d1d5db !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.nova-veiculo__form input:focus,
+.nova-veiculo__form textarea:focus {
+  border-color: #2f9e58 !important;
+  box-shadow: 0 0 0 2px rgba(47, 158, 88, 0.15) !important;
+  outline: none !important;
+}
+
+/* evita o anel vermelho em campo obrigatório vazio antes do usuário tocar nele */
+.nova-veiculo__form input.ng-invalid:not(.ng-touched) {
+  border-color: #d1d5db !important;
+  box-shadow: none !important;
+}
+
+.nova-veiculo__btn-salvar {
+  background-color: #2f9e58 !important;
+  border-color: #2f9e58 !important;
+  color: #fff !important;
+}
+
+.nova-veiculo__btn-salvar:hover {
+  background-color: #278a4c !important;
+  border-color: #278a4c !important;
+}
+
+.nova-veiculo__btn-salvar:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
