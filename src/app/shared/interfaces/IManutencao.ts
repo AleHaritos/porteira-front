@@ -1,4 +1,5 @@
 export type TipoManutencao = 'PREVENTIVA' | 'CORRETIVA' | 'REVISAO' | 'TROCA_OLEO' | 'PNEUS' | 'OUTRA';
+export type FormaPagamentoManutencao = 'A_VISTA' | 'FORNECEDOR_CREDENCIADO';
 
 export interface IManutencao {
   id: number;
@@ -8,9 +9,11 @@ export interface IManutencao {
   descricao?: string;
   data: string;
   valor: number;
-  kmAtual?: number | null;
+  kmAtual?: number;
   observacao?: string;
-  vinculoNome?: string | null;
+  formaPagamento: FormaPagamentoManutencao;
+  fornecedorNome?: string;
+  vinculoNome?: string;
 }
 
 export interface ManutencaoRequest {
@@ -19,9 +22,11 @@ export interface ManutencaoRequest {
   descricao?: string;
   data: string;
   valor: number;
-  kmAtual?: number | null;
+  kmAtual?: number;
   observacao?: string;
   fazendaId: number;
   negocioId?: number;
   safraId?: number;
+  formaPagamento: FormaPagamentoManutencao;
+  fornecedorId?: number;
 }

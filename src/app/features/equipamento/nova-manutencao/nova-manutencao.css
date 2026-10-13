@@ -1,0 +1,109 @@
+.nova-manutencao__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nova-manutencao__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #dcfce7;
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.nova-manutencao__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 0;
+}
+
+.nova-manutencao__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nova-manutencao__linha {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.nova-manutencao__secao {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.nova-manutencao__toggle {
+  display: flex;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.nova-manutencao__toggle button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nova-manutencao__toggle button:not(:last-child) {
+  border-right: 1px solid #e5e7eb;
+}
+
+.nova-manutencao__toggle button.ativo {
+  background: #16a34a;
+  color: white;
+}
+
+.nova-manutencao__form input.ng-invalid:not(.ng-touched),
+.nova-manutencao__form textarea.ng-invalid:not(.ng-touched) {
+  border-color: #d1d5db !important;
+  box-shadow: none !important;
+}
+
+.nova-manutencao__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.nova-manutencao__btn-salvar {
+  background: #16a34a;
+  color: white;
+}
+
+.nova-manutencao__btn-salvar:hover {
+  background: #15803d;
+}
+
+.nova-manutencao__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nova-manutencao__subtitulo {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}

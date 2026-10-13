@@ -1,0 +1,44 @@
+<hlm-dialog-header>
+  <div class="nova-equipamento__header-linha">
+    <div class="nova-equipamento__icone">
+      <ng-icon hlm name="lucideWrench" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>{{ editando ? 'Editar Equipamento' : 'Novo Equipamento' }}</h3>
+      <p hlmDialogDescription>Preencha os dados do equipamento</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="nova-equipamento__form mt-2" (ngSubmit)="salvar()">
+  <div class="nova-equipamento__campo">
+    <label hlmLabel>Nome</label>
+    <input hlmInput formControlName="nome" placeholder="Ex: Roçadeira" class="w-full" />
+  </div>
+
+  <div class="nova-equipamento__campo">
+    <label hlmLabel>Data de Compra</label>
+    <hlm-date-picker formControlName="dataCompra" [maxDate]="maxDate" class="w-full">
+      <hlm-date-picker-trigger buttonId="dataCompra" class="w-full">Selecionar data</hlm-date-picker-trigger>
+    </hlm-date-picker>
+  </div>
+
+  <div class="nova-equipamento__campo">
+    <label hlmLabel>Valor de Compra</label>
+    <input hlmInput type="text" inputmode="numeric" class="w-full"
+      [value]="formatarMoedaDisplay(valorCompraRaw())"
+      (input)="onValorCompraInput($any($event.target).value)" placeholder="0,00" />
+  </div>
+
+  <div class="nova-equipamento__campo">
+    <label hlmLabel>Observação</label>
+    <textarea hlmInput formControlName="observacao" rows="3" class="w-full"></textarea>
+  </div>
+
+  <div class="nova-equipamento__acoes">
+    <button type="button" hlmBtn variant="outline" (click)="cancelar()">Cancelar</button>
+    <button type="submit" hlmBtn class="nova-equipamento__btn-salvar cursor-pointer" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : 'Salvar' }}
+    </button>
+  </div>
+</form>

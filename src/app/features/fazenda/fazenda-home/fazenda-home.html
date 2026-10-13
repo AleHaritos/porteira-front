@@ -38,13 +38,34 @@
               </a>
             </li>
             <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="equipamento" routerLinkActive #rlaEquipamento="routerLinkActive"
+                [isActive]="rlaEquipamento.isActive">
+                <ng-icon name="lucideCog" />
+                <span>Equipamento</span>
+              </a>
+            </li>
+            <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="manutencao" routerLinkActive #rlaManutencao="routerLinkActive"
+                [isActive]="rlaManutencao.isActive">
+                <ng-icon name="lucideWrench" />
+                <span>Manutencao</span>
+              </a>
+            </li>
+            <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="fornecedores" routerLinkActive #rlaFornecedores="routerLinkActive"
+                [isActive]="rlaFornecedores.isActive">
+                <ng-icon name="lucideHandshake" />
+                <span>Fornecedores</span>
+              </a>
+            </li>
+            <li hlmSidebarMenuItem>
               <a hlmSidebarMenuButton routerLink="abastecimento" routerLinkActive #rlaAbastecimento="routerLinkActive"
                 [isActive]="rlaAbastecimento.isActive">
                 <ng-icon name="lucideGauge" />
                 <span>Abastecimento</span>
               </a>
             </li>
-              <li hlmSidebarMenuItem>
+            <li hlmSidebarMenuItem>
               <a hlmSidebarMenuButton routerLink="posto" routerLinkActive #rlaPosto="routerLinkActive"
                 [isActive]="rlaPosto.isActive">
                 <ng-icon name="lucideFuel" />
