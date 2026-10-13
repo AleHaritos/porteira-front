@@ -51,6 +51,11 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/abastecimento/abastecimento').then((m) => m.Abastecimento),
           },
+             {
+            path: 'posto',
+            loadComponent: () =>
+              import('./features/postos-estoque/postos-estoque').then((m) => m.PostosEstoque),
+          },  
           {
             path: 'contas-pendentes',
             loadComponent: () =>

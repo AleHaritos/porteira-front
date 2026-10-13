@@ -1,0 +1,95 @@
+.postos-estoque-page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.postos-estoque-page__secao-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.postos-estoque-page__secao-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.postos-estoque-page__btn-acao {
+  background: #2f9e58 !important;
+  color: white !important;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.postos-estoque-page__btn-acao:hover {
+  background: #278a4c !important;
+}
+
+.postos-estoque-page__btn-pagar {
+  border-color: #2f9e58 !important;
+  color: #2f9e58 !important;
+}
+
+.postos-estoque-page__btn-pagar:hover:not(:disabled) {
+  background: #e3f5e8 !important;
+}
+
+.postos-estoque-page__saldo--positivo {
+  color: #b45309;
+  font-weight: 600;
+}
+
+.fazenda-table {
+  background: #ffffff;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.fazenda-table__head-row th {
+  background: #f2f9f4;
+  color: #2f4d3a;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #d8e6dc;
+}
+
+.fazenda-table__row td {
+  border-bottom: 1px solid #eef4f0;
+}
+
+.fazenda-table__row:last-child td {
+  border-bottom: none;
+}
+
+.fazenda-table__row:hover {
+  background-color: #f7fbf8;
+}
+
+.fazenda-table__nome {
+  font-weight: 600;
+  color: #2f4d3a;
+}
+
+.fazenda-table__empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.fazenda-table__acoes-head {
+  text-align: right;
+  width: 1%;
+  white-space: nowrap;
+}

@@ -40,8 +40,15 @@
             <li hlmSidebarMenuItem>
               <a hlmSidebarMenuButton routerLink="abastecimento" routerLinkActive #rlaAbastecimento="routerLinkActive"
                 [isActive]="rlaAbastecimento.isActive">
-                <ng-icon name="lucideFuel" />
+                <ng-icon name="lucideGauge" />
                 <span>Abastecimento</span>
+              </a>
+            </li>
+              <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="posto" routerLinkActive #rlaPosto="routerLinkActive"
+                [isActive]="rlaPosto.isActive">
+                <ng-icon name="lucideFuel" />
+                <span>Posto/Estoque</span>
               </a>
             </li>
             <li hlmSidebarMenuItem>

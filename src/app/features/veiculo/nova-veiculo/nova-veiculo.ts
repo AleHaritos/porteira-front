@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { BrnDialogRef, injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -36,7 +36,7 @@ interface VeiculoDialogContext {
   styleUrl: './nova-veiculo.css',
   templateUrl: './nova-veiculo.html',
 })
-export class NovaVeiculo {
+export class NovaVeiculo implements OnInit {
   private dialogRef = inject(BrnDialogRef);
   private context = injectBrnDialogContext<VeiculoDialogContext>();
   private fb = inject(FormBuilder);
@@ -46,6 +46,9 @@ export class NovaVeiculo {
   salvando = signal(false);
   maxDate = new Date();
   editando = !!this.context.veiculo;
+
+  valorCompraRaw = signal<number | null>(this.context.veiculo?.valorCompra ?? null);
+  kmInicialRaw = signal<number>(this.context.veiculo?.kmInicial ?? 0);
 
   tipoOptions: { value: TipoVeiculo; label: string }[] = [
     { value: 'CAMINHAO', label: 'Caminhão' },
@@ -61,19 +64,47 @@ export class NovaVeiculo {
 
   form = this.fb.group({
     nome: [this.context.veiculo?.nome ?? '', Validators.required],
-    placa: [this.context.veiculo?.placa ?? '', Validators.required],
+    placa: [
+      this.context.veiculo?.placa ?? '',
+      [Validators.required, Validators.pattern(/^[A-Za-z]{3}\d[A-Za-z\d]\d{2}$/)],
+    ],
     dataCompra: [
       this.context.veiculo ? new Date(this.context.veiculo.dataCompra) : (new Date() as Date | null),
       Validators.required,
     ],
-    valorCompra: [this.context.veiculo?.valorCompra ?? null, [Validators.required, Validators.min(0.01)]],
     ano: [this.context.veiculo?.ano ?? null, Validators.required],
-    kmInicial: [this.context.veiculo?.kmInicial ?? 0, [Validators.required, Validators.min(0)]],
     observacao: [this.context.veiculo?.observacao ?? ''],
   });
 
-  onTipoChange(tipo: TipoVeiculo | null | undefined) {
+  ngOnInit(): void {
+    this.form.get('placa')?.valueChanges.subscribe((valor) => {
+      if (valor && valor !== valor.toUpperCase()) {
+        this.form.get('placa')?.setValue(valor.toUpperCase(), { emitEvent: false });
+      }
+    });
+  }
+
+   onTipoChange(tipo: TipoVeiculo | null | undefined) {
     if (tipo) this.tipoSelecionado.set(tipo);
+  }
+
+  onValorCompraInput(valor: string) {
+    const somenteDigitos = valor.replace(/\D/g, '');
+    this.valorCompraRaw.set(somenteDigitos ? Number(somenteDigitos) / 100 : null);
+  }
+
+  onKmInicialInput(valor: string) {
+    const somenteDigitos = valor.replace(/\D/g, '');
+    this.kmInicialRaw.set(somenteDigitos ? Number(somenteDigitos) : 0);
+  }
+
+  formatarMoedaDisplay(valor: number | null): string {
+    if (valor == null) return '';
+    return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  formatarKmDisplay(valor: number): string {
+    return valor.toLocaleString('pt-BR');
   }
 
   cancelar() {
@@ -93,15 +124,21 @@ export class NovaVeiculo {
       return;
     }
 
-    const { nome, placa, dataCompra, valorCompra, ano, kmInicial, observacao } = this.form.value;
+    const valorCompra = this.valorCompraRaw();
+    if (valorCompra == null || valorCompra <= 0) {
+      this.toastService.showError('Erro', 'Informe o valor de compra do veículo');
+      return;
+    }
+
+    const { nome, placa, dataCompra, ano, observacao } = this.form.value;
 
     const request: VeiculoRequest = {
       nome: nome!,
       placa: placa!,
       dataCompra: this.formatarDataIso(dataCompra!),
-      valorCompra: Number(valorCompra),
+      valorCompra,
       ano: Number(ano),
-      kmInicial: Number(kmInicial),
+      kmInicial: this.kmInicialRaw(),
       observacao: observacao || undefined,
       tipo: this.tipoSelecionado(),
       fazendaId: this.context.fazendaId,

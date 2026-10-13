@@ -1,0 +1,11 @@
+.novo-posto__header-linha { display: flex; align-items: flex-start; gap: 12px; }
+.novo-posto__header-icone { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; background-color: #eafaf1; color: #2f9e58; flex-shrink: 0; }
+.novo-posto__header-textos { display: flex; flex-direction: column; gap: 2px; }
+.novo-posto__header-subtitulo { font-size: 13px; color: #6b7280; margin: 0; }
+.novo-posto__form { display: flex; flex-direction: column; gap: 16px; padding: 20px 2px 4px; }
+.novo-posto__campo { display: flex; flex-direction: column; gap: 6px; }
+.novo-posto__campo label { font-size: 13px; font-weight: 600; color: #374151; }
+.novo-posto__form input, .novo-posto__form textarea { border-color: #d1d5db !important; border-radius: 8px !important; }
+.novo-posto__form input:focus, .novo-posto__form textarea:focus { border-color: #2f9e58 !important; box-shadow: 0 0 0 2px rgba(47, 158, 88, 0.15) !important; outline: none !important; }
+.novo-posto__btn-salvar { background-color: #2f9e58 !important; border-color: #2f9e58 !important; color: #fff !important; }
+.novo-posto__btn-salvar:hover { background-color: #278a4c !important; border-color: #278a4c !important; }

@@ -21,19 +21,22 @@
   <div class="nova-veiculo__linha">
     <div class="nova-veiculo__campo">
       <label hlmLabel for="placa">Placa</label>
-      <input hlmInput id="placa" formControlName="placa" placeholder="ABC1D23" />
+      <input hlmInput id="placa" formControlName="placa" placeholder="ABC1D23 ou ABC1234" maxlength="7" />
+      @if (form.get('placa')?.touched && form.get('placa')?.invalid) {
+      <span class="nova-veiculo__erro">Placa inválida. Use o formato ABC1234 ou ABC1D23.</span>
+      }
     </div>
 
     <div class="nova-veiculo__campo">
       <label hlmLabel for="tipo">Tipo</label>
-      <hlm-select [value]="tipoSelecionado()" (valueChange)="onTipoChange($event)"
-        [itemToString]="itemToStringTipo" class="w-full">
+      <hlm-select [value]="tipoSelecionado()" (valueChange)="onTipoChange($event)" [itemToString]="itemToStringTipo"
+        class="w-full">
         <hlm-select-trigger class="w-full">
           <hlm-select-value />
         </hlm-select-trigger>
         <hlm-select-content *hlmSelectPortal>
           @for (opcao of tipoOptions; track opcao.value) {
-            <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+          <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
           }
         </hlm-select-content>
       </hlm-select>
@@ -48,18 +51,20 @@
 
     <div class="nova-veiculo__campo">
       <label hlmLabel for="kmInicial">Km Inicial</label>
-      <input hlmInput type="number" id="kmInicial" formControlName="kmInicial" placeholder="0" />
+      <input hlmInput type="text" inputmode="numeric" id="kmInicial" [value]="formatarKmDisplay(kmInicialRaw())"
+        (input)="onKmInicialInput($any($event.target).value)" placeholder="0" />
     </div>
   </div>
 
   <div class="nova-veiculo__linha">
     <div class="nova-veiculo__campo">
       <label hlmLabel for="valorCompra">Valor de Compra</label>
-      <input hlmInput type="number" step="0.01" id="valorCompra" formControlName="valorCompra" placeholder="0,00" />
+      <input hlmInput type="text" inputmode="numeric" id="valorCompra" [value]="formatarMoedaDisplay(valorCompraRaw())"
+        (input)="onValorCompraInput($any($event.target).value)" placeholder="0,00" />
     </div>
 
     <div class="nova-veiculo__campo">
-      <label hlmLabel for="dataCompra">Data de Compra</label>
+      <label hlmLabel>Data de Compra</label>
       <hlm-date-picker formControlName="dataCompra" [maxDate]="maxDate" class="w-full">
         <hlm-date-picker-trigger buttonId="dataCompra" class="w-full">Selecionar data</hlm-date-picker-trigger>
       </hlm-date-picker>
@@ -74,7 +79,8 @@
 
 <hlm-dialog-footer>
   <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
-  <button hlmBtn class="nova-veiculo__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
+  <button hlmBtn class="nova-veiculo__btn-salvar cursor-pointer" type="button" [disabled]="salvando()"
+    (click)="salvar()">
     {{ salvando() ? 'Salvando...' : 'Salvar' }}
   </button>
 </hlm-dialog-footer>
