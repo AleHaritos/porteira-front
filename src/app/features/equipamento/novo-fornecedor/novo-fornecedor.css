@@ -1,0 +1,52 @@
+.novo-fornecedor__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.novo-fornecedor__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #dcfce7;
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.novo-fornecedor__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 0;
+}
+
+.novo-fornecedor__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.novo-fornecedor__form input.ng-invalid:not(.ng-touched),
+.novo-fornecedor__form textarea.ng-invalid:not(.ng-touched) {
+  border-color: #d1d5db !important;
+  box-shadow: none !important;
+}
+
+.novo-fornecedor__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.novo-fornecedor__btn-salvar {
+  background: #16a34a;
+  color: white;
+}
+
+.novo-fornecedor__btn-salvar:hover {
+  background: #15803d;
+}

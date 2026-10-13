@@ -1,0 +1,35 @@
+<hlm-dialog-header>
+  <div class="novo-fornecedor__header-linha">
+    <div class="novo-fornecedor__icone">
+      <ng-icon hlm name="lucideHandshake" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Novo Fornecedor</h3>
+      <p hlmDialogDescription>Cadastre um mecânico ou oficina credenciada</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="novo-fornecedor__form" (ngSubmit)="salvar()">
+  <div class="novo-fornecedor__campo">
+    <label hlmLabel>Nome</label>
+    <input hlmInput formControlName="nome" placeholder="Ex: Oficina do Zé" class="w-full" />
+  </div>
+
+  <div class="novo-fornecedor__campo">
+    <label hlmLabel>Especialidade</label>
+    <input hlmInput formControlName="especialidade" placeholder="Ex: Mecânica geral" class="w-full" />
+  </div>
+
+  <div class="novo-fornecedor__campo">
+    <label hlmLabel>Observação</label>
+    <textarea hlmInput formControlName="observacao" rows="3" class="w-full"></textarea>
+  </div>
+
+  <div class="novo-fornecedor__acoes">
+    <button type="button" hlmBtn variant="outline" (click)="cancelar()">Cancelar</button>
+    <button type="submit" hlmBtn class="novo-fornecedor__btn-salvar cursor-pointer" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : 'Salvar' }}
+    </button>
+  </div>
+</form>

@@ -42,6 +42,36 @@ export const routes: Routes = [
               import('./features/financeiro/financeiro').then((m) => m.Financeiro),
           },
           {
+            path: 'veiculo',
+            loadComponent: () =>
+              import('./features/veiculo/veiculo').then((m) => m.Veiculo),
+          },
+          {
+            path: 'abastecimento',
+            loadComponent: () =>
+              import('./features/abastecimento/abastecimento').then((m) => m.Abastecimento),
+          },
+          {
+            path: 'equipamento',
+            loadComponent: () =>
+              import('./features/equipamento/equipamento').then((m) => m.Equipamento),
+          },
+          {
+            path: 'fornecedores',
+            loadComponent: () =>
+              import('./features/equipamento/fornecedores/fornecedores').then((m) => m.Fornecedores),
+          },
+          {
+            path: 'manutencao',
+            loadComponent: () =>
+              import('./features/equipamento/manutencao/manutencao').then((m) => m.Manutencao),
+          },
+          {
+            path: 'posto',
+            loadComponent: () =>
+              import('./features/postos-estoque/postos-estoque').then((m) => m.PostosEstoque),
+          },
+          {
             path: 'contas-pendentes',
             loadComponent: () =>
               import('./features/financeiro/contas-pendentes/contas-pendentes').then((m) => m.ContasPendentes),

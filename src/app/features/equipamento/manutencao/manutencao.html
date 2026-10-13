@@ -1,0 +1,111 @@
+<div class="manutencao-page">
+  <div class="manutencao-page__header">
+    <h1 class="manutencao-page__titulo">Manutenção</h1>
+    <button hlmBtn class="manutencao-page__btn-novo" (click)="abrirNovaManutencao()">
+      <ng-icon hlm name="lucidePlus" size="16" />
+      Nova Manutenção
+    </button>
+  </div>
+
+  <div class="manutencao-page__filtros">
+    <div class="manutencao-page__toggle">
+      <button [class.ativo]="tipoAtivo() === 'VEICULO'" (click)="onTipoAtivoChange('VEICULO')">
+        <ng-icon hlm name="lucideTruck" size="16" /> Veículos
+      </button>
+      <button [class.ativo]="tipoAtivo() === 'EQUIPAMENTO'" (click)="onTipoAtivoChange('EQUIPAMENTO')">
+        <ng-icon hlm name="lucideWrench" size="16" /> Equipamentos
+      </button>
+    </div>
+
+    <div class="manutencao-page__filtro">
+      <label hlmLabel>{{ tipoAtivo() === 'VEICULO' ? 'Veículo' : 'Equipamento' }}</label>
+      <hlm-select [value]="ativoSelecionadoId()" (valueChange)="onAtivoChange($event)" [itemToString]="itemToStringAtivo" class="w-64">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @if (tipoAtivo() === 'VEICULO') {
+            @for (v of veiculos(); track v.id) { <hlm-select-item [value]="v.id">{{ v.nome }}</hlm-select-item> }
+          } @else {
+            @for (e of equipamentos(); track e.id) { <hlm-select-item [value]="e.id">{{ e.nome }}</hlm-select-item> }
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+  </div>
+
+  <div class="fazenda-table">
+    <table hlmTable>
+      <thead>
+        <tr hlmTr class="fazenda-table__head-row">
+          <th hlmTh>Data</th>
+          <th hlmTh>Tipo</th>
+          <th hlmTh>Descrição</th>
+          <th hlmTh>Valor</th>
+          <th hlmTh>Pagamento</th>
+          <th hlmTh>Km</th>
+          <th hlmTh>Vínculo</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (tipoAtivo() === 'VEICULO') {
+          @for (r of registrosVeiculo(); track r.id) {
+            <tr hlmTr class="fazenda-table__row">
+              <td hlmTd>{{ r.data | date: 'dd/MM/yyyy' }}</td>
+              <td hlmTd>{{ r.tipo }}</td>
+              <td hlmTd>{{ r.descricao || '-' }}</td>
+              <td hlmTd>{{ formatarValor(r.valor) }}</td>
+              <td hlmTd>{{ formatarPagamento(r.formaPagamento) }}{{ r.fornecedorNome ? ' - ' + r.fornecedorNome : '' }}</td>
+              <td hlmTd>{{ r.kmAtual ?? '-' }}</td>
+              <td hlmTd>{{ r.vinculoNome || '-' }}</td>
+            </tr>
+          } @empty {
+            <tr hlmTr>
+              <td hlmTd colspan="7" class="fazenda-table__empty">
+                @if (carregando()) { Carregando manutenções... } @else { Nenhuma manutenção registrada }
+              </td>
+            </tr>
+          }
+        } @else {
+          @for (r of registrosEquipamento(); track r.id) {
+            <tr hlmTr class="fazenda-table__row">
+              <td hlmTd>{{ r.data | date: 'dd/MM/yyyy' }}</td>
+              <td hlmTd>{{ r.tipo }}</td>
+              <td hlmTd>{{ r.descricao || '-' }}</td>
+              <td hlmTd>{{ formatarValor(r.valor) }}</td>
+              <td hlmTd>{{ formatarPagamento(r.formaPagamento) }}{{ r.fornecedorNome ? ' - ' + r.fornecedorNome : '' }}</td>
+              <td hlmTd>-</td>
+              <td hlmTd>{{ r.vinculoNome || '-' }}</td>
+            </tr>
+          } @empty {
+            <tr hlmTr>
+              <td hlmTd colspan="7" class="fazenda-table__empty">
+                @if (carregando()) { Carregando manutenções... } @else { Nenhuma manutenção registrada }
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+
+    @if (totalPaginas() > 1) {
+      <nav hlmPagination class="fazenda-table__pagination">
+        <ul hlmPaginationContent>
+          <li hlmPaginationItem>
+            <button hlmPaginationPrevious (click)="irPara(paginaAtual() - 1)"></button>
+          </li>
+          @for (pagina of paginasVisiveis(); track pagina) {
+            <li hlmPaginationItem>
+              <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+                {{ pagina + 1 }}
+              </button>
+            </li>
+          }
+          <li hlmPaginationItem>
+            <button hlmPaginationNext (click)="irPara(paginaAtual() + 1)"></button>
+          </li>
+        </ul>
+      </nav>
+    }
+  </div>
+</div>

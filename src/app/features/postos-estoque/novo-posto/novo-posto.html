@@ -1,0 +1,30 @@
+<hlm-dialog-header>
+  <div class="novo-posto__header-linha">
+    <div class="novo-posto__header-icone">
+      <ng-icon name="lucideHandCoins" size="20" />
+    </div>
+    <div class="novo-posto__header-textos">
+      <h3 hlmDialogTitle>Novo Posto Credenciado</h3>
+      <p hlmDialogDescription class="novo-posto__header-subtitulo">Cadastre um posto onde a fazenda abastece fiado.</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="novo-posto__form">
+  <div class="novo-posto__campo">
+    <label hlmLabel for="nome">Nome</label>
+    <input hlmInput id="nome" formControlName="nome" placeholder="Ex: Posto São José" />
+  </div>
+
+  <div class="novo-posto__campo">
+    <label hlmLabel for="observacao">Observação</label>
+    <textarea hlmTextarea id="observacao" formControlName="observacao" rows="2"></textarea>
+  </div>
+</form>
+
+<hlm-dialog-footer>
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn class="novo-posto__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
+    {{ salvando() ? 'Salvando...' : 'Salvar' }}
+  </button>
+</hlm-dialog-footer>

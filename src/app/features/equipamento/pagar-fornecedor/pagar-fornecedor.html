@@ -1,0 +1,78 @@
+<hlm-dialog-header>
+  <div class="pagar-fornecedor__header-linha">
+    <div class="pagar-fornecedor__icone">
+      <ng-icon hlm name="lucideHandCoins" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Pagar Fornecedor</h3>
+      <p hlmDialogDescription>{{ context.fornecedor.nome }} — devendo {{ formatarMoedaDisplay(context.fornecedor.saldoDevedor) }}</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="pagar-fornecedor__form mt-2" (ngSubmit)="salvar()">
+  <div class="pagar-fornecedor__campo">
+    <label hlmLabel>Valor do Pagamento</label>
+    <input hlmInput type="text" inputmode="numeric" class="w-full"
+      [value]="formatarMoedaDisplay(valorRaw())"
+      (input)="onValorInput($any($event.target).value)" placeholder="0,00" />
+  </div>
+
+  <div class="pagar-fornecedor__campo">
+    <label hlmLabel>Data</label>
+    <hlm-date-picker formControlName="data" [maxDate]="maxDate" class="w-full">
+      <hlm-date-picker-trigger buttonId="data" class="w-full">Selecionar data</hlm-date-picker-trigger>
+    </hlm-date-picker>
+  </div>
+
+  <div class="pagar-fornecedor__secao">
+    <label hlmLabel>Vínculo</label>
+    <div class="pagar-fornecedor__toggle">
+      <button type="button" [class.ativo]="vinculo() === 'NEGOCIO'" (click)="onVinculoChange('NEGOCIO')">
+        Negócio
+      </button>
+      <button type="button" [class.ativo]="vinculo() === 'SAFRA'" (click)="onVinculoChange('SAFRA')">
+        Safra
+      </button>
+    </div>
+  </div>
+
+  @if (vinculo() === 'NEGOCIO') {
+  <div class="pagar-fornecedor__campo">
+    <label hlmLabel for="negocio">Negócio</label>
+    <hlm-select [value]="negocioSelecionado()" (valueChange)="onNegocioChange($event)"
+      [itemToString]="itemToStringNegocio" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (negocio of negocios(); track negocio.id) {
+        <hlm-select-item [value]="negocio.id">{{ negocio.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  } @else {
+  <div class="pagar-fornecedor__campo">
+    <label hlmLabel for="safra">Safra</label>
+    <hlm-select [value]="safraSelecionada()" (valueChange)="onSafraChange($event)"
+      [itemToString]="itemToStringSafra" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (safra of safras(); track safra.id) {
+        <hlm-select-item [value]="safra.id">{{ safra.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  }
+
+  <div class="pagar-fornecedor__acoes">
+    <button type="button" hlmBtn variant="outline" (click)="cancelar()">Cancelar</button>
+    <button type="submit" hlmBtn class="pagar-fornecedor__btn-salvar cursor-pointer" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : 'Confirmar Pagamento' }}
+    </button>
+  </div>
+</form>

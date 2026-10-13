@@ -1,0 +1,77 @@
+<div class="veiculo-page">
+  <div class="veiculo-page__header">
+    <h1 class="veiculo-page__titulo">Veículos</h1>
+    <button hlmBtn class="veiculo-page__btn-novo" (click)="abrirNovoVeiculo()">
+      <ng-icon hlm name="lucidePlus" size="16" />
+      Novo Veículo
+    </button>
+  </div>
+
+  <div class="fazenda-table">
+    <table hlmTable>
+      <thead>
+        <tr hlmTr class="fazenda-table__head-row">
+          <th hlmTh>Nome</th>
+          <th hlmTh>Placa</th>
+          <th hlmTh>Tipo</th>
+          <th hlmTh>Ano</th>
+          <th hlmTh>Km Inicial</th>
+          <th hlmTh>Valor de Compra</th>
+          <th hlmTh class="fazenda-table__acoes-head">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (veiculo of veiculos(); track veiculo.id) {
+          <tr hlmTr class="fazenda-table__row">
+            <td hlmTd class="fazenda-table__nome">{{ veiculo.nome }}</td>
+            <td hlmTd>{{ veiculo.placa }}</td>
+            <td hlmTd>{{ tipoLabel(veiculo.tipo) }}</td>
+            <td hlmTd>{{ veiculo.ano }}</td>
+            <td hlmTd>{{ veiculo.kmInicial }} km</td>
+            <td hlmTd>{{ formatarValor(veiculo.valorCompra) }}</td>
+            <td hlmTd>
+              <div class="produtos-table__acoes">
+                <button class="fazenda-table__action-btn fazenda-table__action-btn--editar" (click)="editar(veiculo)">
+                  <ng-icon name="lucidePencil" size="16" />
+                </button>
+                <button class="fazenda-table__action-btn fazenda-table__action-btn--excluir" (click)="inativar(veiculo)">
+                  <ng-icon name="lucideTrash2" size="16" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr hlmTr>
+            <td hlmTd colspan="7" class="fazenda-table__empty">
+              @if (carregando()) {
+                Carregando veículos...
+              } @else {
+                Nenhum veículo cadastrado ainda.
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (totalPaginas() > 1) {
+      <nav hlmPagination class="fazenda-table__pagination">
+        <ul hlmPaginationContent>
+          <li hlmPaginationItem>
+            <button hlmPaginationPrevious (click)="irPara(paginaAtual() - 1)"></button>
+          </li>
+          @for (pagina of paginasVisiveis(); track pagina) {
+            <li hlmPaginationItem>
+              <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+                {{ pagina + 1 }}
+              </button>
+            </li>
+          }
+          <li hlmPaginationItem>
+            <button hlmPaginationNext (click)="irPara(paginaAtual() + 1)"></button>
+          </li>
+        </ul>
+      </nav>
+    }
+  </div>
+</div>

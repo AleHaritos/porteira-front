@@ -1,0 +1,16 @@
+.pagar-posto__header-linha { display: flex; align-items: flex-start; gap: 12px; }
+.pagar-posto__header-icone { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; background-color: #eafaf1; color: #2f9e58; flex-shrink: 0; }
+.pagar-posto__header-textos { display: flex; flex-direction: column; gap: 2px; }
+.pagar-posto__header-subtitulo { font-size: 13px; color: #6b7280; margin: 0; }
+.pagar-posto__form { display: flex; flex-direction: column; gap: 16px; padding: 20px 2px 4px; }
+.pagar-posto__linha { display: flex; gap: 16px; }
+.pagar-posto__linha .pagar-posto__campo { flex: 1; min-width: 0; }
+.pagar-posto__campo { display: flex; flex-direction: column; gap: 6px; }
+.pagar-posto__campo label { font-size: 13px; font-weight: 600; color: #374151; }
+.pagar-posto__vinculo-toggle { display: flex; gap: 8px; }
+.pagar-posto__toggle-btn { flex: 1; }
+.pagar-posto__toggle-btn--ativo { background-color: #2f9e58 !important; border-color: #2f9e58 !important; color: #fff !important; }
+.pagar-posto__form input, .pagar-posto__form textarea { border-color: #d1d5db !important; border-radius: 8px !important; }
+.pagar-posto__form input:focus, .pagar-posto__form textarea:focus { border-color: #2f9e58 !important; box-shadow: 0 0 0 2px rgba(47, 158, 88, 0.15) !important; outline: none !important; }
+.pagar-posto__btn-salvar { background-color: #2f9e58 !important; border-color: #2f9e58 !important; color: #fff !important; }
+.pagar-posto__btn-salvar:hover { background-color: #278a4c !important; border-color: #278a4c !important; }

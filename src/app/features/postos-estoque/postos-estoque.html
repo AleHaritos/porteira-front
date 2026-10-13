@@ -1,0 +1,96 @@
+<div class="postos-estoque-page">
+  <section class="postos-estoque-page__secao">
+    <div class="postos-estoque-page__secao-header">
+      <h2 class="postos-estoque-page__secao-titulo">
+        <ng-icon name="lucideHandCoins" size="18" />
+        Postos Credenciados
+      </h2>
+      <button hlmBtn class="postos-estoque-page__btn-acao" (click)="abrirNovoPosto()">
+        <ng-icon hlm name="lucidePlus" size="16" />
+        Novo Posto
+      </button>
+    </div>
+
+    <div class="fazenda-table">
+      <table hlmTable>
+        <thead>
+          <tr hlmTr class="fazenda-table__head-row">
+            <th hlmTh>Nome</th>
+            <th hlmTh>Saldo Devedor</th>
+            <th hlmTh class="fazenda-table__acoes-head">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (posto of postos(); track posto.id) {
+            <tr hlmTr class="fazenda-table__row">
+              <td hlmTd class="fazenda-table__nome">{{ posto.nome }}</td>
+              <td hlmTd [class.postos-estoque-page__saldo--positivo]="posto.saldoDevedor > 0">
+                {{ formatarValor(posto.saldoDevedor) }}
+              </td>
+              <td hlmTd class="fazenda-table__acoes-head">
+                <button hlmBtn variant="outline" class="postos-estoque-page__btn-pagar cursor-pointer"
+                  [disabled]="posto.saldoDevedor <= 0" (click)="abrirPagarPosto(posto)">
+                  Pagar
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr hlmTr>
+              <td hlmTd colspan="3" class="fazenda-table__empty">
+                @if (carregandoPostos()) {
+                  Carregando postos...
+                } @else {
+                  Nenhum posto credenciado cadastrado ainda.
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="postos-estoque-page__secao">
+    <div class="postos-estoque-page__secao-header">
+      <h2 class="postos-estoque-page__secao-titulo">
+        <ng-icon name="lucideFuel" size="18" />
+        Estoque de Combustível
+      </h2>
+      <button hlmBtn class="postos-estoque-page__btn-acao" (click)="abrirReabastecerEstoque()">
+        <ng-icon hlm name="lucidePlus" size="16" />
+        Reabastecer Estoque
+      </button>
+    </div>
+
+    <div class="fazenda-table">
+      <table hlmTable>
+        <thead>
+          <tr hlmTr class="fazenda-table__head-row">
+            <th hlmTh>Combustível</th>
+            <th hlmTh>Quantidade Disponível</th>
+            <th hlmTh>Último Valor/Litro</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (estoque of estoques(); track estoque.id) {
+            <tr hlmTr class="fazenda-table__row">
+              <td hlmTd class="fazenda-table__nome">{{ tipoCombustivelLabel(estoque.tipoCombustivel) }}</td>
+              <td hlmTd>{{ formatarLitros(estoque.quantidadeLitros) }} L</td>
+              <td hlmTd>{{ estoque.ultimoValorPorLitro != null ? formatarValor(estoque.ultimoValorPorLitro) : '-' }}</td>
+            </tr>
+          } @empty {
+            <tr hlmTr>
+              <td hlmTd colspan="3" class="fazenda-table__empty">
+                @if (carregandoEstoques()) {
+                  Carregando estoque...
+                } @else {
+                  Nenhum estoque registrado ainda. Reabasteça pra começar a usar.
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

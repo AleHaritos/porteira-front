@@ -1,0 +1,129 @@
+.fornecedores-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fornecedores-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fornecedores-page__titulo {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.fornecedores-page__btn-novo {
+  background: #2f9e58 !important;
+  color: white !important;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.fornecedores-page__btn-novo:hover {
+  background: #278a4c !important;
+}
+
+.fornecedores-page__saldo--positivo {
+  color: #b45309;
+  font-weight: 600;
+}
+
+.fornecedores-page__btn-pagar {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid #2f9e58;
+  background: transparent;
+  color: #278a4c;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.fornecedores-page__btn-pagar:hover:not(:disabled) {
+  background: #2f9e58;
+  color: white;
+}
+
+.fornecedores-page__btn-pagar:disabled {
+  border-color: #d8e6dc;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.fazenda-table {
+  background: #ffffff;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.fazenda-table__head-row th {
+  background: #f2f9f4;
+  color: #2f4d3a;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #d8e6dc;
+}
+
+.fazenda-table__row td {
+  border-bottom: 1px solid #eef4f0;
+}
+
+.fazenda-table__row:last-child td {
+  border-bottom: none;
+}
+
+.fazenda-table__row {
+  transition: background-color 0.15s ease;
+}
+
+.fazenda-table__row:hover {
+  background-color: #f7fbf8;
+}
+
+.fazenda-table__nome {
+  font-weight: 600;
+  color: #2f4d3a;
+}
+
+.fazenda-table__empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.fazenda-table__pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  border-top: 1px solid #eef4f0;
+}
+
+.produtos-table__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.fazenda-table__acoes-head {
+  text-align: right;
+  width: 1%;
+  white-space: nowrap;
+  padding-right: 1rem;
+}
+
+.novo-fornecedor__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}

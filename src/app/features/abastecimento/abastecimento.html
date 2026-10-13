@@ -1,0 +1,89 @@
+<div class="abastecimento-page">
+  <div class="abastecimento-page__header">
+    <h1 class="abastecimento-page__titulo">Abastecimento</h1>
+    <button hlmBtn class="abastecimento-page__btn-novo" (click)="abrirNovoAbastecimento()">
+      <ng-icon hlm name="lucidePlus" size="16" />
+      Novo Abastecimento
+    </button>
+  </div>
+
+  <div class="abastecimento-page__filtro">
+    <label hlmLabel>Veículo</label>
+    <hlm-select [value]="veiculoSelecionadoId()" (valueChange)="onVeiculoChange($event)"
+      [itemToString]="itemToStringVeiculo" class="abastecimento-page__select-veiculo">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (veiculo of veiculos(); track veiculo.id) {
+          <hlm-select-item [value]="veiculo.id">{{ veiculo.nome }} ({{ veiculo.placa }})</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+
+  @if (veiculos().length === 0) {
+    <p class="abastecimento-page__sem-veiculo">Cadastre um veículo antes de registrar abastecimentos.</p>
+  } @else {
+    <div class="fazenda-table">
+      <table hlmTable>
+        <thead>
+          <tr hlmTr class="fazenda-table__head-row">
+            <th hlmTh>Data</th>
+            <th hlmTh>Combustível</th>
+            <th hlmTh>Litros</th>
+            <th hlmTh>Local</th>
+            <th hlmTh>Valor/Litro</th>
+            <th hlmTh>Valor Total</th>
+            <th hlmTh>Km Atual</th>
+            <th hlmTh>Vínculo</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (abastecimento of abastecimentos(); track abastecimento.id) {
+            <tr hlmTr class="fazenda-table__row">
+              <td hlmTd>{{ abastecimento.data | date: 'dd/MM/yyyy' }}</td>
+              <td hlmTd>{{ tipoCombustivelLabel(abastecimento.tipoCombustivel) }}</td>
+              <td hlmTd>{{ abastecimento.litros }} L</td>
+              <td hlmTd>{{ localDetalhe(abastecimento) }}</td>
+              <td hlmTd>{{ formatarValor(abastecimento.valorPorLitro) }}</td>
+              <td hlmTd>{{ formatarValor(abastecimento.valorTotal) }}</td>
+              <td hlmTd>{{ abastecimento.kmAtual ?? '-' }}</td>
+              <td hlmTd>{{ abastecimento.vinculoNome ?? '-' }}</td>
+            </tr>
+          } @empty {
+            <tr hlmTr>
+              <td hlmTd colspan="8" class="fazenda-table__empty">
+                @if (carregando()) {
+                  Carregando abastecimentos...
+                } @else {
+                  Nenhum abastecimento registrado para esse veículo ainda.
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (totalPaginas() > 1) {
+        <nav hlmPagination class="fazenda-table__pagination">
+          <ul hlmPaginationContent>
+            <li hlmPaginationItem>
+              <button hlmPaginationPrevious (click)="irPara(paginaAtual() - 1)"></button>
+            </li>
+            @for (pagina of paginasVisiveis(); track pagina) {
+              <li hlmPaginationItem>
+                <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+                  {{ pagina + 1 }}
+                </button>
+              </li>
+            }
+            <li hlmPaginationItem>
+              <button hlmPaginationNext (click)="irPara(paginaAtual() + 1)"></button>
+            </li>
+          </ul>
+        </nav>
+      }
+    </div>
+  }
+</div>
