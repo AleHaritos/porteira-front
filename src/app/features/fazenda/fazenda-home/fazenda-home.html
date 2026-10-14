@@ -17,13 +17,6 @@
         <div hlmSidebarGroupContent>
           <ul hlmSidebarMenu>
             <li hlmSidebarMenuItem>
-              <a hlmSidebarMenuButton routerLink="negocios" routerLinkActive #rlaNegocios="routerLinkActive"
-                [isActive]="rlaNegocios.isActive">
-                <ng-icon name="lucideBriefcase" />
-                <span>Meus Negócios</span>
-              </a>
-            </li>
-            <li hlmSidebarMenuItem>
               <a hlmSidebarMenuButton routerLink="financeiro" routerLinkActive #rlaFinanceiro="routerLinkActive"
                 [isActive]="rlaFinanceiro.isActive">
                 <ng-icon name="lucideWallet" />
@@ -45,17 +38,17 @@
               </a>
             </li>
             <li hlmSidebarMenuItem>
-              <a hlmSidebarMenuButton routerLink="manutencao" routerLinkActive #rlaManutencao="routerLinkActive"
-                [isActive]="rlaManutencao.isActive">
-                <ng-icon name="lucideWrench" />
-                <span>Manutencao</span>
-              </a>
-            </li>
-            <li hlmSidebarMenuItem>
               <a hlmSidebarMenuButton routerLink="fornecedores" routerLinkActive #rlaFornecedores="routerLinkActive"
                 [isActive]="rlaFornecedores.isActive">
                 <ng-icon name="lucideHandshake" />
                 <span>Fornecedores</span>
+              </a>
+            </li>
+            <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="manutencao" routerLinkActive #rlaManutencao="routerLinkActive"
+                [isActive]="rlaManutencao.isActive">
+                <ng-icon name="lucideWrench" />
+                <span>Manutenção</span>
               </a>
             </li>
             <li hlmSidebarMenuItem>
@@ -77,6 +70,20 @@
                 [isActive]="rlaSafra.isActive">
                 <ng-icon name="lucideWheat" />
                 <span>Safra</span>
+              </a>
+            </li>
+            <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="negocios" routerLinkActive #rlaNegocios="routerLinkActive"
+                [isActive]="rlaNegocios.isActive">
+                <ng-icon name="lucideBriefcase" />
+                <span>Negócios</span>
+              </a>
+            </li>
+            <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="animais" routerLinkActive #rlaAnimais="routerLinkActive"
+                [isActive]="rlaAnimais.isActive">
+                <ng-icon name="lucidePawPrint" />
+                <span>Animais</span>
               </a>
             </li>
           </ul>

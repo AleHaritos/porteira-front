@@ -1,0 +1,104 @@
+<hlm-card class="fluxo-card py-0">
+  <div class="fluxo-card__filtros" [formGroup]="filtroForm">
+    <div class="fluxo-card__filtro-campo">
+      <label hlmLabel for="dataInicio">De</label>
+      <hlm-date-picker formControlName="dataInicio" [maxDate]="maxDate" class="fluxo-card__date">
+        <hlm-date-picker-trigger buttonId="dataInicio" class="w-full">Data inicial</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <div class="fluxo-card__filtro-campo">
+      <label hlmLabel for="dataFim">Até</label>
+      <hlm-date-picker formControlName="dataFim" [maxDate]="maxDate" class="fluxo-card__date">
+        <hlm-date-picker-trigger buttonId="dataFim" class="w-full">Data final</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <button hlmBtn class="fluxo-card__btn-pesquisar cursor-pointer" (click)="pesquisar()">
+      <ng-icon name="lucideSearch" size="16" />
+      Pesquisar
+    </button>
+  </div>
+
+  <div hlmCardContent class="fluxo-card__content">
+    <div class="fluxo-card__resumo">
+      <div class="fluxo-card__resumo-card">
+        <span class="fluxo-card__resumo-icone fluxo-card__resumo-icone--receita">
+          <ng-icon name="lucideTrendingUp" size="20" />
+        </span>
+        <div>
+          <p class="fluxo-card__resumo-label">Receitas</p>
+          <p class="fluxo-card__resumo-valor fluxo-card__resumo-valor--receita">
+            {{ formatarValor(resumo().totalReceitas) }}
+          </p>
+        </div>
+      </div>
+
+      <div class="fluxo-card__resumo-card">
+        <span class="fluxo-card__resumo-icone fluxo-card__resumo-icone--gasto">
+          <ng-icon name="lucideTrendingDown" size="20" />
+        </span>
+        <div>
+          <p class="fluxo-card__resumo-label">Gastos</p>
+          <p class="fluxo-card__resumo-valor fluxo-card__resumo-valor--gasto">
+            {{ formatarValor(resumo().totalGastos) }}
+          </p>
+        </div>
+      </div>
+
+      <div class="fluxo-card__resumo-card">
+        <span class="fluxo-card__resumo-icone" [class.fluxo-card__resumo-icone--receita]="resumo().saldo >= 0"
+          [class.fluxo-card__resumo-icone--gasto]="resumo().saldo < 0">
+          <ng-icon [name]="resumo().saldo >= 0 ? 'lucideTrendingUp' : 'lucideTriangleAlert'" size="20" />
+        </span>
+        <div>
+          <p class="fluxo-card__resumo-label">Saldo</p>
+          <p class="fluxo-card__resumo-valor" [class.fluxo-card__resumo-valor--receita]="resumo().saldo >= 0"
+            [class.fluxo-card__resumo-valor--gasto]="resumo().saldo < 0">
+            {{ formatarValor(resumo().saldo) }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fluxo-card__grafico-wrapper">
+      <div class="fluxo-card__grafico-header">
+        <span class="fluxo-card__grafico-icone">
+          <ng-icon name="lucideChartColumn" size="18" />
+        </span>
+        <h3 class="fluxo-card__grafico-titulo">Receitas x Gastos</h3>
+      </div>
+
+      @if (carregando()) {
+      <p class="fluxo-card__estado">Carregando dados...</p>
+      } @else if (resumo().totalReceitas === 0 && resumo().totalGastos === 0) {
+      <p class="fluxo-card__estado">Nenhuma movimentação registrada no período</p>
+      } @else {
+      <svg class="fluxo-card__grafico" [attr.viewBox]="'0 0 ' + larguraViewBoxGrafico() + ' 210'"
+        preserveAspectRatio="xMidYMid meet">
+        <line x1="0" [attr.x2]="larguraViewBoxGrafico()" [attr.y1]="baselineGrafico" [attr.y2]="baselineGrafico"
+          class="fluxo-card__eixo" />
+
+        @for (barra of geometriaGrafico(); track barra.chave) {
+        <g class="fluxo-card__barra-grupo">
+          <title>{{ barra.label }}: {{ barra.valorFormatado }}</title>
+
+          <text [attr.x]="barra.x + barra.width / 2" [attr.y]="barra.y - 10" text-anchor="middle"
+            class="fluxo-card__valor">
+            {{ barra.valorFormatado }}
+          </text>
+
+          <rect [attr.x]="barra.x" [attr.y]="barra.y" [attr.width]="barra.width" [attr.height]="barra.height"
+            rx="10" [attr.fill]="barra.cor" class="fluxo-card__barra" />
+
+          <text [attr.x]="barra.x + barra.width / 2" [attr.y]="baselineGrafico + 22" text-anchor="middle"
+            class="fluxo-card__rotulo">
+            {{ barra.label }}
+          </text>
+        </g>
+        }
+      </svg>
+      }
+    </div>
+  </div>
+</hlm-card>

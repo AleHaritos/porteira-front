@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { FornecedorRequest, IFornecedor, FornecedorPagamentoRequest } from '../../../shared/interfaces/IFornecedor';
 import { UtilService } from '../util-service';
+import { PageResponse } from '../../../shared/interfaces/IPage';
 
 @Service()
 export class FornecedorService {
@@ -19,6 +20,13 @@ export class FornecedorService {
 
   listarPorFazenda(fazendaId: number): Observable<IFornecedor[]> {
     return this.http.get<IFornecedor[]>(this.API_URL + '/fazenda/' + fazendaId).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
+   listarPaginado(fazendaId: number, page: number, size: number): Observable<PageResponse<IFornecedor>> {
+    const params = new HttpParams().set('page', page).set('size', size);
+    return this.http.get<PageResponse<IFornecedor>>(`${this.API_URL}/fazenda/${fazendaId}`, { params }).pipe(
       catchError(e => this.util.errorHandler(e))
     );
   }

@@ -1,0 +1,75 @@
+<hlm-dialog-header>
+  <div class="historico-consultas__header-linha">
+    <div class="historico-consultas__icone">
+      <ng-icon name="lucideSyringe" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Histórico de Consultas</h3>
+      <p class="historico-consultas__subtitulo">{{ context.lote.nome }} — {{ context.lote.quantidade }} animais</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<div class="fazenda-table">
+  <div hlmTableContainer>
+    <table hlmTable>
+      <thead hlmTHead>
+        <tr hlmTr class="fazenda-table__head-row">
+          <th hlmTh>Data</th>
+          <th hlmTh>Tipo</th>
+          <th hlmTh>Qtd. Animais</th>
+          <th hlmTh>Vínculo</th>
+          <th hlmTh>Custo</th>
+        </tr>
+      </thead>
+
+      <tbody hlmTBody>
+        @for (consulta of consultas(); track consulta.id) {
+        <tr hlmTr class="fazenda-table__row">
+          <td hlmTd>{{ consulta.data | date: 'dd/MM/yyyy' }}</td>
+          <td hlmTd>{{ tipoLabel(consulta.tipo) }}</td>
+          <td hlmTd>{{ consulta.quantidadeAnimais }}</td>
+          <td hlmTd>{{ vinculo(consulta) }}</td>
+          <td hlmTd>{{ formatarValor(consulta.custo) }}</td>
+        </tr>
+        } @empty {
+        <tr hlmTr>
+          <td hlmTd [attr.colSpan]="5" class="fazenda-table__empty">
+            @if (carregando()) {
+            Carregando consultas...
+            } @else {
+            Nenhuma consulta registrada
+            }
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (totalPaginas() > 1) {
+  <nav hlmPagination class="fazenda-table__pagination">
+    <ul hlmPaginationContent>
+      <li hlmPaginationItem>
+        <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+      </li>
+
+      @for (pagina of paginasVisiveis(); track pagina) {
+      <li hlmPaginationItem>
+        <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+          {{ pagina + 1 }}
+        </button>
+      </li>
+      }
+
+      <li hlmPaginationItem>
+        <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+      </li>
+    </ul>
+  </nav>
+  }
+</div>
+
+<hlm-dialog-footer>
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="fechar()">Fechar</button>
+</hlm-dialog-footer>

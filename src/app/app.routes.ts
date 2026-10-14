@@ -62,6 +62,11 @@ export const routes: Routes = [
               import('./features/equipamento/fornecedores/fornecedores').then((m) => m.Fornecedores),
           },
           {
+            path: 'animais',
+            loadComponent: () =>
+              import('./features/animais/animais').then((m) => m.Animais),
+          },
+          {
             path: 'manutencao',
             loadComponent: () =>
               import('./features/equipamento/manutencao/manutencao').then((m) => m.Manutencao),

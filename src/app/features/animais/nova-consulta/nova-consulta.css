@@ -1,0 +1,95 @@
+.nova-consulta__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nova-consulta__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #dcfce7;
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.nova-consulta__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nova-consulta__subtitulo {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.nova-consulta__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 0;
+}
+
+.nova-consulta__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nova-consulta__linha {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.nova-consulta__secao {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nova-consulta__toggle {
+  display: flex;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.nova-consulta__toggle button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nova-consulta__toggle button:not(:last-child) {
+  border-right: 1px solid #e5e7eb;
+}
+
+.nova-consulta__toggle button.ativo {
+  background: #16a34a;
+  color: white;
+}
+
+.nova-consulta__btn-salvar {
+  background: #16a34a;
+  color: white;
+}
+
+.nova-consulta__btn-salvar:hover {
+  background: #15803d;
+}

@@ -1,0 +1,110 @@
+<hlm-dialog-header>
+  <div class="nova-consulta__header-linha">
+    <div class="nova-consulta__icone">
+      <ng-icon name="lucideSyringe" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Nova Consulta</h3>
+      <p class="nova-consulta__subtitulo">{{ context.lote.nome }} — {{ context.lote.quantidade }} animais</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="nova-consulta__form">
+  <div class="nova-consulta__campo">
+    <label hlmLabel for="tipo">Tipo</label>
+    <hlm-select [value]="tipoSelecionado()" (valueChange)="onTipoChange($event)"
+      [itemToString]="itemToStringTipo" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (opcao of tipoOptions; track opcao.value) {
+        <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+
+  <div class="nova-consulta__linha">
+    <div class="nova-consulta__campo">
+      <label hlmLabel for="quantidadeAnimais">Quantidade de Animais</label>
+      <input hlmInput id="quantidadeAnimais" [value]="quantidadeAnimaisRaw() ?? ''"
+        (input)="onQuantidadeAnimaisInput($any($event.target).value)" placeholder="0" />
+    </div>
+
+    <div class="nova-consulta__campo">
+      <label hlmLabel for="data">Data</label>
+      <hlm-date-picker formControlName="data" [maxDate]="maxDate" class="w-full">
+        <hlm-date-picker-trigger buttonId="data" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+  </div>
+
+  <div class="nova-consulta__campo">
+    <label hlmLabel for="custo">Custo</label>
+    <input hlmInput id="custo" [value]="formatarMoedaDisplay(custoRaw())"
+      (input)="onCustoInput($any($event.target).value)" placeholder="R$ 0,00" />
+  </div>
+
+  <div class="nova-consulta__campo">
+    <label hlmLabel for="descricao">Descrição</label>
+    <input hlmInput id="descricao" formControlName="descricao" placeholder="Ex: Vacina contra febre aftosa" />
+  </div>
+
+  <div class="nova-consulta__secao">
+    <label hlmLabel>Vínculo</label>
+    <div class="nova-consulta__toggle">
+      <button type="button" [class.ativo]="vinculo() === 'NEGOCIO'" (click)="onVinculoChange('NEGOCIO')">
+        Negócio
+      </button>
+      <button type="button" [class.ativo]="vinculo() === 'SAFRA'" (click)="onVinculoChange('SAFRA')">
+        Safra
+      </button>
+    </div>
+  </div>
+
+  @if (vinculo() === 'NEGOCIO') {
+  <div class="nova-consulta__campo">
+    <label hlmLabel for="negocio">Negócio</label>
+    <hlm-select [value]="negocioSelecionado()" (valueChange)="onNegocioChange($event)"
+      [itemToString]="itemToStringNegocio" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (negocio of negocios(); track negocio.id) {
+        <hlm-select-item [value]="negocio.id">{{ negocio.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  } @else {
+  <div class="nova-consulta__campo">
+    <label hlmLabel for="safra">Safra</label>
+    <hlm-select [value]="safraSelecionada()" (valueChange)="onSafraChange($event)"
+      [itemToString]="itemToStringSafra" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (safra of safras(); track safra.id) {
+        <hlm-select-item [value]="safra.id">{{ safra.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  }
+
+  <div class="nova-consulta__campo">
+    <label hlmLabel for="observacao">Observação</label>
+    <textarea hlmTextarea id="observacao" formControlName="observacao" rows="3"></textarea>
+  </div>
+</form>
+
+<hlm-dialog-footer>
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn class="nova-consulta__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
+    {{ salvando() ? 'Salvando...' : 'Salvar' }}
+  </button>
+</hlm-dialog-footer>

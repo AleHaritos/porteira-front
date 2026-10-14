@@ -36,6 +36,15 @@ export class TransacoesService {
             .pipe(catchError(this.utilService.errorHandler));
     }
 
+    buscarResumoPorSafra(safraId: number, dataInicio: string | null, dataFim: string | null): Observable<ResumoFinanceiro> {
+        let params = new HttpParams();
+        if (dataInicio) params = params.set('dataInicio', dataInicio);
+        if (dataFim) params = params.set('dataFim', dataFim);
+
+        return this.http
+            .get<ResumoFinanceiro>(`${this.utilService.getUrlBase()}/transacao/safra/${safraId}/resumo`, { params })
+            .pipe(catchError((e) => this.utilService.errorHandler(e)));
+    }
 
     buscarResumoPorNegocio(negocioId: number, dataInicio?: string | null, dataFim?: string | null): Observable<ResumoFinanceiro> {
         let params = new HttpParams();
