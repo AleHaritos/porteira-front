@@ -14,6 +14,7 @@ import { NovaSafra } from './nova-safra/nova-safra';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { SafraService } from '../../core/services/safra/safra-service';
 import { CustoSafraCard } from './custo-safra-card/custo-safra-card';
+import { FluxoSafraCard } from './fluxo-safra-card/fluxo-safra-card';
 
 @Component({
   selector: 'app-safra',
@@ -27,7 +28,8 @@ import { CustoSafraCard } from './custo-safra-card/custo-safra-card';
     HlmDropdownMenuImports,
     NgIcon,
     RouterLinkWithHref,
-    CustoSafraCard
+    CustoSafraCard,
+    FluxoSafraCard
   ],
   providers: [provideIcons({ lucideEllipsisVertical, lucideSearch, lucidePlus, lucideExternalLink, lucidePencil  })],
   styleUrl: './safra.css',

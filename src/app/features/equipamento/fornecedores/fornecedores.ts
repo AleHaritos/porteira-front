@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { IFornecedor } from '../../../shared/interfaces/IFornecedor';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -11,10 +11,11 @@ import { FornecedorService } from '../../../core/services/equipamento/fornecedor
 import { ToastService } from '../../../core/services/toast-service';
 import { NovoFornecedor } from '../novo-fornecedor/novo-fornecedor';
 import { PagarFornecedor } from '../pagar-fornecedor/pagar-fornecedor';
+import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 
 @Component({
   selector: 'app-fornecedores',
-  imports: [CommonModule, HlmTableImports, HlmButtonImports, NgIcon],
+  imports: [CommonModule, HlmTableImports, HlmPaginationImports, HlmButtonImports, NgIcon],
   providers: [provideIcons({ lucidePlus })],
   styleUrl: './fornecedores.css',
   templateUrl: './fornecedores.html',
@@ -27,12 +28,25 @@ export class Fornecedores implements OnInit {
 
   fazendaId = signal<number | null>(null);
   fornecedores = signal<IFornecedor[]>([]);
+  paginaAtual = signal(0);
+  totalPaginas = signal(0);
   carregando = signal(false);
+
+  paginasVisiveis = computed(() => {
+    const atual = this.paginaAtual();
+    const total = this.totalPaginas();
+    const inicio = Math.max(0, atual - 1);
+    const fim = Math.min(total - 1, atual + 1);
+    const paginas: number[] = [];
+    for (let i = inicio; i <= fim; i++) paginas.push(i);
+    return paginas;
+  });
 
   ngOnInit(): void {
     this.route.parent?.paramMap.subscribe((params) => {
       const id = params.get('id');
       this.fazendaId.set(id ? Number(id) : null);
+      this.paginaAtual.set(0);
       this.carregar();
     });
   }
@@ -42,9 +56,10 @@ export class Fornecedores implements OnInit {
     if (fazendaId == null) return;
 
     this.carregando.set(true);
-    this.fornecedorService.listarPorFazenda(fazendaId).subscribe({
+    this.fornecedorService.listarPaginado(fazendaId, this.paginaAtual(), 10).subscribe({
       next: (res) => {
-        this.fornecedores.set(res);
+        this.fornecedores.set(res.content);
+        this.totalPaginas.set(res.totalPages);
         this.carregando.set(false);
       },
       error: () => {
@@ -52,6 +67,12 @@ export class Fornecedores implements OnInit {
         this.toastService.showError('Erro', 'Não foi possível carregar os fornecedores');
       },
     });
+  }
+
+  irPara(pagina: number): void {
+    if (pagina < 0 || pagina > this.totalPaginas() - 1) return;
+    this.paginaAtual.set(pagina);
+    this.carregar();
   }
 
   abrirNovoFornecedor(): void {
