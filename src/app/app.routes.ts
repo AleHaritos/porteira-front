@@ -25,7 +25,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/fazenda/fazenda-home/fazenda-home').then((m) => m.FazendaHome),
         children: [
-          { path: '', pathMatch: 'full', redirectTo: 'negocios' },
+          { path: '', pathMatch: 'full', redirectTo: 'financeiro' },
           {
             path: 'negocios',
             loadComponent: () =>
