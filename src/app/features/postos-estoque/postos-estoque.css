@@ -34,13 +34,12 @@
   background: #278a4c !important;
 }
 
-.postos-estoque-page__btn-pagar {
-  border-color: #2f9e58 !important;
-  color: #2f9e58 !important;
+.postos-estoque-page__row-clicavel {
+  cursor: pointer;
 }
 
-.postos-estoque-page__btn-pagar:hover:not(:disabled) {
-  background: #e3f5e8 !important;
+.postos-estoque-page__chevron {
+  color: #9ca3af;
 }
 
 .postos-estoque-page__saldo--positivo {
@@ -92,4 +91,11 @@
   text-align: right;
   width: 1%;
   white-space: nowrap;
+}
+
+.fazenda-table__pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  border-top: 1px solid #eef4f0;
 }

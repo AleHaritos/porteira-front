@@ -59,4 +59,17 @@ export class AbastecimentoService {
     if (params.length) url += `?${params.join('&')}`;
     return this.http.get<IAbastecimentoResumo>(url).pipe(catchError(this.utilService.errorHandler));
   }
+
+  buscarPorPosto(postoId: number, pagina: number, tamanho: number): Observable<PageResponse<IAbastecimento>> {
+    return this.http
+      .get<PageResponse<IAbastecimento>>(`${this.utilService.getUrlBase()}/abastecimento/posto/${postoId}?page=${pagina}&size=${tamanho}`)
+      .pipe(catchError(this.utilService.errorHandler));
+  }
+
+  darBaixa(abastecimentoId: number, dataBaixa?: string | null): Observable<IAbastecimento> {
+    const params = dataBaixa ? `?dataBaixa=${dataBaixa}` : '';
+    return this.http
+      .patch<IAbastecimento>(`${this.utilService.getUrlBase()}/abastecimento/${abastecimentoId}/baixa${params}`, {})
+      .pipe(catchError(this.utilService.errorHandler));
+  }
 }

@@ -1,0 +1,135 @@
+.posto-detalhe {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.posto-detalhe__btn-voltar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: fit-content;
+}
+
+.posto-detalhe__resumo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.posto-detalhe__titulo {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.posto-detalhe__observacao {
+  color: #6b7280;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.posto-detalhe__saldo-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 18px;
+  background: #f2f9f4;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  min-width: 180px;
+}
+
+.posto-detalhe__saldo-label {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.posto-detalhe__saldo-valor {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2f4d3a;
+}
+
+.posto-detalhe__saldo-valor--positivo {
+  color: #b45309;
+}
+
+.posto-detalhe__status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.posto-detalhe__status--pendente {
+  background-color: #fffbeb;
+  color: #b45309;
+}
+
+.posto-detalhe__status--baixado {
+  background-color: #e3f5e8;
+  color: #278a4c;
+}
+
+.posto-detalhe__btn-pagar {
+  border-color: #2f9e58 !important;
+  color: #2f9e58 !important;
+}
+
+.posto-detalhe__btn-pagar:hover {
+  background: #e3f5e8 !important;
+}
+
+.fazenda-table {
+  background: #ffffff;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.fazenda-table__head-row th {
+  background: #f2f9f4;
+  color: #2f4d3a;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #d8e6dc;
+}
+
+.fazenda-table__row td {
+  border-bottom: 1px solid #eef4f0;
+}
+
+.fazenda-table__row:last-child td {
+  border-bottom: none;
+}
+
+.fazenda-table__row:hover {
+  background-color: #f7fbf8;
+}
+
+.fazenda-table__empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.fazenda-table__acoes-head {
+  text-align: right;
+  width: 1%;
+  white-space: nowrap;
+}
+
+.fazenda-table__pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  border-top: 1px solid #eef4f0;
+}

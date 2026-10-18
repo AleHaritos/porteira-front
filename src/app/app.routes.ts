@@ -77,6 +77,11 @@ export const routes: Routes = [
               import('./features/postos-estoque/postos-estoque').then((m) => m.PostosEstoque),
           },
           {
+            path: 'posto/:postoId',
+            loadComponent: () =>
+              import('./features/postos-estoque/posto-detalhe/posto-detalhe').then((m) => m.PostoDetalhe),
+          },
+          {
             path: 'contas-pendentes',
             loadComponent: () =>
               import('./features/financeiro/contas-pendentes/contas-pendentes').then((m) => m.ContasPendentes),
