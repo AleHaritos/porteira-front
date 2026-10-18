@@ -98,19 +98,11 @@
     </div>
   }
 
-  <div class="novo-abastecimento__linha">
-    <div class="novo-abastecimento__campo">
-      <label hlmLabel>Data</label>
-      <hlm-date-picker formControlName="data" [maxDate]="maxDate" class="w-full">
-        <hlm-date-picker-trigger buttonId="data" class="w-full">Selecionar data</hlm-date-picker-trigger>
-      </hlm-date-picker>
-    </div>
-
-    <div class="novo-abastecimento__campo">
-      <label hlmLabel for="kmAtual">Km Atual</label>
-      <input hlmInput type="text" inputmode="numeric" id="kmAtual"
-        [value]="formatarKmDisplay(kmAtualRaw())" (input)="onKmAtualInput($any($event.target).value)" placeholder="0" />
-    </div>
+  <div class="novo-abastecimento__campo">
+    <label hlmLabel>Data</label>
+    <hlm-date-picker formControlName="data" [maxDate]="maxDate" class="w-full">
+      <hlm-date-picker-trigger buttonId="data" class="w-full">Selecionar data</hlm-date-picker-trigger>
+    </hlm-date-picker>
   </div>
 
   <div class="novo-abastecimento__vinculo-toggle">

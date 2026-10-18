@@ -86,7 +86,6 @@ export class NovoAbastecimento implements OnInit {
 
   litrosRaw = signal<number | null>(null);
   valorPorLitroRaw = signal<number | null>(null);
-  kmAtualRaw = signal<number | null>(null);
 
   postos = signal<IPosto[]>([]);
   postoSelecionadoId = signal<number | null>(null);
@@ -174,19 +173,9 @@ export class NovoAbastecimento implements OnInit {
     this.valorPorLitroRaw.set(digitos ? Number(digitos) / 1000 : null);
   }
 
-  onKmAtualInput(valor: string) {
-    const digitos = valor.replace(/\D/g, '');
-    this.kmAtualRaw.set(digitos ? Number(digitos) : null);
-  }
-
   formatarValorPorLitroDisplay(valor: number | null): string {
     if (valor == null) return '';
     return valor.toLocaleString('pt-BR', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
-  }
-
-  formatarKmDisplay(valor: number | null): string {
-    if (valor == null) return '';
-    return valor.toLocaleString('pt-BR');
   }
 
   cancelar() {
@@ -254,7 +243,6 @@ export class NovoAbastecimento implements OnInit {
         tipoCombustivel: this.tipoCombustivel(),
         localAbastecimento: local,
         postoId: local === 'POSTO_CREDENCIADO' ? this.postoSelecionadoId() : null,
-        kmAtual: this.kmAtualRaw() ?? undefined,
         observacao: observacao || undefined,
         fazendaId: this.context.fazendaId,
         negocioId: negocioId ?? undefined,

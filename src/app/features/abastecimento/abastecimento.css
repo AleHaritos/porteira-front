@@ -30,20 +30,69 @@
   background: #278a4c !important;
 }
 
-.abastecimento-page__filtro {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  max-width: 320px;
-}
-
-.abastecimento-page__select-veiculo {
-  width: 100%;
-}
-
 .abastecimento-page__sem-veiculo {
   color: #6b7280;
   font-size: 14px;
+}
+
+.abastecimento-page__filtros {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.abastecimento-page__campo-filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 200px;
+}
+
+.abastecimento-page__campo-filtro label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2f4d3a;
+}
+
+.abastecimento-page__acoes-filtro {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.abastecimento-page__acoes-filtro button {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.abastecimento-page__resumo {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.abastecimento-page__resumo-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 18px;
+  background: #f2f9f4;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  min-width: 170px;
+}
+
+.abastecimento-page__resumo-label {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.abastecimento-page__resumo-valor {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2f4d3a;
 }
 
 .fazenda-table {
@@ -86,4 +135,34 @@
   justify-content: center;
   padding: 1rem;
   border-top: 1px solid #eef4f0;
+}
+
+.abastecimento-page__vinculo-toggle {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.abastecimento-page__toggle-btn {
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #d8e6dc;
+  background: #ffffff;
+  color: #2f4d3a;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.abastecimento-page__toggle-btn:hover {
+  background: #f2f9f4;
+}
+
+.abastecimento-page__toggle-btn--ativo {
+  background: #2f9e58;
+  border-color: #2f9e58;
+  color: #ffffff;
+}
+
+.abastecimento-page__toggle-btn--ativo:hover {
+  background: #278a4c;
 }

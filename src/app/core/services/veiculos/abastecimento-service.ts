@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { AbastecimentoRequest, IAbastecimento } from '../../../shared/interfaces/IAbastecimento';
+import { AbastecimentoRequest, IAbastecimento, IAbastecimentoResumo } from '../../../shared/interfaces/IAbastecimento';
 import { PageResponse } from '../../../shared/interfaces/IPage';
 import { UtilService } from '../util-service';
 
@@ -20,5 +20,43 @@ export class AbastecimentoService {
     return this.http
       .get<PageResponse<IAbastecimento>>(`${this.utilService.getUrlBase()}/abastecimento/veiculo/${veiculoId}?page=${pagina}&size=${tamanho}`)
       .pipe(catchError(this.utilService.errorHandler));
+  }
+
+  buscarPorFazenda(
+    fazendaId: number,
+    pagina: number,
+    tamanho: number,
+    veiculoId?: number | null,
+    dataInicio?: string | null,
+    dataFim?: string | null,
+    negocioId?: number | null,
+    safraId?: number | null
+  ): Observable<PageResponse<IAbastecimento>> {
+    let url = `${this.utilService.getUrlBase()}/abastecimento/fazenda/${fazendaId}?page=${pagina}&size=${tamanho}`;
+    if (veiculoId) url += `&veiculoId=${veiculoId}`;
+    if (dataInicio) url += `&dataInicio=${dataInicio}`;
+    if (dataFim) url += `&dataFim=${dataFim}`;
+    if (negocioId) url += `&negocioId=${negocioId}`;
+    if (safraId) url += `&safraId=${safraId}`;
+    return this.http.get<PageResponse<IAbastecimento>>(url).pipe(catchError(this.utilService.errorHandler));
+  }
+
+  buscarResumo(
+    fazendaId: number,
+    veiculoId?: number | null,
+    dataInicio?: string | null,
+    dataFim?: string | null,
+    negocioId?: number | null,
+    safraId?: number | null
+  ): Observable<IAbastecimentoResumo> {
+    const params: string[] = [];
+    if (veiculoId) params.push(`veiculoId=${veiculoId}`);
+    if (dataInicio) params.push(`dataInicio=${dataInicio}`);
+    if (dataFim) params.push(`dataFim=${dataFim}`);
+    if (negocioId) params.push(`negocioId=${negocioId}`);
+    if (safraId) params.push(`safraId=${safraId}`);
+    let url = `${this.utilService.getUrlBase()}/abastecimento/fazenda/${fazendaId}/resumo`;
+    if (params.length) url += `?${params.join('&')}`;
+    return this.http.get<IAbastecimentoResumo>(url).pipe(catchError(this.utilService.errorHandler));
   }
 }

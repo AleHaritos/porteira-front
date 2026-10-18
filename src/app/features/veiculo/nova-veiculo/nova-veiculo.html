@@ -43,32 +43,11 @@
     </div>
   </div>
 
-  <div class="nova-veiculo__linha">
-    <div class="nova-veiculo__campo">
-      <label hlmLabel for="ano">Ano</label>
-      <input hlmInput type="number" id="ano" formControlName="ano" placeholder="2020" />
-    </div>
-
-    <div class="nova-veiculo__campo">
-      <label hlmLabel for="kmInicial">Km Inicial</label>
-      <input hlmInput type="text" inputmode="numeric" id="kmInicial" [value]="formatarKmDisplay(kmInicialRaw())"
-        (input)="onKmInicialInput($any($event.target).value)" placeholder="0" />
-    </div>
-  </div>
-
-  <div class="nova-veiculo__linha">
-    <div class="nova-veiculo__campo">
-      <label hlmLabel for="valorCompra">Valor de Compra</label>
-      <input hlmInput type="text" inputmode="numeric" id="valorCompra" [value]="formatarMoedaDisplay(valorCompraRaw())"
-        (input)="onValorCompraInput($any($event.target).value)" placeholder="0,00" />
-    </div>
-
-    <div class="nova-veiculo__campo">
-      <label hlmLabel>Data de Compra</label>
-      <hlm-date-picker formControlName="dataCompra" [maxDate]="maxDate" class="w-full">
-        <hlm-date-picker-trigger buttonId="dataCompra" class="w-full">Selecionar data</hlm-date-picker-trigger>
-      </hlm-date-picker>
-    </div>
+  <div class="nova-veiculo__campo">
+    <label hlmLabel>Data de Compra</label>
+    <hlm-date-picker formControlName="dataCompra" [maxDate]="maxDate" class="w-full">
+      <hlm-date-picker-trigger buttonId="dataCompra" class="w-full">Selecionar data</hlm-date-picker-trigger>
+    </hlm-date-picker>
   </div>
 
   <div class="nova-veiculo__campo">
