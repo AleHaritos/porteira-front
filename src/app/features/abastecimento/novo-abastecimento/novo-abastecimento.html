@@ -5,12 +5,27 @@
     </div>
     <div class="novo-abastecimento__header-textos">
       <h3 hlmDialogTitle>Novo Abastecimento</h3>
-      <p hlmDialogDescription class="novo-abastecimento__header-subtitulo">{{ veiculoNome }}</p>
+      <p hlmDialogDescription class="novo-abastecimento__header-subtitulo">{{ headerSubtitulo() }}</p>
     </div>
   </div>
 </hlm-dialog-header>
 
 <form [formGroup]="form" class="novo-abastecimento__form">
+  <div class="novo-abastecimento__campo">
+    <label hlmLabel>Veículo</label>
+    <hlm-select [value]="veiculoSelecionadoId()" (valueChange)="onVeiculoChange($event)"
+      [itemToString]="itemToStringVeiculo" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (veiculo of veiculos(); track veiculo.id) {
+          <hlm-select-item [value]="veiculo.id">{{ veiculo.nome }} ({{ veiculo.placa }})</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+
   <div class="novo-abastecimento__local-toggle">
     <button type="button" hlmBtn variant="outline" class="novo-abastecimento__toggle-btn cursor-pointer"
       [class.novo-abastecimento__toggle-btn--ativo]="localAbastecimento() === 'POSTO_CASUAL'"
@@ -30,12 +45,6 @@
       Posto Credenciado
     </button>
   </div>
-
-  @if (localAbastecimento() === 'ESTOQUE_FAZENDA') {
-    <p class="novo-abastecimento__aviso">
-      O custo já foi lançado no reabastecimento do estoque — aqui só será descontada a quantidade de litros.
-    </p>
-  }
 
   <div class="novo-abastecimento__linha">
     <div class="novo-abastecimento__campo">

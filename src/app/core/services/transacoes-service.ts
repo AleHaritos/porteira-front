@@ -25,11 +25,15 @@ export class TransacoesService {
         dataInicio?: string | null,
         dataFim?: string | null,
         tipo?: 'RECEITA' | 'GASTO' | null,
+        negocioId?: number | null,
+        safraId?: number | null,
     ): Observable<PageResponse<ITransacao>> {
         let params = `page=${pagina}&size=${tamanho}`;
         if (dataInicio) params += `&dataInicio=${dataInicio}`;
         if (dataFim) params += `&dataFim=${dataFim}`;
         if (tipo) params += `&tipo=${tipo}`;
+        if (negocioId) params += `&negocioId=${negocioId}`;
+        if (safraId) params += `&safraId=${safraId}`;
 
         return this.http
             .get<PageResponse<ITransacao>>(`${this.utilService.getUrlBase()}/transacao/fazenda/${fazendaId}?${params}`)
@@ -72,10 +76,18 @@ export class TransacoesService {
             .pipe(catchError(this.utilService.errorHandler));
     }
 
-    buscarResumo(fazendaId: number, dataInicio?: string | null, dataFim?: string | null): Observable<ResumoFinanceiro> {
+    buscarResumo(
+        fazendaId: number,
+        dataInicio?: string | null,
+        dataFim?: string | null,
+        negocioId?: number | null,
+        safraId?: number | null,
+    ): Observable<ResumoFinanceiro> {
         let params = '';
         if (dataInicio) params += `dataInicio=${dataInicio}`;
         if (dataFim) params += `${params ? '&' : ''}dataFim=${dataFim}`;
+        if (negocioId) params += `${params ? '&' : ''}negocioId=${negocioId}`;
+        if (safraId) params += `${params ? '&' : ''}safraId=${safraId}`;
 
         return this.http
             .get<ResumoFinanceiro>(`${this.utilService.getUrlBase()}/transacao/fazenda/${fazendaId}/resumo${params ? '?' + params : ''}`)
