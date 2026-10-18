@@ -139,8 +139,4 @@ export class Veiculo implements OnInit {
   tipoLabel(tipo: string): string {
     return this.tipoOptions.find((o) => o.value === tipo)?.label || tipo;
   }
-
-  formatarValor(valor: number): string {
-    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  }
 }

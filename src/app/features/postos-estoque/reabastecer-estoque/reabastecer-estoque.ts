@@ -39,8 +39,6 @@ export class ReabastecerEstoque implements OnInit {
   private context = injectBrnDialogContext<ReabastecerEstoqueDialogContext>();
   private fb = inject(FormBuilder);
   private estoqueCombustivelService = inject(EstoqueCombustivelService);
-  private negocioService = inject(NegocioService);
-  private safraService = inject(SafraService);
   private toastService = inject(ToastService);
 
   salvando = signal(false);
@@ -59,18 +57,6 @@ export class ReabastecerEstoque implements OnInit {
   litrosRaw = signal<number | null>(null);
   valorPorLitroRaw = signal<number | null>(null);
 
-  vinculo = signal<Vinculo>('NEGOCIO');
-  negocios = signal<INegocio[]>([]);
-  safras = signal<ISafra[]>([]);
-  negocioSelecionado = signal<number | null>(null);
-  safraSelecionada = signal<number | null>(null);
-
-  itemToStringNegocio = (value: number | null | undefined) =>
-    this.negocios().find((n) => n.id === value)?.nome || '';
-
-  itemToStringSafra = (value: number | null | undefined) =>
-    this.safras().find((s) => s.id === value)?.nome || '';
-
   form = this.fb.group({
     data: [new Date() as Date | null, Validators.required],
     observacao: [''],
@@ -78,8 +64,6 @@ export class ReabastecerEstoque implements OnInit {
 
   ngOnInit(): void {
     const fazendaId = this.context.fazendaId;
-    this.negocioService.listarTodosPorFazenda(fazendaId).subscribe({ next: (n) => this.negocios.set(n) });
-    this.safraService.buscarSafrasPorFazenda(fazendaId).subscribe({ next: (s) => this.safras.set(s.content) });
   }
 
   onTipoCombustivelChange(tipo: TipoCombustivel | null | undefined) {
@@ -100,15 +84,6 @@ export class ReabastecerEstoque implements OnInit {
     if (valor == null) return '';
     return valor.toLocaleString('pt-BR', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
   }
-
-  onVinculoChange(vinculo: Vinculo) {
-    this.vinculo.set(vinculo);
-    this.negocioSelecionado.set(null);
-    this.safraSelecionada.set(null);
-  }
-
-  onNegocioChange(id: number | null | undefined) { this.negocioSelecionado.set(id ?? null); }
-  onSafraChange(id: number | null | undefined) { this.safraSelecionada.set(id ?? null); }
 
   cancelar() {
     this.dialogRef.close(false);
@@ -139,15 +114,6 @@ export class ReabastecerEstoque implements OnInit {
       return;
     }
 
-    const vinculo = this.vinculo();
-    const negocioId = vinculo === 'NEGOCIO' ? this.negocioSelecionado() : null;
-    const safraId = vinculo === 'SAFRA' ? this.safraSelecionada() : null;
-
-    if (!negocioId && !safraId) {
-      this.toastService.showError('Erro', 'Selecione um negócio ou uma safra');
-      return;
-    }
-
     const { data, observacao } = this.form.value;
 
     this.salvando.set(true);
@@ -158,8 +124,6 @@ export class ReabastecerEstoque implements OnInit {
         litros,
         valorPorLitro,
         data: this.formatarDataIso(data!),
-        negocioId: negocioId ?? undefined,
-        safraId: safraId ?? undefined,
         observacao: observacao || undefined,
       })
       .subscribe({

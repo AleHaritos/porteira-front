@@ -102,7 +102,7 @@
   </div>
 </form>
 
-<hlm-dialog-footer>
+<hlm-dialog-footer class="mt-2">
   <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
   <button hlmBtn class="nova-consulta__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
     {{ salvando() ? 'Salvando...' : 'Salvar' }}

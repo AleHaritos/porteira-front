@@ -14,9 +14,7 @@
           <th hlmTh>Nome</th>
           <th hlmTh>Placa</th>
           <th hlmTh>Tipo</th>
-          <th hlmTh>Ano</th>
-          <th hlmTh>Km Inicial</th>
-          <th hlmTh>Valor de Compra</th>
+          <th hlmTh>Data de Compra</th>
           <th hlmTh class="fazenda-table__acoes-head">Ações</th>
         </tr>
       </thead>
@@ -26,9 +24,7 @@
             <td hlmTd class="fazenda-table__nome">{{ veiculo.nome }}</td>
             <td hlmTd>{{ veiculo.placa }}</td>
             <td hlmTd>{{ tipoLabel(veiculo.tipo) }}</td>
-            <td hlmTd>{{ veiculo.ano }}</td>
-            <td hlmTd>{{ veiculo.kmInicial }} km</td>
-            <td hlmTd>{{ formatarValor(veiculo.valorCompra) }}</td>
+            <td hlmTd>{{ veiculo.dataCompra | date: 'dd/MM/yyyy' }}</td>
             <td hlmTd>
               <div class="produtos-table__acoes">
                 <button class="fazenda-table__action-btn fazenda-table__action-btn--editar" (click)="editar(veiculo)">
@@ -42,7 +38,7 @@
           </tr>
         } @empty {
           <tr hlmTr>
-            <td hlmTd colspan="7" class="fazenda-table__empty">
+            <td hlmTd colspan="5" class="fazenda-table__empty">
               @if (carregando()) {
                 Carregando veículos...
               } @else {

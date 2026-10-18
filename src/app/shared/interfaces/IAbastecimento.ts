@@ -12,7 +12,6 @@ export interface IAbastecimento {
   tipoCombustivel: TipoCombustivel;
   localAbastecimento: LocalAbastecimento;
   postoNome?: string | null;
-  kmAtual?: number | null;
   observacao?: string;
   vinculoNome?: string | null;
 }
@@ -25,9 +24,14 @@ export interface AbastecimentoRequest {
   tipoCombustivel: TipoCombustivel;
   localAbastecimento: LocalAbastecimento;
   postoId?: number | null;
-  kmAtual?: number | null;
   observacao?: string;
   fazendaId: number;
   negocioId?: number;
   safraId?: number;
+}
+
+export interface IAbastecimentoResumo {
+  totalValor: number;
+  totalLitros: number;
+  quantidade: number;
 }

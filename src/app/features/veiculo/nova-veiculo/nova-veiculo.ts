@@ -47,9 +47,6 @@ export class NovaVeiculo implements OnInit {
   maxDate = new Date();
   editando = !!this.context.veiculo;
 
-  valorCompraRaw = signal<number | null>(this.context.veiculo?.valorCompra ?? null);
-  kmInicialRaw = signal<number>(this.context.veiculo?.kmInicial ?? 0);
-
   tipoOptions: { value: TipoVeiculo; label: string }[] = [
     { value: 'CAMINHAO', label: 'Caminhão' },
     { value: 'TRATOR', label: 'Trator' },
@@ -72,7 +69,6 @@ export class NovaVeiculo implements OnInit {
       this.context.veiculo ? new Date(this.context.veiculo.dataCompra) : (new Date() as Date | null),
       Validators.required,
     ],
-    ano: [this.context.veiculo?.ano ?? null, Validators.required],
     observacao: [this.context.veiculo?.observacao ?? ''],
   });
 
@@ -84,27 +80,8 @@ export class NovaVeiculo implements OnInit {
     });
   }
 
-   onTipoChange(tipo: TipoVeiculo | null | undefined) {
+  onTipoChange(tipo: TipoVeiculo | null | undefined) {
     if (tipo) this.tipoSelecionado.set(tipo);
-  }
-
-  onValorCompraInput(valor: string) {
-    const somenteDigitos = valor.replace(/\D/g, '');
-    this.valorCompraRaw.set(somenteDigitos ? Number(somenteDigitos) / 100 : null);
-  }
-
-  onKmInicialInput(valor: string) {
-    const somenteDigitos = valor.replace(/\D/g, '');
-    this.kmInicialRaw.set(somenteDigitos ? Number(somenteDigitos) : 0);
-  }
-
-  formatarMoedaDisplay(valor: number | null): string {
-    if (valor == null) return '';
-    return valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-
-  formatarKmDisplay(valor: number): string {
-    return valor.toLocaleString('pt-BR');
   }
 
   cancelar() {
@@ -124,21 +101,12 @@ export class NovaVeiculo implements OnInit {
       return;
     }
 
-    const valorCompra = this.valorCompraRaw();
-    if (valorCompra == null || valorCompra <= 0) {
-      this.toastService.showError('Erro', 'Informe o valor de compra do veículo');
-      return;
-    }
-
-    const { nome, placa, dataCompra, ano, observacao } = this.form.value;
+    const { nome, placa, dataCompra, observacao } = this.form.value;
 
     const request: VeiculoRequest = {
       nome: nome!,
       placa: placa!,
       dataCompra: this.formatarDataIso(dataCompra!),
-      valorCompra,
-      ano: Number(ano),
-      kmInicial: this.kmInicialRaw(),
       observacao: observacao || undefined,
       tipo: this.tipoSelecionado(),
       fazendaId: this.context.fazendaId,

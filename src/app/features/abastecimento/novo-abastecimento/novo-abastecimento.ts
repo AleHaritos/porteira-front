@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideFuel, lucideWarehouse, lucideHandshake } from '@ng-icons/lucide';
@@ -15,10 +15,12 @@ import { SafraService } from '../../../core/services/safra/safra-service';
 import { ToastService } from '../../../core/services/toast-service';
 import { AbastecimentoService } from '../../../core/services/veiculos/abastecimento-service';
 import { PostoService } from '../../../core/services/veiculos/posto-service';
+import { VeiculoService } from '../../../core/services/veiculos/veiculo-service';
 import { TipoCombustivel, LocalAbastecimento } from '../../../shared/interfaces/IAbastecimento';
 import { INegocio } from '../../../shared/interfaces/INegocio';
 import { IPosto } from '../../../shared/interfaces/IPosto';
 import { ISafra } from '../../../shared/interfaces/ISafras';
+import { IVeiculo } from '../../../shared/interfaces/IVeiculos';
 
 type Vinculo = 'NEGOCIO' | 'SAFRA';
 
@@ -50,15 +52,25 @@ export class NovoAbastecimento implements OnInit {
   private context = injectBrnDialogContext<AbastecimentoDialogContext>();
   private fb = inject(FormBuilder);
   private abastecimentoService = inject(AbastecimentoService);
+  private veiculoService = inject(VeiculoService);
   private postoService = inject(PostoService);
   private negocioService = inject(NegocioService);
   private safraService = inject(SafraService);
   private toastService = inject(ToastService);
 
-  veiculoNome = this.context.veiculoNome;
-
   salvando = signal(false);
   maxDate = new Date();
+
+  veiculos = signal<IVeiculo[]>([]);
+  veiculoSelecionadoId = signal<number | null>(this.context.veiculoId);
+
+  veiculoSelecionado = computed(() => this.veiculos().find((v) => v.id === this.veiculoSelecionadoId()) ?? null);
+  headerSubtitulo = computed(() => this.veiculoSelecionado()?.nome ?? this.context.veiculoNome);
+
+  itemToStringVeiculo = (value: number | null | undefined) => {
+    const veiculo = this.veiculos().find((v) => v.id === value);
+    return veiculo ? `${veiculo.nome} (${veiculo.placa})` : '';
+  };
 
   tipoCombustivel = signal<TipoCombustivel>('DIESEL');
   localAbastecimento = signal<LocalAbastecimento>('POSTO_CASUAL');
@@ -74,7 +86,6 @@ export class NovoAbastecimento implements OnInit {
 
   litrosRaw = signal<number | null>(null);
   valorPorLitroRaw = signal<number | null>(null);
-  kmAtualRaw = signal<number | null>(null);
 
   postos = signal<IPosto[]>([]);
   postoSelecionadoId = signal<number | null>(null);
@@ -102,6 +113,11 @@ export class NovoAbastecimento implements OnInit {
   ngOnInit(): void {
     const fazendaId = this.context.fazendaId;
 
+    this.veiculoService.buscarPorFazenda(fazendaId, 0, 100).subscribe({
+      next: (res) => this.veiculos.set(res.content),
+      error: () => this.toastService.showError('Erro', 'Não foi possível carregar os veículos'),
+    });
+
     this.negocioService.listarTodosPorFazenda(fazendaId).subscribe({
       next: (negocios) => this.negocios.set(negocios),
     });
@@ -113,6 +129,10 @@ export class NovoAbastecimento implements OnInit {
     this.postoService.listarPorFazenda(fazendaId).subscribe({
       next: (postos) => this.postos.set(postos),
     });
+  }
+
+  onVeiculoChange(id: number | null | undefined) {
+    this.veiculoSelecionadoId.set(id ?? null);
   }
 
   onTipoCombustivelChange(tipo: TipoCombustivel | null | undefined) {
@@ -153,19 +173,9 @@ export class NovoAbastecimento implements OnInit {
     this.valorPorLitroRaw.set(digitos ? Number(digitos) / 1000 : null);
   }
 
-  onKmAtualInput(valor: string) {
-    const digitos = valor.replace(/\D/g, '');
-    this.kmAtualRaw.set(digitos ? Number(digitos) : null);
-  }
-
   formatarValorPorLitroDisplay(valor: number | null): string {
     if (valor == null) return '';
     return valor.toLocaleString('pt-BR', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
-  }
-
-  formatarKmDisplay(valor: number | null): string {
-    if (valor == null) return '';
-    return valor.toLocaleString('pt-BR');
   }
 
   cancelar() {
@@ -182,6 +192,12 @@ export class NovoAbastecimento implements OnInit {
   salvar() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return;
+    }
+
+    const veiculoId = this.veiculoSelecionadoId();
+    if (veiculoId == null) {
+      this.toastService.showError('Erro', 'Selecione o veículo');
       return;
     }
 
@@ -220,14 +236,13 @@ export class NovoAbastecimento implements OnInit {
     this.salvando.set(true);
     this.abastecimentoService
       .salvar({
-        veiculoId: this.context.veiculoId,
+        veiculoId,
         data: this.formatarDataIso(data!),
         litros,
         valorPorLitro: local === 'ESTOQUE_FAZENDA' ? null : this.valorPorLitroRaw(),
         tipoCombustivel: this.tipoCombustivel(),
         localAbastecimento: local,
         postoId: local === 'POSTO_CREDENCIADO' ? this.postoSelecionadoId() : null,
-        kmAtual: this.kmAtualRaw() ?? undefined,
         observacao: observacao || undefined,
         fazendaId: this.context.fazendaId,
         negocioId: negocioId ?? undefined,
