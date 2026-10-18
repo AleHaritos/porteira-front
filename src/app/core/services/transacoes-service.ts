@@ -93,4 +93,24 @@ export class TransacoesService {
             .get<ResumoFinanceiro>(`${this.utilService.getUrlBase()}/transacao/fazenda/${fazendaId}/resumo${params ? '?' + params : ''}`)
             .pipe(catchError(this.utilService.errorHandler));
     }
+
+    listarComFiltros(
+        fazendaId: number,
+        dataInicio?: string | null,
+        dataFim?: string | null,
+        tipo?: 'RECEITA' | 'GASTO' | null,
+        negocioId?: number | null,
+        safraId?: number | null,
+    ): Observable<ITransacao[]> {
+        let params = '';
+        if (dataInicio) params += `dataInicio=${dataInicio}`;
+        if (dataFim) params += `${params ? '&' : ''}dataFim=${dataFim}`;
+        if (tipo) params += `${params ? '&' : ''}tipo=${tipo}`;
+        if (negocioId) params += `${params ? '&' : ''}negocioId=${negocioId}`;
+        if (safraId) params += `${params ? '&' : ''}safraId=${safraId}`;
+
+        return this.http
+            .get<ITransacao[]>(`${this.utilService.getUrlBase()}/transacao/fazenda/${fazendaId}/todos${params ? '?' + params : ''}`)
+            .pipe(catchError(this.utilService.errorHandler));
+    }
 }

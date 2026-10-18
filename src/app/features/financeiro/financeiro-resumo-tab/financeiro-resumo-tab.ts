@@ -2,7 +2,10 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, computed, in
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideTrendingUp, lucideTrendingDown, lucideTriangleAlert, lucideChartColumn, lucideSearch } from '@ng-icons/lucide';
+import { lucideTrendingUp, lucideTrendingDown, lucideTriangleAlert, lucideChartColumn, lucideSearch, lucideFileDown } from '@ng-icons/lucide';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { ITransacao } from '../../../shared/interfaces/ITransacao';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
@@ -54,7 +57,7 @@ const GRAFICO_BASELINE = 170;
     TruncarPipe,
   ],
   providers: [
-    provideIcons({ lucideTrendingUp, lucideTrendingDown, lucideTriangleAlert, lucideChartColumn, lucideSearch }),
+    provideIcons({ lucideTrendingUp, lucideTrendingDown, lucideTriangleAlert, lucideChartColumn, lucideSearch, lucideFileDown }),
   ],
   styleUrl: './financeiro-resumo-tab.css',
   templateUrl: './financeiro-resumo-tab.html',
@@ -79,6 +82,7 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
   contasReceberTotal = signal(0);
 
   readonly baselineGrafico = GRAFICO_BASELINE;
+  exportandoPdf = signal(false);
 
   vinculoFiltro = signal<VinculoFiltro>('TODOS');
   negocios = signal<INegocio[]>([]);
@@ -234,5 +238,179 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
 
   formatarValor(valor: number): string {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  private formatarDataBr(data: Date): string {
+    return data.toLocaleDateString('pt-BR');
+  }
+
+  exportarPdf(): void {
+    if (this.fazendaId == null) return;
+
+    const { dataInicio, dataFim } = this.filtroForm.value;
+    const inicio = dataInicio ? this.formatarDataIso(dataInicio) : this.primeiroDiaDoMes();
+    const fim = dataFim ? this.formatarDataIso(dataFim) : this.ultimoDiaDoMes();
+
+    const vinculo = this.vinculoFiltro();
+    const negocioId = vinculo === 'NEGOCIO' ? this.negocioFiltroId() : null;
+    const safraId = vinculo === 'SAFRA' ? this.safraFiltroId() : null;
+
+    this.exportandoPdf.set(true);
+
+    this.transacoesService.listarComFiltros(this.fazendaId, inicio, fim, null, negocioId, safraId).subscribe({
+      next: (transacoes) => {
+        this.gerarPdf(transacoes, inicio, fim);
+        this.exportandoPdf.set(false);
+      },
+      error: () => {
+        this.exportandoPdf.set(false);
+        this.toastService.showError('Erro', 'Não foi possível gerar o PDF');
+      },
+    });
+  }
+
+  private parseDataIso(iso: string): Date {
+    const [ano, mes, dia] = iso.split('-').map(Number);
+    return new Date(ano, mes - 1, dia);
+  }
+
+  private gerarPdf(transacoes: ITransacao[], inicioIso: string, fimIso: string): void {
+    const doc = new jsPDF();
+    const larguraPagina = doc.internal.pageSize.getWidth();
+    const margem = 14;
+    let y: number;
+
+    // ---- faixa de cabeçalho ----
+    doc.setFillColor(47, 158, 88);
+    doc.rect(0, 0, larguraPagina, 28, 'F');
+
+    doc.setFontSize(18);
+    doc.setTextColor(255, 255, 255);
+    doc.text('Relatório Financeiro', margem, 17);
+
+    doc.setFontSize(9);
+    doc.setTextColor(230, 245, 235);
+    doc.text(`Gerado em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR').slice(0, 5)}`, margem, 24);
+
+    y = 38;
+
+    // ---- filtros ----
+    doc.setFontSize(10);
+    doc.setTextColor(107, 114, 128);
+    const inicioTexto = this.formatarDataBr(this.parseDataIso(inicioIso));
+    const fimTexto = this.formatarDataBr(this.parseDataIso(fimIso));
+    doc.text(`Período: ${inicioTexto} até ${fimTexto}`, margem, y);
+
+    const vinculo = this.vinculoFiltro();
+    let vinculoTexto = 'Vínculo: Todos';
+    if (vinculo === 'NEGOCIO') {
+      vinculoTexto = `Vínculo: Negócio - ${this.itemToStringNegocio(this.negocioFiltroId()) || '-'}`;
+    } else if (vinculo === 'SAFRA') {
+      vinculoTexto = `Vínculo: Safra - ${this.itemToStringSafra(this.safraFiltroId()) || '-'}`;
+    }
+    doc.text(vinculoTexto, larguraPagina - margem, y, { align: 'right' });
+
+    y += 10;
+
+    // ---- cards de resumo ----
+    const resumo = this.resumo();
+    const cardLargura = (larguraPagina - margem * 2 - 10 * 2) / 3;
+    const cardAltura = 22;
+
+    const cards: { label: string; valor: number; corFundo: [number, number, number]; corTexto: [number, number, number] }[] = [
+      { label: 'Receitas', valor: resumo.totalReceitas, corFundo: [227, 245, 232], corTexto: [39, 138, 76] },
+      { label: 'Gastos', valor: resumo.totalGastos, corFundo: [253, 232, 232], corTexto: [192, 57, 43] },
+      {
+        label: 'Saldo',
+        valor: resumo.saldo,
+        corFundo: resumo.saldo >= 0 ? [227, 245, 232] : [253, 232, 232],
+        corTexto: resumo.saldo >= 0 ? [39, 138, 76] : [192, 57, 43],
+      },
+    ];
+
+    cards.forEach((card, i) => {
+      const x = margem + i * (cardLargura + 10);
+      doc.setFillColor(card.corFundo[0], card.corFundo[1], card.corFundo[2]);
+      doc.roundedRect(x, y, cardLargura, cardAltura, 2, 2, 'F');
+
+      doc.setFontSize(8);
+      doc.setTextColor(107, 114, 128);
+      doc.text(card.label, x + 4, y + 8);
+
+      doc.setFontSize(12);
+      doc.setTextColor(card.corTexto[0], card.corTexto[1], card.corTexto[2]);
+      doc.text(this.formatarValor(card.valor), x + 4, y + 17);
+    });
+
+    y += cardAltura + 14;
+
+    // ---- gráfico ----
+    doc.setFontSize(11);
+    doc.setTextColor(31, 41, 55);
+    doc.text('Receitas x Gastos', margem, y);
+    y += 6;
+
+    const alturaMaxima = 40;
+    const larguraBarra = 26;
+    const espacoBarras = 18;
+    const baseline = y + alturaMaxima;
+    const maxValor = Math.max(resumo.totalReceitas, resumo.totalGastos, 1);
+
+    const barras: { label: string; valor: number; cor: [number, number, number] }[] = [
+      { label: 'Receitas', valor: resumo.totalReceitas, cor: [47, 158, 88] },
+      { label: 'Gastos', valor: resumo.totalGastos, cor: [192, 57, 43] },
+    ];
+
+    barras.forEach((barra, i) => {
+      const altura = (barra.valor / maxValor) * alturaMaxima;
+      const x = margem + i * (larguraBarra + espacoBarras);
+      const yTopo = baseline - altura;
+
+      doc.setFillColor(barra.cor[0], barra.cor[1], barra.cor[2]);
+      doc.roundedRect(x, yTopo, larguraBarra, altura, 1.5, 1.5, 'F');
+
+      doc.setFontSize(8);
+      doc.setTextColor(31, 41, 55);
+      doc.text(this.formatarValor(barra.valor), x, yTopo - 2);
+      doc.text(barra.label, x, baseline + 5);
+    });
+
+    doc.setDrawColor(229, 231, 235);
+    doc.line(margem, baseline, larguraPagina - margem, baseline);
+
+    y = baseline + 16;
+
+    // ---- tabela de transações ----
+    doc.setFontSize(11);
+    doc.setTextColor(31, 41, 55);
+    doc.text(`Transações do Período (${transacoes.length})`, margem, y);
+
+    const linhas = transacoes.map((t) => [
+      this.formatarDataBr(this.parseDataIso(t.data)),
+      t.tipo === 'RECEITA' ? 'Receita' : 'Gasto',
+      t.descricao || '-',
+      t.negocioNome ?? t.safraNome ?? '-',
+      this.formatarValor(t.valor),
+    ]);
+
+    autoTable(doc, {
+      startY: y + 4,
+      head: [['Data', 'Tipo', 'Descrição', 'Vínculo', 'Valor']],
+      body: linhas,
+      margin: { left: margem, right: margem },
+      styles: { fontSize: 8.5, cellPadding: 2.5 },
+      headStyles: { fillColor: [232, 245, 236], textColor: [39, 138, 76], fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [251, 254, 252] },
+      columnStyles: { 4: { halign: 'right' } },
+      didParseCell: (data) => {
+        if (data.section === 'body' && data.column.index === 4) {
+          const tipo = linhas[data.row.index][1];
+          data.cell.styles.textColor = tipo === 'Receita' ? [39, 138, 76] : [192, 57, 43];
+          data.cell.styles.fontStyle = 'bold';
+        }
+      },
+    });
+
+    doc.save(`relatorio-financeiro-${this.formatarDataIso(new Date())}.pdf`);
   }
 }

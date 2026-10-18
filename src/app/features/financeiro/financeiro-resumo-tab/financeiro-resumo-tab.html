@@ -77,6 +77,12 @@
     <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="limparFiltros()">
       Limpar filtros
     </button>
+
+    <button hlmBtn variant="outline" type="button" class="financeiro-page__btn-exportar cursor-pointer"
+      [disabled]="exportandoPdf()" (click)="exportarPdf()">
+      <ng-icon name="lucideFileDown" size="16" />
+      {{ exportandoPdf() ? 'Gerando...' : 'Exportar PDF' }}
+    </button>
   </div>
 
   <div class="financeiro-resumo">
@@ -157,8 +163,7 @@
     </div>
   </div>
 
-  
- <div class="financeiro-contas-resumo">
+  <div class="financeiro-contas-resumo">
     <div class="financeiro-contas-card">
       <div class="financeiro-contas-card__header">
         <span class="financeiro-contas-card__icone financeiro-contas-card__icone--gasto">

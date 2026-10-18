@@ -7,6 +7,7 @@
 /* ---- filtros ---- */
 
 .financeiro-page__filtros {
+  position: relative;
   display: flex;
   align-items: flex-end;
   gap: 1rem;
@@ -15,6 +16,7 @@
   border: 1px solid #d9f0e1;
   border-radius: 0.75rem;
   padding: 1rem;
+  padding-right: 9.5rem;
 }
 
 .financeiro-page__filtro-campo {
@@ -40,6 +42,38 @@
 
 .financeiro-page__btn-pesquisar:hover {
   background-color: #278a4c;
+}
+
+.financeiro-page__vinculo-toggle {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.financeiro-page__vinculo-btn {
+  font-size: 0.85rem;
+}
+
+.financeiro-page__vinculo-btn--ativo {
+  background-color: #2f9e58;
+  color: #fff;
+  border-color: #2f9e58;
+}
+
+.financeiro-page__vinculo-btn--ativo:hover {
+  background-color: #278a4c;
+}
+
+.financeiro-page__btn-exportar {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  white-space: nowrap;
+  color: #278a4c;
+  border-color: #2f9e58;
+}
+
+.financeiro-page__btn-exportar:hover {
+  background-color: #e3f5e8;
 }
 
 /* ---- resumo ---- */
@@ -177,24 +211,7 @@
   padding: 1.5rem 0;
 }
 
-.financeiro-page__vinculo-toggle {
-  display: flex;
-  gap: 0.4rem;
-}
-
-.financeiro-page__vinculo-btn {
-  font-size: 0.85rem;
-}
-
-.financeiro-page__vinculo-btn--ativo {
-  background-color: #2f9e58;
-  color: #fff;
-  border-color: #2f9e58;
-}
-
-.financeiro-page__vinculo-btn--ativo:hover {
-  background-color: #278a4c;
-}
+/* ---- contas a pagar / receber ---- */
 
 .financeiro-contas-resumo {
   display: grid;
