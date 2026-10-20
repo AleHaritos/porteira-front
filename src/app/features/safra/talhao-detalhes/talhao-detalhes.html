@@ -20,53 +20,164 @@
   <p class="talhao-detalhes__estado">Carregando dados do talhão...</p>
   } @else {
 
-  <div class="talhao-detalhes__rateio-card">
-    <div class="talhao-detalhes__rateio-header">
-      <span class="talhao-detalhes__rateio-icone">
-        <ng-icon name="lucideCalculator" size="20" />
-      </span>
-      <div>
-        <p class="talhao-detalhes__rateio-label">Custo estimado do talhão</p>
-        <p class="talhao-detalhes__rateio-descricao">
-          Rateio proporcional à área, com base nos gastos totais da safra
-        </p>
+  <hlm-tabs [tab]="abaAtiva()" class="w-full">
+    <hlm-tabs-list variant="line" class="talhao-detalhes__tabs-list">
+      <button hlmTabsTrigger="resumo" (click)="selecionarAba('resumo')" class="cursor-pointer">
+        Resumo
+      </button>
+      <button hlmTabsTrigger="manejos" (click)="selecionarAba('manejos')" class="cursor-pointer">
+        Manejos
+      </button>
+      <button hlmTabsTrigger="custosFixos" (click)="selecionarAba('custosFixos')" class="cursor-pointer">
+        Custos Fixos
+      </button>
+    </hlm-tabs-list>
+
+    <div hlmTabsContent="resumo" class="talhao-detalhes__content">
+      @if (abaAtiva() === 'resumo') {
+      <div class="talhao-detalhes__rateio-card">
+        <div class="talhao-detalhes__rateio-header">
+          <span class="talhao-detalhes__rateio-icone">
+            <ng-icon name="lucideCalculator" size="20" />
+          </span>
+          <div>
+            <p class="talhao-detalhes__rateio-label">Custo estimado do talhão</p>
+            <p class="talhao-detalhes__rateio-descricao">
+              Rateio proporcional à área, com base nos gastos totais da safra
+            </p>
+          </div>
+        </div>
+
+        <div class="talhao-detalhes__rateio-grid">
+          <div class="talhao-detalhes__rateio-item">
+            <span class="talhao-detalhes__rateio-item-label">Área do talhão</span>
+            <span class="talhao-detalhes__rateio-item-valor">{{ talhao()?.areaHectares ?? 0 }} ha</span>
+          </div>
+
+          <div class="talhao-detalhes__rateio-item">
+            <span class="talhao-detalhes__rateio-item-label">Área total da safra</span>
+            <span class="talhao-detalhes__rateio-item-valor">{{ safra()?.areaTotal ?? 0 }} ha</span>
+          </div>
+
+          <div class="talhao-detalhes__rateio-item">
+            <span class="talhao-detalhes__rateio-item-label">Gastos totais da safra</span>
+            <span class="talhao-detalhes__rateio-item-valor">{{ formatarValor(custoTotalSafra()) }}</span>
+          </div>
+
+          <div class="talhao-detalhes__rateio-item talhao-detalhes__rateio-item--destaque">
+            <span class="talhao-detalhes__rateio-item-label">Custo estimado do talhão</span>
+            <span class="talhao-detalhes__rateio-item-valor talhao-detalhes__rateio-item-valor--destaque">
+              {{ formatarValor(custoEstimadoTalhao()) }}
+            </span>
+          </div>
+
+          <div class="talhao-detalhes__rateio-item talhao-detalhes__rateio-item--destaque">
+            <span class="talhao-detalhes__rateio-item-label">Custo estimado por hectare</span>
+            <span class="talhao-detalhes__rateio-item-valor talhao-detalhes__rateio-item-valor--destaque">
+              {{ formatarValor(custoPorHectare()) }}
+            </span>
+          </div>
+        </div>
       </div>
+
+      <div class="talhao-detalhes__duas-colunas">
+        <div class="talhao-detalhes__custos-fixos-card">
+          <div class="talhao-detalhes__custos-fixos-header">
+            <div class="talhao-detalhes__custos-fixos-titulo-bloco">
+              <span class="talhao-detalhes__custos-fixos-icone">
+                <ng-icon name="lucideWallet" size="18" />
+              </span>
+              <div>
+                <p class="talhao-detalhes__custos-fixos-titulo">Custos Fixos</p>
+                <p class="talhao-detalhes__custos-fixos-subtitulo">
+                  {{ custosFixos().length }} custo(s) · total {{ formatarValor(totalCustosFixos()) }}
+                </p>
+              </div>
+            </div>
+            <button type="button" class="talhao-detalhes__custos-fixos-ver-todas cursor-pointer"
+              (click)="selecionarAba('custosFixos')">
+              Ver todas
+            </button>
+          </div>
+
+          <div class="talhao-detalhes__custos-fixos-lista">
+            @for (custo of custosFixosPreview(); track custo.id) {
+            <div class="talhao-detalhes__custos-fixos-item">
+              <span class="talhao-detalhes__custos-fixos-item-descricao">{{ custo.descricao }}</span>
+              <span class="talhao-detalhes__custos-fixos-item-valor">{{ formatarValor(custo.valor) }}</span>
+            </div>
+            } @empty {
+            <p class="talhao-detalhes__custos-fixos-vazio">Nenhum custo fixo cadastrado</p>
+            }
+          </div>
+        </div>
+
+        <div class="talhao-detalhes__categoria-card">
+          <div class="talhao-detalhes__categoria-header">
+            <span class="talhao-detalhes__categoria-icone">
+              <ng-icon name="lucideFuel" size="18" />
+            </span>
+            <div>
+              <p class="talhao-detalhes__categoria-titulo">Combustível e Manutenção</p>
+              <p class="talhao-detalhes__categoria-subtitulo">Rateio proporcional à área do talhão</p>
+            </div>
+          </div>
+
+        <div class="talhao-detalhes__categoria-item">
+            <div class="talhao-detalhes__categoria-item-topo">
+              <span class="talhao-detalhes__categoria-item-nome">Combustível</span>
+              <span class="talhao-detalhes__categoria-item-total">
+                Safra: {{ formatarValor(custosCombustivelManutencao()?.totalCombustivel ?? 0) }}
+              </span>
+            </div>
+            <div class="talhao-detalhes__categoria-item-valores">
+              <div>
+                <span class="talhao-detalhes__categoria-item-label">Valor atribuído ao talhão</span>
+                <span class="talhao-detalhes__categoria-item-valor">{{ formatarValor(custoCombustivelEstimado()) }}</span>
+              </div>
+              <div>
+                <span class="talhao-detalhes__categoria-item-label">Por hectare</span>
+                <span class="talhao-detalhes__categoria-item-valor">{{ formatarValor(custoCombustivelPorHa()) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="talhao-detalhes__categoria-item">
+            <div class="talhao-detalhes__categoria-item-topo">
+              <span class="talhao-detalhes__categoria-item-nome">Manutenção</span>
+              <span class="talhao-detalhes__categoria-item-total">
+                Safra: {{ formatarValor(custosCombustivelManutencao()?.totalManutencao ?? 0) }}
+              </span>
+            </div>
+            <div class="talhao-detalhes__categoria-item-valores">
+              <div>
+                <span class="talhao-detalhes__categoria-item-label">Valor atribuído ao talhão</span>
+                <span class="talhao-detalhes__categoria-item-valor">{{ formatarValor(custoManutencaoEstimado()) }}</span>
+              </div>
+              <div>
+                <span class="talhao-detalhes__categoria-item-label">Por hectare</span>
+                <span class="talhao-detalhes__categoria-item-valor">{{ formatarValor(custoManutencaoPorHa()) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <app-custo-talhao-card [talhaoId]="talhaoId" [nomeTalhao]="talhao()?.nome ?? ''" />
+      }
     </div>
 
-    <div class="talhao-detalhes__rateio-grid">
-      <div class="talhao-detalhes__rateio-item">
-        <span class="talhao-detalhes__rateio-item-label">Área do talhão</span>
-        <span class="talhao-detalhes__rateio-item-valor">{{ talhao()?.areaHectares ?? 0 }} ha</span>
-      </div>
-
-      <div class="talhao-detalhes__rateio-item">
-        <span class="talhao-detalhes__rateio-item-label">Área total da safra</span>
-        <span class="talhao-detalhes__rateio-item-valor">{{ safra()?.areaTotal ?? 0 }} ha</span>
-      </div>
-
-      <div class="talhao-detalhes__rateio-item">
-        <span class="talhao-detalhes__rateio-item-label">Gastos totais da safra</span>
-        <span class="talhao-detalhes__rateio-item-valor">{{ formatarValor(custoTotalSafra()) }}</span>
-      </div>
-
-      <div class="talhao-detalhes__rateio-item talhao-detalhes__rateio-item--destaque">
-        <span class="talhao-detalhes__rateio-item-label">Custo estimado do talhão</span>
-        <span class="talhao-detalhes__rateio-item-valor talhao-detalhes__rateio-item-valor--destaque">
-          {{ formatarValor(custoEstimadoTalhao()) }}
-        </span>
-      </div>
-
-      <div class="talhao-detalhes__rateio-item talhao-detalhes__rateio-item--destaque">
-        <span class="talhao-detalhes__rateio-item-label">Custo estimado por hectare</span>
-        <span class="talhao-detalhes__rateio-item-valor talhao-detalhes__rateio-item-valor--destaque">
-          {{ formatarValor(custoPorHectare()) }}
-        </span>
-      </div>
+    <div hlmTabsContent="manejos" class="talhao-detalhes__content">
+      @if (abaAtiva() === 'manejos') {
+      <!-- vazio por enquanto -->
+      }
     </div>
-  </div>
 
-  <div class="talhao-detalhes__manejos">
-    <app-custo-talhao-card [talhaoId]="talhaoId" [nomeTalhao]="talhao()?.nome ?? ''" />
-  </div>
+    <div hlmTabsContent="custosFixos" class="talhao-detalhes__content">
+      @if (abaAtiva() === 'custosFixos') {
+      <app-custos-fixos-talhao-tab [talhaoId]="talhaoId" />
+      }
+    </div>
+  </hlm-tabs>
   }
 </div>

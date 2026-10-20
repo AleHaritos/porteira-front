@@ -62,7 +62,7 @@ const BASELINE = 170;
           <ng-icon name="lucideWallet" size="22" />
         </div>
         <div>
-          <p hlmCardDescription>Custo total — {{ nomeTalhao() }}</p>
+          <p hlmCardDescription>Custo de Manejo — {{ nomeTalhao() }}</p>
           <h3 hlmCardTitle class="custo-card__total">{{ totalFormatado() }}</h3>
         </div>
       </hlm-card-header>
