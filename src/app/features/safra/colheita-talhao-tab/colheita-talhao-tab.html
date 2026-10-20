@@ -1,0 +1,91 @@
+<div class="colheita-tab">
+  <div class="colheita-tab__form-card">
+    <h3 class="colheita-tab__form-titulo">Adicionar colheita</h3>
+    <form [formGroup]="form" class="colheita-tab__form" (ngSubmit)="adicionar()">
+      <div class="colheita-tab__campo">
+        <label hlmLabel for="descricao">Descrição (opcional)</label>
+        <input hlmInput id="descricao" formControlName="descricao" placeholder="Ex: Colheita 1, Safrinha..." />
+      </div>
+
+      <div class="colheita-tab__campo colheita-tab__campo--menor">
+        <label hlmLabel for="quantidade">Quantidade (sc)</label>
+        <input hlmInput id="quantidade" type="text" inputmode="numeric"
+          [value]="formatarInputDisplay(quantidadeRaw())"
+          (input)="onQuantidadeInput($any($event.target).value)" placeholder="0,00" />
+      </div>
+
+      <div class="colheita-tab__campo colheita-tab__campo--menor">
+        <label hlmLabel for="valorUnitario">Valor Un</label>
+        <input hlmInput id="valorUnitario" type="text" inputmode="numeric"
+          [value]="formatarInputDisplay(valorUnitarioRaw())"
+          (input)="onValorUnitarioInput($any($event.target).value)" placeholder="0,00" />
+      </div>
+
+      <button type="submit" hlmBtn class="colheita-tab__btn-add cursor-pointer" [disabled]="salvando()">
+        <ng-icon name="lucidePlus" size="16" />
+        Adicionar
+      </button>
+    </form>
+  </div>
+
+  <div class="fazenda-table">
+    <table hlmTable>
+      <thead>
+        <tr hlmTr class="fazenda-table__head-row">
+          <th hlmTh>Descrição</th>
+          <th hlmTh>Quantidade</th>
+          <th hlmTh>Valor Un</th>
+          <th hlmTh>Receita</th>
+          <th hlmTh class="fazenda-table__acoes-head">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (colheita of colheitas(); track colheita.id) {
+        <tr hlmTr class="fazenda-table__row">
+          <td hlmTd class="fazenda-table__nome">{{ colheita.descricao || '-' }}</td>
+          <td hlmTd>{{ formatarSacas(colheita.quantidadeColhida) }}</td>
+          <td hlmTd>{{ formatarValor(colheita.valorUnitario) }}</td>
+          <td hlmTd>{{ formatarValor(colheita.quantidadeColhida * colheita.valorUnitario) }}</td>
+          <td hlmTd>
+            <button hlmBtn variant="ghost" size="sm" class="colheita-tab__btn-excluir cursor-pointer" (click)="excluir(colheita)">
+              <ng-icon name="lucideTrash2" size="16" />
+            </button>
+          </td>
+        </tr>
+        } @empty {
+        <tr hlmTr>
+          <td hlmTd [attr.colSpan]="5" class="fazenda-table__empty">
+            @if (carregando()) {
+            Carregando colheitas...
+            } @else {
+            Nenhuma colheita cadastrada
+            }
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="colheita-tab__grid">
+    <div class="colheita-tab__stat">
+      <span class="colheita-tab__stat-label">Produção Total</span>
+      <span class="colheita-tab__stat-valor">{{ formatarSacas(producaoTotal()) }}</span>
+    </div>
+
+    <div class="colheita-tab__stat">
+      <span class="colheita-tab__stat-label">Produção/Ha</span>
+      <span class="colheita-tab__stat-valor">{{ formatarSacas(producaoPorHa()) }}</span>
+    </div>
+
+    <div class="colheita-tab__stat colheita-tab__stat--destaque">
+      <span class="colheita-tab__stat-label">Receita Total</span>
+      <span class="colheita-tab__stat-valor colheita-tab__stat-valor--destaque">{{ formatarValor(receitaTotal()) }}</span>
+    </div>
+
+    <div class="colheita-tab__stat colheita-tab__stat--destaque">
+      <span class="colheita-tab__stat-label">Receita/Ha</span>
+      <span class="colheita-tab__stat-valor colheita-tab__stat-valor--destaque">{{ formatarValor(receitaPorHa()) }}</span>
+    </div>
+  </div>
+</div>

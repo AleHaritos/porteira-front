@@ -261,6 +261,51 @@
   color: #278a4c;
 }
 
+.talhao-detalhes__colheita-resumo-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.talhao-detalhes__colheita-stats {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+.talhao-detalhes__colheita-stat {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0 1.25rem;
+  border-left: 1px solid #eef4f0;
+}
+
+.talhao-detalhes__colheita-stat:first-child {
+  padding-left: 0;
+  border-left: none;
+}
+
+.talhao-detalhes__colheita-stat-label {
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+.talhao-detalhes__colheita-stat-valor {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.talhao-detalhes__colheita-stat--destaque .talhao-detalhes__colheita-stat-valor {
+  color: #278a4c;
+  font-size: 1.15rem;
+}
+
 .talhao-detalhes__content {
   display: flex;
   flex-direction: column;

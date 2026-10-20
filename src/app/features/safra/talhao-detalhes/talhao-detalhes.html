@@ -31,6 +31,9 @@
       <button hlmTabsTrigger="custosFixos" (click)="selecionarAba('custosFixos')" class="cursor-pointer">
         Custos Fixos
       </button>
+      <button hlmTabsTrigger="colheita" (click)="selecionarAba('colheita')" class="cursor-pointer">
+        Colheita
+      </button>
     </hlm-tabs-list>
 
     <div hlmTabsContent="resumo" class="talhao-detalhes__content">
@@ -123,7 +126,7 @@
             </div>
           </div>
 
-        <div class="talhao-detalhes__categoria-item">
+          <div class="talhao-detalhes__categoria-item">
             <div class="talhao-detalhes__categoria-item-topo">
               <span class="talhao-detalhes__categoria-item-nome">Combustível</span>
               <span class="talhao-detalhes__categoria-item-total">
@@ -133,7 +136,8 @@
             <div class="talhao-detalhes__categoria-item-valores">
               <div>
                 <span class="talhao-detalhes__categoria-item-label">Valor atribuído ao talhão</span>
-                <span class="talhao-detalhes__categoria-item-valor">{{ formatarValor(custoCombustivelEstimado()) }}</span>
+                <span class="talhao-detalhes__categoria-item-valor">{{ formatarValor(custoCombustivelEstimado())
+                  }}</span>
               </div>
               <div>
                 <span class="talhao-detalhes__categoria-item-label">Por hectare</span>
@@ -152,13 +156,57 @@
             <div class="talhao-detalhes__categoria-item-valores">
               <div>
                 <span class="talhao-detalhes__categoria-item-label">Valor atribuído ao talhão</span>
-                <span class="talhao-detalhes__categoria-item-valor">{{ formatarValor(custoManutencaoEstimado()) }}</span>
+                <span class="talhao-detalhes__categoria-item-valor">{{ formatarValor(custoManutencaoEstimado())
+                  }}</span>
               </div>
               <div>
                 <span class="talhao-detalhes__categoria-item-label">Por hectare</span>
                 <span class="talhao-detalhes__categoria-item-valor">{{ formatarValor(custoManutencaoPorHa()) }}</span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="talhao-detalhes__colheita-resumo-card">
+        <div class="talhao-detalhes__rateio-header">
+          <span class="talhao-detalhes__rateio-icone">
+            <ng-icon name="lucideWheat" size="20" />
+          </span>
+          <div>
+            <p class="talhao-detalhes__rateio-label">Colheita</p>
+            <p class="talhao-detalhes__rateio-descricao">Resumo da produção e receita do talhão</p>
+          </div>
+        </div>
+
+        <div class="talhao-detalhes__colheita-stats">
+          <div class="talhao-detalhes__colheita-stat">
+            <span class="talhao-detalhes__colheita-stat-label">Total de sc</span>
+            <span class="talhao-detalhes__colheita-stat-valor">{{ formatarSacas(producaoTotalColheita()) }}</span>
+          </div>
+
+          <div class="talhao-detalhes__colheita-stat">
+            <span class="talhao-detalhes__colheita-stat-label">Média de valor</span>
+            <span class="talhao-detalhes__colheita-stat-valor">{{ formatarValor(mediaValorColheita()) }}</span>
+          </div>
+
+          <div class="talhao-detalhes__colheita-stat">
+            <span class="talhao-detalhes__colheita-stat-label">Produção/Ha</span>
+            <span class="talhao-detalhes__colheita-stat-valor">{{ formatarSacas(producaoPorHaColheita()) }}</span>
+          </div>
+
+          <div class="talhao-detalhes__colheita-stat talhao-detalhes__colheita-stat--destaque">
+            <span class="talhao-detalhes__colheita-stat-label">Receita Total</span>
+            <span class="talhao-detalhes__colheita-stat-valor talhao-detalhes__colheita-stat-valor--destaque">
+              {{ formatarValor(receitaTotalColheita()) }}
+            </span>
+          </div>
+
+          <div class="talhao-detalhes__colheita-stat talhao-detalhes__colheita-stat--destaque">
+            <span class="talhao-detalhes__colheita-stat-label">Receita/Ha</span>
+            <span class="talhao-detalhes__colheita-stat-valor talhao-detalhes__colheita-stat-valor--destaque">
+              {{ formatarValor(receitaPorHaColheita()) }}
+            </span>
           </div>
         </div>
       </div>
@@ -176,6 +224,12 @@
     <div hlmTabsContent="custosFixos" class="talhao-detalhes__content">
       @if (abaAtiva() === 'custosFixos') {
       <app-custos-fixos-talhao-tab [talhaoId]="talhaoId" />
+      }
+    </div>
+
+    <div hlmTabsContent="colheita" class="talhao-detalhes__content">
+      @if (abaAtiva() === 'colheita') {
+      <app-colheita-talhao-tab [talhaoId]="talhaoId" [talhao]="talhao()" (colheitaAlterada)="recarregarColheitas()" />
       }
     </div>
   </hlm-tabs>

@@ -1,7 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideArrowLeft, lucideLandPlot, lucideCalculator, lucideWallet, lucideFuel } from '@ng-icons/lucide';
+import { lucideArrowLeft, lucideLandPlot, lucideCalculator, lucideWallet, lucideFuel, lucideWheat } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { TalhaoService } from '../../../core/services/safra/talhao-service';
@@ -9,21 +9,25 @@ import { SafraService } from '../../../core/services/safra/safra-service';
 import { TransacoesService } from '../../../core/services/transacoes-service';
 import { CustoFixoTalhaoService } from '../../../core/services/safra/custo-fixo-talhao-service';
 import { CustoCategoriaSafraService } from '../../../core/services/safra/custo-categoria-safra-service';
+import { ColheitaTalhaoService } from '../../../core/services/safra/colheita-talhao-service';
 import { ITalhao } from '../../../shared/interfaces/ITalhao';
 import { ISafra } from '../../../shared/interfaces/ISafras';
 import { ICustoFixoTalhao } from '../../../shared/interfaces/ICustoFixoTalhao';
+import { IColheitaTalhao } from '../../../shared/interfaces/IColheitaTalhao';
 import { CustoTalhaoCard } from '../custo-talhao-card/custo-talhao-card';
 import { CustosFixosTalhaoTab } from '../custos-fixos-talhao-tab/custos-fixos-talhao-tab';
+import { ColheitaTalhaoTab } from '../colheita-talhao-tab/colheita-talhao-tab';
 import { ICustosCombustivelManutencao } from '../../../shared/interfaces/ICustosCombustivelManutencao';
 
 const moeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+const numeroFormatter = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-type AbaTalhao = 'resumo' | 'manejos' | 'custosFixos';
+type AbaTalhao = 'resumo' | 'manejos' | 'custosFixos' | 'colheita';
 
 @Component({
   selector: 'app-talhao-detalhes',
-  imports: [HlmButtonImports, HlmTabsImports, NgIcon, CustoTalhaoCard, CustosFixosTalhaoTab],
-  providers: [provideIcons({ lucideArrowLeft, lucideLandPlot, lucideCalculator, lucideWallet, lucideFuel })],
+  imports: [HlmButtonImports, HlmTabsImports, NgIcon, CustoTalhaoCard, CustosFixosTalhaoTab, ColheitaTalhaoTab],
+  providers: [provideIcons({ lucideArrowLeft, lucideLandPlot, lucideCalculator, lucideWallet, lucideFuel, lucideWheat })],
   styleUrl: './talhao-detalhes.css',
   templateUrl: './talhao-detalhes.html',
 })
@@ -35,6 +39,7 @@ export class TalhaoDetalhes implements OnInit {
   private transacoesService = inject(TransacoesService);
   private custoFixoTalhaoService = inject(CustoFixoTalhaoService);
   private custoCategoriaSafraService = inject(CustoCategoriaSafraService);
+  private colheitaTalhaoService = inject(ColheitaTalhaoService);
 
   fazendaId!: number;
   safraId!: number;
@@ -45,6 +50,7 @@ export class TalhaoDetalhes implements OnInit {
   custoTotalSafra = signal<number>(0);
   custosFixos = signal<ICustoFixoTalhao[]>([]);
   custosCombustivelManutencao = signal<ICustosCombustivelManutencao | null>(null);
+  colheitas = signal<IColheitaTalhao[]>([]);
   carregando = signal(false);
 
   abaAtiva = signal<AbaTalhao>('resumo');
@@ -86,7 +92,26 @@ export class TalhaoDetalhes implements OnInit {
     return this.custoManutencaoEstimado() / talhao.areaHectares;
   });
 
+  producaoTotalColheita = computed(() => this.colheitas().reduce((soma, c) => soma + c.quantidadeColhida, 0));
+  receitaTotalColheita = computed(() =>
+    this.colheitas().reduce((soma, c) => soma + c.quantidadeColhida * c.valorUnitario, 0),
+  );
+  mediaValorColheita = computed(() =>
+    this.producaoTotalColheita() ? this.receitaTotalColheita() / this.producaoTotalColheita() : 0,
+  );
+  producaoPorHaColheita = computed(() => {
+    const talhao = this.talhao();
+    if (!talhao || !talhao.areaHectares) return 0;
+    return this.producaoTotalColheita() / talhao.areaHectares;
+  });
+  receitaPorHaColheita = computed(() => {
+    const talhao = this.talhao();
+    if (!talhao || !talhao.areaHectares) return 0;
+    return this.receitaTotalColheita() / talhao.areaHectares;
+  });
+
   readonly formatarValor = (valor: number) => moeda.format(valor);
+  readonly formatarSacas = (valor: number) => `${numeroFormatter.format(valor)} sc`;
 
   ngOnInit(): void {
     this.fazendaId = Number(this.route.parent?.snapshot.paramMap.get('id'));
@@ -94,6 +119,12 @@ export class TalhaoDetalhes implements OnInit {
     this.talhaoId = Number(this.route.snapshot.paramMap.get('talhaoId'));
 
     this.carregar();
+  }
+
+  recarregarColheitas(): void {
+    this.colheitaTalhaoService.listarPorTalhao(this.talhaoId).subscribe({
+      next: (colheitas) => this.colheitas.set(colheitas),
+    });
   }
 
   private carregar(): void {
@@ -115,6 +146,10 @@ export class TalhaoDetalhes implements OnInit {
 
     this.custoCategoriaSafraService.buscar(this.safraId).subscribe({
       next: (dados) => this.custosCombustivelManutencao.set(dados),
+    });
+
+    this.colheitaTalhaoService.listarPorTalhao(this.talhaoId).subscribe({
+      next: (colheitas) => this.colheitas.set(colheitas),
     });
 
     this.transacoesService.buscarResumoPorSafra(this.safraId, null, null).subscribe({
