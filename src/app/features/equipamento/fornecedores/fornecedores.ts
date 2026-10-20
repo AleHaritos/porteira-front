@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { IFornecedor } from '../../../shared/interfaces/IFornecedor';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucidePlus } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -10,7 +10,6 @@ import { HlmTableImports } from '@spartan-ng/helm/table';
 import { FornecedorService } from '../../../core/services/equipamento/fornecedor-service';
 import { ToastService } from '../../../core/services/toast-service';
 import { NovoFornecedor } from '../novo-fornecedor/novo-fornecedor';
-import { PagarFornecedor } from '../pagar-fornecedor/pagar-fornecedor';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 
 @Component({
@@ -22,6 +21,7 @@ import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 })
 export class Fornecedores implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private fornecedorService = inject(FornecedorService);
   private dialogService = inject(HlmDialogService);
   private toastService = inject(ToastService);
@@ -88,17 +88,8 @@ export class Fornecedores implements OnInit {
     });
   }
 
-  abrirPagarFornecedor(fornecedor: IFornecedor): void {
-    const dialogRef = this.dialogService.open(PagarFornecedor, {
-      context: { fazendaId: this.fazendaId(), fornecedor },
-      contentClass: 'sm:!max-w-[750px], sm:!min-w-[500px]',
-    });
-    dialogRef.closed$.subscribe((sucesso) => {
-      if (sucesso) {
-        this.toastService.showSuccess('Sucesso', 'Pagamento registrado com sucesso');
-        this.carregar();
-      }
-    });
+  abrirDetalhesFornecedor(fornecedor: IFornecedor): void {
+    this.router.navigate(['/fazenda', this.fazendaId(), 'fornecedores', fornecedor.id]);
   }
 
   formatarValor(valor: number): string {

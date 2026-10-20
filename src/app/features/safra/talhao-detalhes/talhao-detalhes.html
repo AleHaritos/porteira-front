@@ -1,0 +1,72 @@
+<div class="talhao-detalhes">
+  <div class="talhao-detalhes__header">
+    @if (talhao(); as t) {
+    <div class="talhao-detalhes__titulo-bloco">
+      <span class="talhao-detalhes__icone">
+        <ng-icon name="lucideLandPlot" size="20" />
+      </span>
+      <div>
+        <h2 class="talhao-detalhes__titulo">{{ t.nome }}</h2>
+        <p class="talhao-detalhes__subtitulo">
+          {{ t.areaHectares }} ha
+          @if (t.localizacao) { · {{ t.localizacao }} }
+        </p>
+      </div>
+    </div>
+    }
+  </div>
+
+  @if (carregando()) {
+  <p class="talhao-detalhes__estado">Carregando dados do talhão...</p>
+  } @else {
+
+  <div class="talhao-detalhes__rateio-card">
+    <div class="talhao-detalhes__rateio-header">
+      <span class="talhao-detalhes__rateio-icone">
+        <ng-icon name="lucideCalculator" size="20" />
+      </span>
+      <div>
+        <p class="talhao-detalhes__rateio-label">Custo estimado do talhão</p>
+        <p class="talhao-detalhes__rateio-descricao">
+          Rateio proporcional à área, com base nos gastos totais da safra
+        </p>
+      </div>
+    </div>
+
+    <div class="talhao-detalhes__rateio-grid">
+      <div class="talhao-detalhes__rateio-item">
+        <span class="talhao-detalhes__rateio-item-label">Área do talhão</span>
+        <span class="talhao-detalhes__rateio-item-valor">{{ talhao()?.areaHectares ?? 0 }} ha</span>
+      </div>
+
+      <div class="talhao-detalhes__rateio-item">
+        <span class="talhao-detalhes__rateio-item-label">Área total da safra</span>
+        <span class="talhao-detalhes__rateio-item-valor">{{ safra()?.areaTotal ?? 0 }} ha</span>
+      </div>
+
+      <div class="talhao-detalhes__rateio-item">
+        <span class="talhao-detalhes__rateio-item-label">Gastos totais da safra</span>
+        <span class="talhao-detalhes__rateio-item-valor">{{ formatarValor(custoTotalSafra()) }}</span>
+      </div>
+
+      <div class="talhao-detalhes__rateio-item talhao-detalhes__rateio-item--destaque">
+        <span class="talhao-detalhes__rateio-item-label">Custo estimado do talhão</span>
+        <span class="talhao-detalhes__rateio-item-valor talhao-detalhes__rateio-item-valor--destaque">
+          {{ formatarValor(custoEstimadoTalhao()) }}
+        </span>
+      </div>
+
+      <div class="talhao-detalhes__rateio-item talhao-detalhes__rateio-item--destaque">
+        <span class="talhao-detalhes__rateio-item-label">Custo estimado por hectare</span>
+        <span class="talhao-detalhes__rateio-item-valor talhao-detalhes__rateio-item-valor--destaque">
+          {{ formatarValor(custoPorHectare()) }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="talhao-detalhes__manejos">
+    <app-custo-talhao-card [talhaoId]="talhaoId" [nomeTalhao]="talhao()?.nome ?? ''" />
+  </div>
+  }
+</div>

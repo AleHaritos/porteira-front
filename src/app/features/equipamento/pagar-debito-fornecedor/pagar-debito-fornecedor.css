@@ -1,0 +1,90 @@
+.pagar-debito-fornecedor__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pagar-debito-fornecedor__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #fef3c7;
+  color: #d97706;
+  flex-shrink: 0;
+}
+
+.pagar-debito-fornecedor__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 0;
+}
+
+.pagar-debito-fornecedor__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pagar-debito-fornecedor__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.pagar-debito-fornecedor__btn-salvar {
+  background: #16a34a;
+  color: white;
+}
+
+.pagar-debito-fornecedor__btn-salvar:hover {
+  background: #15803d;
+}
+
+.pagar-debito-fornecedor__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pagar-debito-fornecedor__secao {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pagar-debito-fornecedor__toggle {
+  display: flex;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pagar-debito-fornecedor__toggle button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+.pagar-debito-fornecedor__toggle button:not(:last-child) {
+  border-right: 1px solid #e5e7eb;
+}
+
+.pagar-debito-fornecedor__toggle button.ativo {
+  background: #16a34a;
+  color: white;
+}

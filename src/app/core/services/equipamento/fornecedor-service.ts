@@ -19,12 +19,18 @@ export class FornecedorService {
   }
 
   listarPorFazenda(fazendaId: number): Observable<IFornecedor[]> {
-    return this.http.get<IFornecedor[]>(this.API_URL + '/fazenda/' + fazendaId).pipe(
+    return this.http.get<IFornecedor[]>(this.API_URL + '/fazenda/' + fazendaId + '/todos').pipe(
       catchError(e => this.util.errorHandler(e))
     );
   }
 
-   listarPaginado(fazendaId: number, page: number, size: number): Observable<PageResponse<IFornecedor>> {
+  buscarPorId(id: number): Observable<IFornecedor> {
+    return this.http.get<IFornecedor>(`${this.API_URL}/${id}`).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
+  listarPaginado(fazendaId: number, page: number, size: number): Observable<PageResponse<IFornecedor>> {
     const params = new HttpParams().set('page', page).set('size', size);
     return this.http.get<PageResponse<IFornecedor>>(`${this.API_URL}/fazenda/${fazendaId}`, { params }).pipe(
       catchError(e => this.util.errorHandler(e))

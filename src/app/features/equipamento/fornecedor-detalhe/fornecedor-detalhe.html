@@ -1,0 +1,107 @@
+<div class="fornecedor-detalhe">
+  <div class="fornecedor-detalhe__header">
+
+    @if (fornecedor(); as f) {
+    <div class="fornecedor-detalhe__titulo-bloco">
+      <span class="fornecedor-detalhe__icone">
+        <ng-icon name="lucideHandshake" size="20" />
+      </span>
+      <div class="fornecedor-detalhe__info">
+        <h2 class="fornecedor-detalhe__titulo">{{ f.nome }}</h2>
+        <p class="fornecedor-detalhe__subtitulo">{{ f.especialidade || 'Fornecedor' }}</p>
+      </div>
+
+      <div class="fornecedor-detalhe__direita">
+        <div class="fornecedor-detalhe__saldo">
+          <span class="fornecedor-detalhe__saldo-label">Saldo Devedor</span>
+          <span class="fornecedor-detalhe__saldo-valor"
+            [class.fornecedor-detalhe__saldo-valor--zerado]="f.saldoDevedor <= 0">
+            {{ formatarValor(f.saldoDevedor) }}
+          </span>
+        </div>
+        <button hlmBtn class="fornecedor-detalhe__btn-lancar cursor-pointer" (click)="abrirLancarConta()">
+          <ng-icon name="lucidePlus" size="16" />
+          Lançar Conta
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="fazenda-table">
+    <table hlmTable>
+      <thead>
+        <tr hlmTr class="fazenda-table__head-row">
+          <th hlmTh>Origem</th>
+          <th hlmTh>Ativo</th>
+          <th hlmTh>Descrição</th>
+          <th hlmTh>Data</th>
+          <th hlmTh>Valor</th>
+          <th hlmTh class="fazenda-table__acoes-head">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (debito of debitosPaginados(); track debito.origem + '-' + debito.id) {
+        <tr hlmTr class="fazenda-table__row">
+          <td hlmTd>
+            <span class="fornecedor-detalhe__badge"
+              [class.fornecedor-detalhe__badge--veiculo]="debito.origem === 'VEICULO'"
+              [class.fornecedor-detalhe__badge--equipamento]="debito.origem === 'EQUIPAMENTO'"
+              [class.fornecedor-detalhe__badge--conta]="debito.origem === 'CONTA'">
+              @if (debito.origem === 'VEICULO') {
+              <ng-icon name="lucideTruck" size="14" />
+              } @else if (debito.origem === 'EQUIPAMENTO') {
+              <ng-icon name="lucideWrench" size="14" />
+              } @else {
+              <ng-icon name="lucideReceipt" size="14" />
+              }
+              {{ debito.origem === 'VEICULO' ? 'Veículo' : debito.origem === 'EQUIPAMENTO' ? 'Equipamento' : 'Conta' }}
+            </span>
+          </td>
+          <td hlmTd class="fazenda-table__nome">{{ debito.origem === 'CONTA' ? '-' : debito.nomeAtivo }}</td>
+          <td hlmTd>{{ debito.descricao || '-' }}</td>
+          <td hlmTd>{{ debito.data | date: 'dd/MM/yyyy' }}</td>
+          <td hlmTd>{{ formatarValor(debito.valor) }}</td>
+          <td hlmTd>
+            <button hlmBtn size="sm" class="fornecedor-detalhe__btn-pagar cursor-pointer" (click)="abrirPagar(debito)">
+              Pagar
+            </button>
+          </td>
+        </tr>
+        } @empty {
+        <tr hlmTr>
+          <td hlmTd [attr.colSpan]="6" class="fazenda-table__empty">
+            @if (carregando()) {
+            Carregando débitos...
+            } @else {
+            Nenhum débito pendente
+            }
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (totalPaginas() > 1) {
+    <nav hlmPagination class="fazenda-table__pagination">
+      <ul hlmPaginationContent>
+        <li hlmPaginationItem>
+          <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+        </li>
+
+        @for (pagina of paginasVisiveis(); track pagina) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+            {{ pagina + 1 }}
+          </button>
+        </li>
+        }
+
+        <li hlmPaginationItem>
+          <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+        </li>
+      </ul>
+    </nav>
+    }
+  </div>
+</div>

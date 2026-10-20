@@ -1,4 +1,4 @@
-import { TipoManutencao, FormaPagamentoManutencao } from './IManutencao';
+import { TipoManutencao, FormaPagamentoManutencao, StatusPagamentoManutencao } from './IManutencao';
 
 export interface IManutencaoEquipamento {
   id: number;
@@ -12,6 +12,8 @@ export interface IManutencaoEquipamento {
   formaPagamento: FormaPagamentoManutencao;
   fornecedorNome?: string;
   vinculoNome?: string;
+  statusPagamento: StatusPagamentoManutencao;
+  dataBaixa?: string;
 }
 
 export interface ManutencaoEquipamentoRequest {

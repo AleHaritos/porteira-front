@@ -16,18 +16,6 @@
   background: #278a4c;
 }
 
-.talhoes-page__row {
-  cursor: pointer;
-}
-
-.talhoes-page__row--selecionada {
-  background-color: #e3f5e8 !important;
-}
-
-.talhoes-page__row--selecionada .fazenda-table__nome {
-  color: #278a4c;
-}
-
 .fazenda-table {
   background: #ffffff;
   border: 1px solid #d8e6dc;

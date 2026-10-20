@@ -1,0 +1,40 @@
+<hlm-dialog-header>
+  <div class="nova-conta-fornecedor__header-linha">
+    <div class="nova-conta-fornecedor__icone">
+      <ng-icon hlm name="lucideReceipt" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Lançar Conta</h3>
+      <p hlmDialogDescription>Registre um novo débito para este fornecedor</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="nova-conta-fornecedor__form mt-2" (ngSubmit)="salvar()">
+  <div class="nova-conta-fornecedor__campo">
+    <label hlmLabel for="descricao">Descrição</label>
+    <input hlmInput id="descricao" formControlName="descricao" placeholder="Ex: Compra de peças, serviço de..." />
+  </div>
+
+  <div class="nova-conta-fornecedor__linha">
+    <div class="nova-conta-fornecedor__campo">
+      <label hlmLabel for="valor">Valor</label>
+      <input hlmInput id="valor" type="text" inputmode="numeric" [value]="formatarMoedaDisplay(valorRaw())"
+        (input)="onValorInput($any($event.target).value)" placeholder="0,00" />
+    </div>
+
+    <div class="nova-conta-fornecedor__campo">
+      <label hlmLabel for="data">Data</label>
+      <hlm-date-picker formControlName="data" [maxDate]="maxDate" class="w-full">
+        <hlm-date-picker-trigger buttonId="data" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+  </div>
+
+  <div class="nova-conta-fornecedor__acoes">
+    <button type="button" hlmBtn variant="outline" (click)="cancelar()">Cancelar</button>
+    <button type="submit" hlmBtn class="nova-conta-fornecedor__btn-salvar cursor-pointer" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : 'Lançar Conta' }}
+    </button>
+  </div>
+</form>

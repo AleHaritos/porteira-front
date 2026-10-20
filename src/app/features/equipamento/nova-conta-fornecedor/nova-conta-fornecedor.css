@@ -1,0 +1,61 @@
+.nova-conta-fornecedor__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nova-conta-fornecedor__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #fef3c7;
+  color: #d97706;
+  flex-shrink: 0;
+}
+
+.nova-conta-fornecedor__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 0;
+}
+
+.nova-conta-fornecedor__linha {
+  display: flex;
+  gap: 16px;
+}
+
+.nova-conta-fornecedor__linha > * {
+  flex: 1;
+}
+
+.nova-conta-fornecedor__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nova-conta-fornecedor__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.nova-conta-fornecedor__btn-salvar {
+  background: #16a34a;
+  color: white;
+}
+
+.nova-conta-fornecedor__btn-salvar:hover {
+  background: #15803d;
+}
+
+.nova-conta-fornecedor__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}

@@ -1,4 +1,5 @@
 import { Component, OnInit, computed, inject, input, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideEllipsisVertical, lucidePlus } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -9,12 +10,11 @@ import { HlmTableImports } from '@spartan-ng/helm/table';
 import { ITalhao } from '../../../shared/interfaces/ITalhao';
 import { NovoTalhao } from '../novo-talhao/novo-talhao';
 import { TalhaoService } from '../../../core/services/safra/talhao-service';
-import { CustoTalhaoCard } from '../custo-talhao-card/custo-talhao-card';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-talhoes-tab',
-  imports: [CommonModule, HlmTableImports, HlmPaginationImports, HlmButtonImports, HlmDropdownMenuImports, NgIcon, CustoTalhaoCard],
+  imports: [CommonModule, HlmTableImports, HlmPaginationImports, HlmButtonImports, HlmDropdownMenuImports, NgIcon],
   providers: [provideIcons({ lucideEllipsisVertical, lucidePlus })],
   styleUrl: './talhoes-tab.css',
   templateUrl: './talhoes-tab.html',
@@ -22,11 +22,12 @@ import { CommonModule } from '@angular/common';
 export class TalhoesTab implements OnInit {
   private talhaoService = inject(TalhaoService);
   private dialogService = inject(HlmDialogService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   safraId = input.required<number>();
 
   talhoes = signal<ITalhao[]>([]);
-  talhaoSelecionado = signal<ITalhao | null>(null);
   paginaAtual = signal(0);
   totalPaginas = signal(0);
   carregando = signal(false);
@@ -63,9 +64,9 @@ export class TalhoesTab implements OnInit {
     this.carregar();
   }
 
-  selecionar(talhao: ITalhao) {
-    const jaSelecionado = this.talhaoSelecionado()?.id === talhao.id;
-    this.talhaoSelecionado.set(jaSelecionado ? null : talhao);
+  abrirDetalhesTalhao(talhao: ITalhao) {
+    const fazendaId = Number(this.route.parent?.snapshot.paramMap.get('id'));
+    this.router.navigate(['/fazenda', fazendaId, 'safra', this.safraId(), 'talhao', talhao.id]);
   }
 
   abrirNovoTalhao() {

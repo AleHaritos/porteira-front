@@ -202,18 +202,25 @@ export class NovaManutencao implements OnInit {
       return;
     }
 
-    if (this.formaPagamento() === 'FORNECEDOR_CREDENCIADO' && this.fornecedorId() == null) {
+    const formaPagamento = this.formaPagamento();
+
+    if (formaPagamento === 'FORNECEDOR_CREDENCIADO' && this.fornecedorId() == null) {
       this.toastService.showError('Erro', 'Selecione o fornecedor');
       return;
     }
 
-    const vinculo = this.vinculo();
-    const negocioId = vinculo === 'NEGOCIO' ? this.negocioSelecionado() : null;
-    const safraId = vinculo === 'SAFRA' ? this.safraSelecionada() : null;
+    let negocioId: number | null = null;
+    let safraId: number | null = null;
 
-    if (!negocioId && !safraId) {
-      this.toastService.showError('Erro', 'Selecione um negócio ou uma safra');
-      return;
+    if (formaPagamento === 'A_VISTA') {
+      const vinculo = this.vinculo();
+      negocioId = vinculo === 'NEGOCIO' ? this.negocioSelecionado() : null;
+      safraId = vinculo === 'SAFRA' ? this.safraSelecionada() : null;
+
+      if (!negocioId && !safraId) {
+        this.toastService.showError('Erro', 'Selecione um negócio ou uma safra');
+        return;
+      }
     }
 
     this.salvando.set(true);
@@ -227,8 +234,8 @@ export class NovaManutencao implements OnInit {
       fazendaId: this.context.fazendaId,
       negocioId: negocioId ?? undefined,
       safraId: safraId ?? undefined,
-      formaPagamento: this.formaPagamento(),
-      fornecedorId: this.formaPagamento() === 'FORNECEDOR_CREDENCIADO' ? this.fornecedorId()! : undefined,
+      formaPagamento,
+      fornecedorId: formaPagamento === 'FORNECEDOR_CREDENCIADO' ? this.fornecedorId()! : undefined,
     };
 
     const onSuccess = () => {

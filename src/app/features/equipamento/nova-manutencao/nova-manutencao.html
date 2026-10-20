@@ -24,8 +24,8 @@
 
   <div class="nova-manutencao__campo">
     <label hlmLabel for="ativo">{{ tipoAtivo() === 'VEICULO' ? 'Veículo' : 'Equipamento' }}</label>
-    <hlm-select [value]="ativoId()" (valueChange)="onAtivoIdChange($event)"
-      [itemToString]="itemToStringAtivo" class="w-full">
+    <hlm-select [value]="ativoId()" (valueChange)="onAtivoIdChange($event)" [itemToString]="itemToStringAtivo"
+      class="w-full">
       <hlm-select-trigger class="w-full">
         <hlm-select-value />
       </hlm-select-trigger>
@@ -40,8 +40,8 @@
   <div class="nova-manutencao__linha">
     <div class="nova-manutencao__campo">
       <label hlmLabel for="tipo">Tipo de Manutenção</label>
-      <hlm-select [value]="tipoSelecionado()" (valueChange)="onTipoChange($event)"
-        [itemToString]="itemToStringTipo" class="w-full">
+      <hlm-select [value]="tipoSelecionado()" (valueChange)="onTipoChange($event)" [itemToString]="itemToStringTipo"
+        class="w-full">
         <hlm-select-trigger class="w-full">
           <hlm-select-value />
         </hlm-select-trigger>
@@ -89,7 +89,8 @@
         <ng-icon name="lucideBanknote" size="16" />
         À Vista
       </button>
-      <button type="button" [class.ativo]="formaPagamento() === 'FORNECEDOR_CREDENCIADO'" (click)="onFormaPagamentoChange('FORNECEDOR_CREDENCIADO')">
+      <button type="button" [class.ativo]="formaPagamento() === 'FORNECEDOR_CREDENCIADO'"
+        (click)="onFormaPagamentoChange('FORNECEDOR_CREDENCIADO')">
         <ng-icon name="lucideHandshake" size="16" />
         Fornecedor Credenciado
       </button>
@@ -113,6 +114,7 @@
   </div>
   }
 
+  @if (formaPagamento() === 'A_VISTA') {
   <div class="nova-manutencao__secao">
     <label hlmLabel>Vínculo</label>
     <div class="nova-manutencao__toggle">
@@ -143,8 +145,8 @@
   } @else {
   <div class="nova-manutencao__campo">
     <label hlmLabel for="safra">Safra</label>
-    <hlm-select [value]="safraSelecionada()" (valueChange)="onSafraChange($event)"
-      [itemToString]="itemToStringSafra" class="w-full">
+    <hlm-select [value]="safraSelecionada()" (valueChange)="onSafraChange($event)" [itemToString]="itemToStringSafra"
+      class="w-full">
       <hlm-select-trigger class="w-full">
         <hlm-select-value />
       </hlm-select-trigger>
@@ -156,8 +158,9 @@
     </hlm-select>
   </div>
   }
+  }
 
-  <div class="nova-manutencao__campo">
+  <div class="nova-manutencao__campo mb-2">
     <label hlmLabel for="observacao">Observação</label>
     <textarea hlmTextarea id="observacao" formControlName="observacao" rows="3"></textarea>
   </div>
@@ -165,7 +168,8 @@
 
 <hlm-dialog-footer>
   <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
-  <button hlmBtn class="nova-manutencao__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
+  <button hlmBtn class="nova-manutencao__btn-salvar cursor-pointer" type="button" [disabled]="salvando()"
+    (click)="salvar()">
     {{ salvando() ? 'Salvando...' : 'Salvar' }}
   </button>
 </hlm-dialog-footer>

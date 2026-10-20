@@ -24,4 +24,20 @@ export class ManutencaoService {
       catchError(e => this.util.errorHandler(e))
     );
   }
+
+  listarPendentesPorFornecedor(fornecedorId: number): Observable<IManutencao[]> {
+    return this.http.get<IManutencao[]>(this.API_URL + '/fornecedor/' + fornecedorId + '/pendentes').pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
+  darBaixa(id: number, negocioId: number | null, safraId: number | null, dataBaixa: string | null): Observable<IManutencao> {
+    let params = '';
+    if (negocioId) params += `negocioId=${negocioId}`;
+    if (safraId) params += `${params ? '&' : ''}safraId=${safraId}`;
+    if (dataBaixa) params += `${params ? '&' : ''}dataBaixa=${dataBaixa}`;
+    return this.http.patch<IManutencao>(`${this.API_URL}/${id}/baixa${params ? '?' + params : ''}`, {}).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
 }

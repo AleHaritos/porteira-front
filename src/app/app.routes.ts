@@ -62,6 +62,11 @@ export const routes: Routes = [
               import('./features/equipamento/fornecedores/fornecedores').then((m) => m.Fornecedores),
           },
           {
+            path: 'fornecedores/:fornecedorId',
+            loadComponent: () =>
+              import('./features/equipamento/fornecedor-detalhe/fornecedor-detalhe').then((m) => m.FornecedorDetalhe),
+          },
+          {
             path: 'animais',
             loadComponent: () =>
               import('./features/animais/animais').then((m) => m.Animais),
@@ -95,6 +100,11 @@ export const routes: Routes = [
             path: 'safra/:safraId',
             loadComponent: () =>
               import('./features/safra/safra-detalhes/safra-detalhes').then((m) => m.SafraDetalhes),
+          },
+          {
+            path: 'safra/:safraId/talhao/:talhaoId',
+            loadComponent: () =>
+              import('./features/safra/talhao-detalhes/talhao-detalhes').then((m) => m.TalhaoDetalhes),
           },
         ],
       },
