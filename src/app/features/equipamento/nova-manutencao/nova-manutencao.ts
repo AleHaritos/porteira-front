@@ -209,18 +209,13 @@ export class NovaManutencao implements OnInit {
       return;
     }
 
-    let negocioId: number | null = null;
-    let safraId: number | null = null;
+    const vinculo = this.vinculo();
+    const negocioId = vinculo === 'NEGOCIO' ? this.negocioSelecionado() : null;
+    const safraId = vinculo === 'SAFRA' ? this.safraSelecionada() : null;
 
-    if (formaPagamento === 'A_VISTA') {
-      const vinculo = this.vinculo();
-      negocioId = vinculo === 'NEGOCIO' ? this.negocioSelecionado() : null;
-      safraId = vinculo === 'SAFRA' ? this.safraSelecionada() : null;
-
-      if (!negocioId && !safraId) {
-        this.toastService.showError('Erro', 'Selecione um negócio ou uma safra');
-        return;
-      }
+    if (!negocioId && !safraId) {
+      this.toastService.showError('Erro', 'Selecione um negócio ou uma safra');
+      return;
     }
 
     this.salvando.set(true);

@@ -59,3 +59,41 @@
   flex-direction: column;
   gap: 3px;
 }
+
+.nova-conta-fornecedor__secao {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nova-conta-fornecedor__toggle {
+  display: flex;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.nova-conta-fornecedor__toggle button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nova-conta-fornecedor__toggle button:not(:last-child) {
+  border-right: 1px solid #e5e7eb;
+}
+
+.nova-conta-fornecedor__toggle button.ativo {
+  background: #16a34a;
+  color: white;
+}

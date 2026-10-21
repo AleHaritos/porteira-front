@@ -31,12 +31,9 @@ export class ManutencaoEquipamentoService {
     );
   }
 
-  darBaixa(id: number, negocioId: number | null, safraId: number | null, dataBaixa: string | null): Observable<IManutencaoEquipamento> {
-    let params = '';
-    if (negocioId) params += `negocioId=${negocioId}`;
-    if (safraId) params += `${params ? '&' : ''}safraId=${safraId}`;
-    if (dataBaixa) params += `${params ? '&' : ''}dataBaixa=${dataBaixa}`;
-    return this.http.patch<IManutencaoEquipamento>(`${this.API_URL}/${id}/baixa${params ? '?' + params : ''}`, {}).pipe(
+  darBaixa(id: number, dataBaixa: string | null): Observable<IManutencaoEquipamento> {
+    const params = dataBaixa ? `?dataBaixa=${dataBaixa}` : '';
+    return this.http.patch<IManutencaoEquipamento>(`${this.API_URL}/${id}/baixa${params}`, {}).pipe(
       catchError(e => this.util.errorHandler(e))
     );
   }

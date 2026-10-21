@@ -18,4 +18,6 @@ export interface ContaFornecedorRequest {
   descricao: string;
   data: string;
   valor: number;
+  negocioId: number | null;
+  safraId: number | null;
 }
