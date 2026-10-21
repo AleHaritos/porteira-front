@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideWallet } from '@ng-icons/lucide';
 import { HlmCardImports } from '@spartan-ng/helm/card';
@@ -62,7 +62,7 @@ const BASELINE = 170;
           <ng-icon name="lucideWallet" size="22" />
         </div>
         <div>
-          <p hlmCardDescription>Custo total — {{ nomeTalhao() }}</p>
+          <p hlmCardDescription>Custo de Manejo — {{ nomeTalhao() }}</p>
           <h3 hlmCardTitle class="custo-card__total">{{ totalFormatado() }}</h3>
         </div>
       </hlm-card-header>
@@ -122,6 +122,8 @@ const BASELINE = 170;
 export class CustoTalhaoCard {
   talhaoId = input.required<number | null>();
   nomeTalhao = input<string>('');
+  totalCalculado = output<number>();
+  dadosCalculados = output<{ label: string; valor: number }[]>();
 
   private manejoService = inject(ManejoService);
 
@@ -166,6 +168,8 @@ export class CustoTalhaoCard {
       } else {
         this.dados.set([]);
         this.total.set(0);
+        this.totalCalculado.emit(0);
+        this.dadosCalculados.emit([]);
       }
     });
   }
@@ -189,8 +193,17 @@ export class CustoTalhaoCard {
         this.dados.set(lista);
         this.total.set(total);
         this.carregando.set(false);
+        this.totalCalculado.emit(total);
+        this.dadosCalculados.emit(lista.map((d) => ({ label: d.label, valor: d.valor })));
       },
       error: () => this.carregando.set(false),
     });
+  }
+
+  recarregar(): void {
+    const id = this.talhaoId();
+    if (id) {
+      this.carregar(id);
+    }
   }
 }

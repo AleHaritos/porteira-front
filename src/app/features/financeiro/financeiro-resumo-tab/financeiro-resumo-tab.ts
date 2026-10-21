@@ -37,6 +37,7 @@ interface ResumoBarraGeometria extends ResumoBarraDatum {
 }
 
 type VinculoFiltro = 'TODOS' | 'NEGOCIO' | 'SAFRA';
+type TipoFiltro = 'TODOS' | 'RECEITA' | 'GASTO';
 
 const GRAFICO_ALTURA_MAXIMA = 150;
 const GRAFICO_LARGURA_BARRA = 64;
@@ -90,6 +91,8 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
   negocioFiltroId = signal<number | null>(null);
   safraFiltroId = signal<number | null>(null);
 
+  tipoFiltro = signal<TipoFiltro>('TODOS');
+
   itemToStringNegocio = (value: number | null | undefined) =>
     this.negocios().find((n) => n.id === value)?.nome || '';
 
@@ -101,10 +104,18 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
     dataFim: [null as Date | null],
   });
 
-  dadosGrafico = computed<ResumoBarraDatum[]>(() => [
-    { chave: 'receitas', label: 'Receitas', valor: this.resumo().totalReceitas, cor: '#2f9e58' },
-    { chave: 'gastos', label: 'Gastos', valor: this.resumo().totalGastos, cor: '#c0392b' },
-  ]);
+  dadosGrafico = computed<ResumoBarraDatum[]>(() => {
+    const tipo = this.tipoFiltro();
+    const todos: ResumoBarraDatum[] = [
+      { chave: 'receitas', label: 'Receitas', valor: this.resumo().totalReceitas, cor: '#2f9e58' },
+      { chave: 'gastos', label: 'Gastos', valor: this.resumo().totalGastos, cor: '#c0392b' },
+    ];
+    if (tipo === 'RECEITA') return todos.filter((d) => d.chave === 'receitas');
+    if (tipo === 'GASTO') return todos.filter((d) => d.chave === 'gastos');
+    return todos;
+  });
+
+  temMovimentacaoVisivel = computed(() => this.dadosGrafico().some((d) => d.valor > 0));
 
   geometriaGrafico = computed<ResumoBarraGeometria[]>(() => {
     const dados = this.dadosGrafico();
@@ -190,6 +201,10 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
     this.safraFiltroId.set(id ?? null);
   }
 
+  onTipoFiltroChange(tipo: TipoFiltro) {
+    this.tipoFiltro.set(tipo);
+  }
+
   private formatarDataIso(data: Date): string {
     const ano = data.getFullYear();
     const mes = String(data.getMonth() + 1).padStart(2, '0');
@@ -216,6 +231,7 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
     this.vinculoFiltro.set('TODOS');
     this.negocioFiltroId.set(null);
     this.safraFiltroId.set(null);
+    this.tipoFiltro.set('TODOS');
     this.carregarResumo();
   }
 
@@ -255,9 +271,12 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
     const negocioId = vinculo === 'NEGOCIO' ? this.negocioFiltroId() : null;
     const safraId = vinculo === 'SAFRA' ? this.safraFiltroId() : null;
 
+    const tipo = this.tipoFiltro();
+    const tipoParam = tipo === 'TODOS' ? null : tipo;
+
     this.exportandoPdf.set(true);
 
-    this.transacoesService.listarComFiltros(this.fazendaId, inicio, fim, null, negocioId, safraId).subscribe({
+    this.transacoesService.listarComFiltros(this.fazendaId, inicio, fim, tipoParam, negocioId, safraId).subscribe({
       next: (transacoes) => {
         this.gerarPdf(transacoes, inicio, fim);
         this.exportandoPdf.set(false);
@@ -308,25 +327,37 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
     } else if (vinculo === 'SAFRA') {
       vinculoTexto = `Vínculo: Safra - ${this.itemToStringSafra(this.safraFiltroId()) || '-'}`;
     }
-    doc.text(vinculoTexto, larguraPagina - margem, y, { align: 'right' });
+
+    const tipo = this.tipoFiltro();
+    let tipoTexto = '';
+    if (tipo === 'RECEITA') tipoTexto = ' | Tipo: Receitas';
+    else if (tipo === 'GASTO') tipoTexto = ' | Tipo: Gastos';
+
+    doc.text(vinculoTexto + tipoTexto, larguraPagina - margem, y, { align: 'right' });
 
     y += 10;
 
     // ---- cards de resumo ----
     const resumo = this.resumo();
-    const cardLargura = (larguraPagina - margem * 2 - 10 * 2) / 3;
-    const cardAltura = 22;
 
-    const cards: { label: string; valor: number; corFundo: [number, number, number]; corTexto: [number, number, number] }[] = [
-      { label: 'Receitas', valor: resumo.totalReceitas, corFundo: [227, 245, 232], corTexto: [39, 138, 76] },
-      { label: 'Gastos', valor: resumo.totalGastos, corFundo: [253, 232, 232], corTexto: [192, 57, 43] },
-      {
+    const cards: { label: string; valor: number; corFundo: [number, number, number]; corTexto: [number, number, number] }[] = [];
+    if (tipo !== 'GASTO') {
+      cards.push({ label: 'Receitas', valor: resumo.totalReceitas, corFundo: [227, 245, 232], corTexto: [39, 138, 76] });
+    }
+    if (tipo !== 'RECEITA') {
+      cards.push({ label: 'Gastos', valor: resumo.totalGastos, corFundo: [253, 232, 232], corTexto: [192, 57, 43] });
+    }
+    if (tipo === 'TODOS') {
+      cards.push({
         label: 'Saldo',
         valor: resumo.saldo,
         corFundo: resumo.saldo >= 0 ? [227, 245, 232] : [253, 232, 232],
         corTexto: resumo.saldo >= 0 ? [39, 138, 76] : [192, 57, 43],
-      },
-    ];
+      });
+    }
+
+    const cardLargura = (larguraPagina - margem * 2 - 10 * (cards.length - 1)) / cards.length;
+    const cardAltura = 22;
 
     cards.forEach((card, i) => {
       const x = margem + i * (cardLargura + 10);
@@ -347,7 +378,8 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
     // ---- gráfico ----
     doc.setFontSize(11);
     doc.setTextColor(31, 41, 55);
-    doc.text('Receitas x Gastos', margem, y);
+    const tituloGrafico = tipo === 'RECEITA' ? 'Receitas' : tipo === 'GASTO' ? 'Gastos' : 'Receitas x Gastos';
+    doc.text(tituloGrafico, margem, y);
     y += 6;
 
     const alturaMaxima = 40;
@@ -356,10 +388,9 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
     const baseline = y + alturaMaxima;
     const maxValor = Math.max(resumo.totalReceitas, resumo.totalGastos, 1);
 
-    const barras: { label: string; valor: number; cor: [number, number, number] }[] = [
-      { label: 'Receitas', valor: resumo.totalReceitas, cor: [47, 158, 88] },
-      { label: 'Gastos', valor: resumo.totalGastos, cor: [192, 57, 43] },
-    ];
+    const barras: { label: string; valor: number; cor: [number, number, number] }[] = [];
+    if (tipo !== 'GASTO') barras.push({ label: 'Receitas', valor: resumo.totalReceitas, cor: [47, 158, 88] });
+    if (tipo !== 'RECEITA') barras.push({ label: 'Gastos', valor: resumo.totalGastos, cor: [192, 57, 43] });
 
     barras.forEach((barra, i) => {
       const altura = (barra.valor / maxValor) * alturaMaxima;
@@ -404,8 +435,8 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
       columnStyles: { 4: { halign: 'right' } },
       didParseCell: (data) => {
         if (data.section === 'body' && data.column.index === 4) {
-          const tipo = linhas[data.row.index][1];
-          data.cell.styles.textColor = tipo === 'Receita' ? [39, 138, 76] : [192, 57, 43];
+          const tipoLinha = linhas[data.row.index][1];
+          data.cell.styles.textColor = tipoLinha === 'Receita' ? [39, 138, 76] : [192, 57, 43];
           data.cell.styles.fontStyle = 'bold';
         }
       },

@@ -15,28 +15,21 @@
           <th hlmTh>Especialidade</th>
           <th hlmTh>Saldo Devedor</th>
           <th hlmTh>Observação</th>
-          <th hlmTh class="fazenda-table__acoes-head">Ações</th>
         </tr>
       </thead>
       <tbody>
         @for (fornecedor of fornecedores(); track fornecedor.id) {
-          <tr hlmTr class="fazenda-table__row">
-            <td hlmTd class="fazenda-table__nome">{{ fornecedor.nome }}</td>
-            <td hlmTd>{{ fornecedor.especialidade || '-' }}</td>
-            <td hlmTd [class.fornecedores-page__saldo--positivo]="fornecedor.saldoDevedor > 0">
+          <tr hlmTr class="fazenda-table__row fornecedores-page__row" (click)="abrirDetalhesFornecedor(fornecedor)">
+            <td hlmTd class="fazenda-table__nome cursor-pointer">{{ fornecedor.nome }}</td>
+            <td hlmTd class="cursor-pointer">{{ fornecedor.especialidade || '-' }}</td>
+            <td hlmTd class="cursor-pointer" [class.fornecedores-page__saldo--positivo]="fornecedor.saldoDevedor > 0">
               {{ formatarValor(fornecedor.saldoDevedor) }}
             </td>
-            <td hlmTd>{{ fornecedor.observacao || '-' }}</td>
-            <td hlmTd>
-              <div class="produtos-table__acoes">
-                <button class="fornecedores-page__btn-pagar cursor-pointer" [disabled]="fornecedor.saldoDevedor <= 0"
-                  (click)="abrirPagarFornecedor(fornecedor)">Pagar</button>
-              </div>
-            </td>
+            <td hlmTd class="cursor-pointer">{{ fornecedor.observacao || '-' }}</td>
           </tr>
         } @empty {
           <tr hlmTr>
-            <td hlmTd colspan="5" class="fazenda-table__empty">
+            <td hlmTd colspan="4" class="fazenda-table__empty">
               @if (carregando()) {
                 Carregando fornecedores...
               } @else {

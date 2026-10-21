@@ -1,0 +1,64 @@
+<div class="custos-fixos-tab">
+  <div class="custos-fixos-tab__form-card">
+    <h3 class="custos-fixos-tab__form-titulo">Adicionar custo fixo</h3>
+    <form [formGroup]="form" class="custos-fixos-tab__form" (ngSubmit)="adicionar()">
+      <div class="custos-fixos-tab__campo">
+        <label hlmLabel for="descricao">Descrição</label>
+        <input hlmInput id="descricao" formControlName="descricao" placeholder="Ex: Aluguel do talhão, droneagem..." />
+      </div>
+
+      <div class="custos-fixos-tab__campo custos-fixos-tab__campo--valor">
+        <label hlmLabel for="valor">Valor</label>
+        <input hlmInput id="valor" type="text" inputmode="numeric" [value]="formatarMoedaDisplay(valorRaw())"
+          (input)="onValorInput($any($event.target).value)" placeholder="0,00" />
+      </div>
+
+      <button type="submit" hlmBtn class="custos-fixos-tab__btn-add cursor-pointer" [disabled]="salvando()">
+        <ng-icon name="lucidePlus" size="16" />
+        Adicionar
+      </button>
+    </form>
+  </div>
+
+  <div class="fazenda-table">
+    <table hlmTable>
+      <thead>
+        <tr hlmTr class="fazenda-table__head-row">
+          <th hlmTh>Descrição</th>
+          <th hlmTh>Valor</th>
+          <th hlmTh class="fazenda-table__acoes-head">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (custo of custos(); track custo.id) {
+        <tr hlmTr class="fazenda-table__row">
+          <td hlmTd class="fazenda-table__nome">{{ custo.descricao }}</td>
+          <td hlmTd>{{ formatarValor(custo.valor) }}</td>
+          <td hlmTd>
+            <button hlmBtn variant="ghost" size="sm" class="custos-fixos-tab__btn-excluir cursor-pointer" (click)="excluir(custo)">
+              <ng-icon name="lucideTrash2" size="16" />
+            </button>
+          </td>
+        </tr>
+        } @empty {
+        <tr hlmTr>
+          <td hlmTd [attr.colSpan]="3" class="fazenda-table__empty">
+            @if (carregando()) {
+            Carregando custos fixos...
+            } @else {
+            Nenhum custo fixo cadastrado
+            }
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (custos().length > 0) {
+    <div class="custos-fixos-tab__total">
+      <span>Total de custos fixos</span>
+      <strong>{{ formatarValor(totalCustos()) }}</strong>
+    </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,84 @@
+<hlm-dialog-header>
+  <div class="nova-conta-fornecedor__header-linha">
+    <div class="nova-conta-fornecedor__icone">
+      <ng-icon hlm name="lucideReceipt" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Lançar Conta</h3>
+      <p hlmDialogDescription>Registre um novo débito para este fornecedor</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="nova-conta-fornecedor__form mt-2" (ngSubmit)="salvar()">
+  <div class="nova-conta-fornecedor__campo">
+    <label hlmLabel for="descricao">Descrição</label>
+    <input hlmInput id="descricao" formControlName="descricao" placeholder="Ex: Compra de peças, serviço de..." />
+  </div>
+
+  <div class="nova-conta-fornecedor__linha">
+    <div class="nova-conta-fornecedor__campo">
+      <label hlmLabel for="valor">Valor</label>
+      <input hlmInput id="valor" type="text" inputmode="numeric" [value]="formatarMoedaDisplay(valorRaw())"
+        (input)="onValorInput($any($event.target).value)" placeholder="0,00" />
+    </div>
+
+    <div class="nova-conta-fornecedor__campo">
+      <label hlmLabel for="data">Data</label>
+      <hlm-date-picker formControlName="data" [maxDate]="maxDate" class="w-full">
+        <hlm-date-picker-trigger buttonId="data" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+  </div>
+
+  <div class="nova-conta-fornecedor__secao">
+    <label hlmLabel>Vínculo</label>
+    <div class="nova-conta-fornecedor__toggle">
+      <button type="button" [class.ativo]="vinculo() === 'NEGOCIO'" (click)="onVinculoChange('NEGOCIO')">
+        Negócio
+      </button>
+      <button type="button" [class.ativo]="vinculo() === 'SAFRA'" (click)="onVinculoChange('SAFRA')">
+        Safra
+      </button>
+    </div>
+  </div>
+
+  @if (vinculo() === 'NEGOCIO') {
+  <div class="nova-conta-fornecedor__campo">
+    <label hlmLabel for="negocio">Negócio</label>
+    <hlm-select [value]="negocioSelecionado()" (valueChange)="onNegocioChange($event)"
+      [itemToString]="itemToStringNegocio" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (negocio of negocios(); track negocio.id) {
+        <hlm-select-item [value]="negocio.id">{{ negocio.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  } @else {
+  <div class="nova-conta-fornecedor__campo">
+    <label hlmLabel for="safra">Safra</label>
+    <hlm-select [value]="safraSelecionada()" (valueChange)="onSafraChange($event)"
+      [itemToString]="itemToStringSafra" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (safra of safras(); track safra.id) {
+        <hlm-select-item [value]="safra.id">{{ safra.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  }
+
+  <div class="nova-conta-fornecedor__acoes">
+    <button type="button" hlmBtn variant="outline" (click)="cancelar()">Cancelar</button>
+    <button type="submit" hlmBtn class="nova-conta-fornecedor__btn-salvar cursor-pointer" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : 'Lançar Conta' }}
+    </button>
+  </div>
+</form>

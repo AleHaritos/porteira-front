@@ -24,4 +24,17 @@ export class ManutencaoEquipamentoService {
       catchError(e => this.util.errorHandler(e))
     );
   }
+
+  listarPendentesPorFornecedor(fornecedorId: number): Observable<IManutencaoEquipamento[]> {
+    return this.http.get<IManutencaoEquipamento[]>(this.API_URL + '/fornecedor/' + fornecedorId + '/pendentes').pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
+  darBaixa(id: number, dataBaixa: string | null): Observable<IManutencaoEquipamento> {
+    const params = dataBaixa ? `?dataBaixa=${dataBaixa}` : '';
+    return this.http.patch<IManutencaoEquipamento>(`${this.API_URL}/${id}/baixa${params}`, {}).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
 }

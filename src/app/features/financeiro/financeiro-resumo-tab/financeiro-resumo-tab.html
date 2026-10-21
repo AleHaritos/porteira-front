@@ -15,6 +15,27 @@
     </div>
 
     <div class="financeiro-page__filtro-campo">
+      <label hlmLabel>Tipo</label>
+      <div class="financeiro-page__vinculo-toggle">
+        <button type="button" hlmBtn variant="outline" class="financeiro-page__vinculo-btn cursor-pointer"
+          [class.financeiro-page__vinculo-btn--ativo]="tipoFiltro() === 'TODOS'"
+          (click)="onTipoFiltroChange('TODOS')">
+          Todos
+        </button>
+        <button type="button" hlmBtn variant="outline" class="financeiro-page__vinculo-btn cursor-pointer"
+          [class.financeiro-page__vinculo-btn--ativo]="tipoFiltro() === 'RECEITA'"
+          (click)="onTipoFiltroChange('RECEITA')">
+          Receitas
+        </button>
+        <button type="button" hlmBtn variant="outline" class="financeiro-page__vinculo-btn cursor-pointer"
+          [class.financeiro-page__vinculo-btn--ativo]="tipoFiltro() === 'GASTO'"
+          (click)="onTipoFiltroChange('GASTO')">
+          Gastos
+        </button>
+      </div>
+    </div>
+
+    <div class="financeiro-page__filtro-campo">
       <label hlmLabel>Vínculo</label>
       <div class="financeiro-page__vinculo-toggle">
         <button type="button" hlmBtn variant="outline" class="financeiro-page__vinculo-btn cursor-pointer"
@@ -86,7 +107,8 @@
   </div>
 
   <div class="financeiro-resumo">
-    <div class="financeiro-resumo__card">
+    @if (tipoFiltro() !== 'GASTO') {
+    <div class="financeiro-resumo__card" [class.financeiro-resumo__card--unico]="tipoFiltro() !== 'TODOS'">
       <span class="financeiro-resumo__icone financeiro-resumo__icone--receita">
         <ng-icon name="lucideTrendingUp" size="20" />
       </span>
@@ -97,8 +119,10 @@
         </p>
       </div>
     </div>
+    }
 
-    <div class="financeiro-resumo__card">
+    @if (tipoFiltro() !== 'RECEITA') {
+    <div class="financeiro-resumo__card" [class.financeiro-resumo__card--unico]="tipoFiltro() !== 'TODOS'">
       <span class="financeiro-resumo__icone financeiro-resumo__icone--gasto">
         <ng-icon name="lucideTrendingDown" size="20" />
       </span>
@@ -109,7 +133,9 @@
         </p>
       </div>
     </div>
+    }
 
+    @if (tipoFiltro() === 'TODOS') {
     <div class="financeiro-resumo__card">
       <span class="financeiro-resumo__icone" [class.financeiro-resumo__icone--receita]="resumo().saldo >= 0"
         [class.financeiro-resumo__icone--gasto]="resumo().saldo < 0">
@@ -123,16 +149,25 @@
         </p>
       </div>
     </div>
+    }
 
     <div class="financeiro-grafico">
       <div class="financeiro-grafico__header">
         <span class="financeiro-grafico__icone">
           <ng-icon name="lucideChartColumn" size="18" />
         </span>
-        <h3 class="financeiro-grafico__titulo">Receitas x Gastos no Período</h3>
+        <h3 class="financeiro-grafico__titulo">
+          @if (tipoFiltro() === 'RECEITA') {
+            Receitas no Período
+          } @else if (tipoFiltro() === 'GASTO') {
+            Gastos no Período
+          } @else {
+            Receitas x Gastos no Período
+          }
+        </h3>
       </div>
 
-      @if (resumo().totalReceitas === 0 && resumo().totalGastos === 0) {
+      @if (!temMovimentacaoVisivel()) {
       <p class="financeiro-grafico__estado">Nenhuma movimentação registrada no período</p>
       } @else {
       <svg class="financeiro-grafico__svg" [attr.viewBox]="'0 0 ' + larguraViewBoxGrafico() + ' 210'"

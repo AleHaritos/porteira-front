@@ -1,0 +1,27 @@
+<hlm-dialog-header>
+  <div class="pagar-debito-fornecedor__header-linha">
+    <div class="pagar-debito-fornecedor__icone">
+      <ng-icon hlm name="lucideHandCoins" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Pagar Débito</h3>
+      <p hlmDialogDescription>{{ context.nomeAtivo }} — {{ formatarValor(context.valor) }}</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="pagar-debito-fornecedor__form mt-2" (ngSubmit)="salvar()">
+  <div class="pagar-debito-fornecedor__campo">
+    <label hlmLabel>Data</label>
+    <hlm-date-picker formControlName="data" [maxDate]="maxDate" class="w-full">
+      <hlm-date-picker-trigger buttonId="data" class="w-full">Selecionar data</hlm-date-picker-trigger>
+    </hlm-date-picker>
+  </div>
+
+  <div class="pagar-debito-fornecedor__acoes">
+    <button type="button" hlmBtn variant="outline" (click)="cancelar()">Cancelar</button>
+    <button type="submit" hlmBtn class="pagar-debito-fornecedor__btn-salvar cursor-pointer" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : 'Confirmar Pagamento' }}
+    </button>
+  </div>
+</form>

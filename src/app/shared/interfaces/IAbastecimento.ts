@@ -1,5 +1,6 @@
 export type TipoCombustivel = 'DIESEL' | 'GASOLINA' | 'ETANOL';
 export type LocalAbastecimento = 'ESTOQUE_FAZENDA' | 'POSTO_CREDENCIADO' | 'POSTO_CASUAL';
+export type StatusPagamento = 'PENDENTE' | 'BAIXADO';
 
 export interface IAbastecimento {
   id: number;
@@ -14,6 +15,9 @@ export interface IAbastecimento {
   postoNome?: string | null;
   observacao?: string;
   vinculoNome?: string | null;
+  postoId?: number | null;
+  statusPagamento?: StatusPagamento | null;
+  dataBaixa?: string | null
 }
 
 export interface AbastecimentoRequest {

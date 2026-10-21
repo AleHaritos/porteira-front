@@ -202,7 +202,9 @@ export class NovaManutencao implements OnInit {
       return;
     }
 
-    if (this.formaPagamento() === 'FORNECEDOR_CREDENCIADO' && this.fornecedorId() == null) {
+    const formaPagamento = this.formaPagamento();
+
+    if (formaPagamento === 'FORNECEDOR_CREDENCIADO' && this.fornecedorId() == null) {
       this.toastService.showError('Erro', 'Selecione o fornecedor');
       return;
     }
@@ -227,8 +229,8 @@ export class NovaManutencao implements OnInit {
       fazendaId: this.context.fazendaId,
       negocioId: negocioId ?? undefined,
       safraId: safraId ?? undefined,
-      formaPagamento: this.formaPagamento(),
-      fornecedorId: this.formaPagamento() === 'FORNECEDOR_CREDENCIADO' ? this.fornecedorId()! : undefined,
+      formaPagamento,
+      fornecedorId: formaPagamento === 'FORNECEDOR_CREDENCIADO' ? this.fornecedorId()! : undefined,
     };
 
     const onSuccess = () => {

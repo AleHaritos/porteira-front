@@ -1,0 +1,154 @@
+.colheita-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.colheita-tab__form-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.colheita-tab__form-titulo {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #1f2937;
+  background-color: #e3f5e8;
+  padding: 0.85rem 1.5rem;
+  margin: -1.25rem -1.5rem 1.25rem -1.5rem;
+  border-radius: 0.75rem 0.75rem 0 0;
+  border-bottom: 1px solid #d8e6dc;
+}
+
+.colheita-tab__form {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.colheita-tab__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+.colheita-tab__campo--menor {
+  flex: 0 0 150px;
+  min-width: 130px;
+}
+
+.colheita-tab__btn-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  background: #2f9e58;
+  color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.colheita-tab__btn-add:hover {
+  background: #278a4c;
+}
+
+.colheita-tab__btn-excluir {
+  color: #b91c1c;
+}
+
+.colheita-tab__btn-excluir:hover {
+  background-color: #fee2e2;
+}
+
+.fazenda-table {
+  background: #ffffff;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.fazenda-table__head-row th {
+  background: #f2f9f4;
+  color: #2f4d3a;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #d8e6dc;
+}
+
+.fazenda-table__row td {
+  border-bottom: 1px solid #eef4f0;
+}
+
+.fazenda-table__row:last-child td {
+  border-bottom: none;
+}
+
+.fazenda-table__nome {
+  font-weight: 600;
+  color: #2f4d3a;
+}
+
+.fazenda-table__empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.fazenda-table__acoes-head {
+  text-align: right;
+  width: 1%;
+  white-space: nowrap;
+  padding-right: 1rem;
+}
+
+.colheita-tab__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .colheita-tab__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.colheita-tab__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background-color: #fbfefc;
+  border: 1px solid #f0f4f1;
+  border-radius: 0.6rem;
+  padding: 0.85rem 1rem;
+}
+
+.colheita-tab__stat-label {
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+.colheita-tab__stat-valor {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.colheita-tab__stat--destaque {
+  background-color: #e3f5e8;
+  border-color: #d8e6dc;
+}
+
+.colheita-tab__stat-valor--destaque {
+  color: #278a4c;
+  font-size: 1.2rem;
+}

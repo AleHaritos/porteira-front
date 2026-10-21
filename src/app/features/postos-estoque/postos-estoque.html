@@ -17,21 +17,18 @@
           <tr hlmTr class="fazenda-table__head-row">
             <th hlmTh>Nome</th>
             <th hlmTh>Saldo Devedor</th>
-            <th hlmTh class="fazenda-table__acoes-head">Ações</th>
+            <th hlmTh class="fazenda-table__acoes-head"></th>
           </tr>
         </thead>
         <tbody>
           @for (posto of postos(); track posto.id) {
-            <tr hlmTr class="fazenda-table__row">
+            <tr hlmTr class="fazenda-table__row postos-estoque-page__row-clicavel" (click)="abrirDetalhePosto(posto)">
               <td hlmTd class="fazenda-table__nome">{{ posto.nome }}</td>
               <td hlmTd [class.postos-estoque-page__saldo--positivo]="posto.saldoDevedor > 0">
                 {{ formatarValor(posto.saldoDevedor) }}
               </td>
               <td hlmTd class="fazenda-table__acoes-head">
-                <button hlmBtn variant="outline" class="postos-estoque-page__btn-pagar cursor-pointer"
-                  [disabled]="posto.saldoDevedor <= 0" (click)="abrirPagarPosto(posto)">
-                  Pagar
-                </button>
+                <ng-icon name="lucideChevronRight" size="16" class="postos-estoque-page__chevron" />
               </td>
             </tr>
           } @empty {
@@ -47,6 +44,26 @@
           }
         </tbody>
       </table>
+
+      @if (totalPaginas() > 1) {
+        <nav hlmPagination class="fazenda-table__pagination">
+          <ul hlmPaginationContent>
+            <li hlmPaginationItem>
+              <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+            </li>
+            @for (pagina of paginasVisiveis(); track pagina) {
+              <li hlmPaginationItem>
+                <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+                  {{ pagina + 1 }}
+                </button>
+              </li>
+            }
+            <li hlmPaginationItem>
+              <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+            </li>
+          </ul>
+        </nav>
+      }
     </div>
   </section>
 

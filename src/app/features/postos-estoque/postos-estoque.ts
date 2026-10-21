@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucidePlus, lucideHandCoins, lucideFuel } from '@ng-icons/lucide';
+import { lucidePlus, lucideHandCoins, lucideFuel, lucideChevronRight } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
+import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import { ToastService } from '../../core/services/toast-service';
 import { EstoqueCombustivelService } from '../../core/services/veiculos/estoque-combustivel-service';
@@ -12,19 +13,19 @@ import { PostoService } from '../../core/services/veiculos/posto-service';
 import { TipoCombustivel } from '../../shared/interfaces/IAbastecimento';
 import { IEstoqueCombustivel } from '../../shared/interfaces/IEstoqueCombustivel';
 import { IPosto } from '../../shared/interfaces/IPosto';
-import { PagarPosto } from './pagar-posto/pagar-posto';
 import { ReabastecerEstoque } from './reabastecer-estoque/reabastecer-estoque';
 import { NovoPosto } from './novo-posto/novo-posto';
 
 @Component({
   selector: 'app-postos-estoque',
-  imports: [CommonModule, HlmTableImports, HlmButtonImports, NgIcon],
-  providers: [provideIcons({ lucidePlus, lucideHandCoins, lucideFuel })],
+  imports: [CommonModule, HlmTableImports, HlmPaginationImports, HlmButtonImports, NgIcon],
+  providers: [provideIcons({ lucidePlus, lucideHandCoins, lucideFuel, lucideChevronRight })],
   styleUrl: './postos-estoque.css',
   templateUrl: './postos-estoque.html',
 })
 export class PostosEstoque implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private postoService = inject(PostoService);
   private estoqueCombustivelService = inject(EstoqueCombustivelService);
   private dialogService = inject(HlmDialogService);
@@ -33,6 +34,8 @@ export class PostosEstoque implements OnInit {
   fazendaId = signal<number | null>(null);
 
   postos = signal<IPosto[]>([]);
+  paginaAtual = signal(0);
+  totalPaginas = signal(0);
   carregandoPostos = signal(false);
 
   estoques = signal<IEstoqueCombustivel[]>([]);
@@ -43,6 +46,16 @@ export class PostosEstoque implements OnInit {
     GASOLINA: 'Gasolina',
     ETANOL: 'Etanol',
   };
+
+  paginasVisiveis = computed(() => {
+    const atual = this.paginaAtual();
+    const total = this.totalPaginas();
+    const inicio = Math.max(0, atual - 1);
+    const fim = Math.min(total - 1, atual + 1);
+    const paginas: number[] = [];
+    for (let i = inicio; i <= fim; i++) paginas.push(i);
+    return paginas;
+  });
 
   ngOnInit(): void {
     this.route.parent?.paramMap.subscribe((params) => {
@@ -58,9 +71,10 @@ export class PostosEstoque implements OnInit {
     if (fazendaId == null) return;
 
     this.carregandoPostos.set(true);
-    this.postoService.listarPorFazenda(fazendaId).subscribe({
-      next: (postos) => {
-        this.postos.set(postos);
+    this.postoService.listarPaginado(fazendaId, this.paginaAtual(), 6).subscribe({
+      next: (res) => {
+        this.postos.set(res.content);
+        this.totalPaginas.set(res.totalPages);
         this.carregandoPostos.set(false);
       },
       error: () => {
@@ -68,6 +82,12 @@ export class PostosEstoque implements OnInit {
         this.toastService.showError('Erro', 'Não foi possível carregar os postos');
       },
     });
+  }
+
+  irPara(pagina: number) {
+    if (pagina < 0 || pagina > this.totalPaginas() - 1) return;
+    this.paginaAtual.set(pagina);
+    this.carregarPostos();
   }
 
   carregarEstoques() {
@@ -101,18 +121,10 @@ export class PostosEstoque implements OnInit {
     });
   }
 
-  abrirPagarPosto(posto: IPosto) {
+  abrirDetalhePosto(posto: IPosto) {
     const fazendaId = this.fazendaId();
     if (fazendaId == null) return;
-
-    const dialogRef = this.dialogService.open(PagarPosto, {
-      context: { fazendaId, posto },
-      contentClass: 'sm:!max-w-[520px]',
-    });
-
-    dialogRef.closed$.subscribe((pago) => {
-      if (pago) this.carregarPostos();
-    });
+    this.router.navigate(['/fazenda', fazendaId, 'posto', posto.id]);
   }
 
   abrirReabastecerEstoque() {

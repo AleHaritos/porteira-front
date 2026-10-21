@@ -22,6 +22,12 @@ export class SafraService {
         )
     }
 
+    buscarPorId(id: number): Observable<ISafra> {
+        return this.http.get<ISafra>(`${this.API_URL}/detalhe/${id}`).pipe(
+            catchError(e => this.util.errorHandler(e))
+        );
+    }
+
     atualizar(id: number, req: ISafraUpdateRequest): Observable<ISafra> {
         return this.http
             .put<ISafra>(`${this.API_URL}/${id}`, req)

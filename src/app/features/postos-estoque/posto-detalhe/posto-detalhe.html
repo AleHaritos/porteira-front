@@ -1,0 +1,94 @@
+<div class="posto-detalhe">
+  <button hlmBtn variant="outline" class="posto-detalhe__btn-voltar cursor-pointer" (click)="voltar()">
+    <ng-icon name="lucideArrowLeft" size="16" />
+    Voltar
+  </button>
+
+  @if (posto()) {
+    <div class="posto-detalhe__resumo">
+      <div>
+        <h1 class="posto-detalhe__titulo">{{ posto()!.nome }}</h1>
+        @if (posto()!.observacao) {
+          <p class="posto-detalhe__observacao">{{ posto()!.observacao }}</p>
+        }
+      </div>
+      <div class="posto-detalhe__saldo-card">
+        <span class="posto-detalhe__saldo-label">Saldo Devedor</span>
+        <span class="posto-detalhe__saldo-valor" [class.posto-detalhe__saldo-valor--positivo]="posto()!.saldoDevedor > 0">
+          {{ formatarValor(posto()!.saldoDevedor) }}
+        </span>
+      </div>
+    </div>
+  }
+
+  <div class="fazenda-table">
+    <table hlmTable>
+      <thead>
+        <tr hlmTr class="fazenda-table__head-row">
+          <th hlmTh>Data</th>
+          <th hlmTh>Veículo</th>
+          <th hlmTh>Combustível</th>
+          <th hlmTh>Litros</th>
+          <th hlmTh>Valor/Litro</th>
+          <th hlmTh>Valor Total</th>
+          <th hlmTh>Status</th>
+          <th hlmTh class="fazenda-table__acoes-head">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (abastecimento of abastecimentos(); track abastecimento.id) {
+          <tr hlmTr class="fazenda-table__row">
+            <td hlmTd>{{ abastecimento.data | date: 'dd/MM/yyyy' }}</td>
+            <td hlmTd>{{ abastecimento.veiculoNome }}</td>
+            <td hlmTd>{{ tipoCombustivelLabel(abastecimento.tipoCombustivel) }}</td>
+            <td hlmTd>{{ abastecimento.litros }} L</td>
+            <td hlmTd>{{ formatarValor(abastecimento.valorPorLitro) }}</td>
+            <td hlmTd>{{ formatarValor(abastecimento.valorTotal) }}</td>
+            <td hlmTd>
+              <span class="posto-detalhe__status" [ngClass]="statusClasse(abastecimento.statusPagamento)">
+                {{ statusLabel(abastecimento.statusPagamento) }}
+              </span>
+            </td>
+            <td hlmTd class="fazenda-table__acoes-head">
+              @if (abastecimento.statusPagamento === 'PENDENTE') {
+                <button hlmBtn variant="outline" class="posto-detalhe__btn-pagar cursor-pointer" (click)="pagar(abastecimento)">
+                  Pagar
+                </button>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr hlmTr>
+            <td hlmTd colspan="8" class="fazenda-table__empty">
+              @if (carregando()) {
+                Carregando abastecimentos...
+              } @else {
+                Nenhum abastecimento registrado nesse posto ainda.
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (totalPaginas() > 1) {
+      <nav hlmPagination class="fazenda-table__pagination">
+        <ul hlmPaginationContent>
+          <li hlmPaginationItem>
+            <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+          </li>
+          @for (pagina of paginasVisiveis(); track pagina) {
+            <li hlmPaginationItem>
+              <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+                {{ pagina + 1 }}
+              </button>
+            </li>
+          }
+          <li hlmPaginationItem>
+            <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+          </li>
+        </ul>
+      </nav>
+    }
+  </div>
+</div>
