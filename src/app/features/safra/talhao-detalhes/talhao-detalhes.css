@@ -6,8 +6,12 @@
 
 .talhao-detalhes__header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   gap: 1rem;
+  flex-wrap: wrap;
+  text-align: left;
 }
 
 .talhao-detalhes__voltar {
@@ -399,4 +403,29 @@
 
 ::ng-deep [hlmTabsTrigger][data-state='active']::after {
   background-color: #2f9e58 !important;
+}
+
+.talhao-detalhes__btn-exportar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid #278a4c;
+  background: #ffffff;
+  color: #278a4c;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.talhao-detalhes__btn-exportar:hover:not(:disabled) {
+  background: #278a4c;
+  color: #ffffff;
+}
+
+.talhao-detalhes__btn-exportar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

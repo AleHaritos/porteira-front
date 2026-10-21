@@ -14,6 +14,12 @@
       </div>
     </div>
     }
+
+    <button type="button" class="talhao-detalhes__btn-exportar cursor-pointer" (click)="exportarPdf()"
+      [disabled]="exportandoPdf()">
+      <ng-icon name="lucideFileText" size="18" />
+      {{ exportandoPdf() ? 'Gerando PDF...' : 'Exportar PDF' }}
+    </button>
   </div>
 
   @if (carregando()) {
@@ -210,8 +216,18 @@
           </div>
         </div>
       </div>
+      
+      <div #graficoReceitaGastosWrap>
+        <app-receita-gastos-talhao-card [nomeTalhao]="talhao()?.nome ?? ''" [receita]="receitaTotalColheita()"
+          [custoRateioTotal]="custoEstimadoTalhao()" [custoCombustivel]="custoCombustivelEstimado()"
+          [custoManutencao]="custoManutencaoEstimado()" [custoFixos]="totalCustosFixos()"
+          [custoManejo]="custoManejoTotal()" />
+      </div>
 
-      <app-custo-talhao-card [talhaoId]="talhaoId" [nomeTalhao]="talhao()?.nome ?? ''" />
+      <div #graficoManejoWrap>
+        <app-custo-talhao-card [talhaoId]="talhaoId" [nomeTalhao]="talhao()?.nome ?? ''"
+          (totalCalculado)="onCustoManejoCalculado($event)" (dadosCalculados)="onManejoDetalhadoCalculado($event)" />
+      </div>
       }
     </div>
 

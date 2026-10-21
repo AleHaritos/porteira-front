@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideWallet } from '@ng-icons/lucide';
 import { HlmCardImports } from '@spartan-ng/helm/card';
@@ -122,6 +122,8 @@ const BASELINE = 170;
 export class CustoTalhaoCard {
   talhaoId = input.required<number | null>();
   nomeTalhao = input<string>('');
+  totalCalculado = output<number>();
+  dadosCalculados = output<{ label: string; valor: number }[]>();
 
   private manejoService = inject(ManejoService);
 
@@ -158,7 +160,7 @@ export class CustoTalhaoCard {
     return n * (LARGURA_BARRA + ESPACO_ENTRE) + ESPACO_ENTRE / 2;
   });
 
-  constructor() {
+   constructor() {
     effect(() => {
       const id = this.talhaoId();
       if (id) {
@@ -166,6 +168,8 @@ export class CustoTalhaoCard {
       } else {
         this.dados.set([]);
         this.total.set(0);
+        this.totalCalculado.emit(0);
+        this.dadosCalculados.emit([]);
       }
     });
   }
@@ -189,6 +193,8 @@ export class CustoTalhaoCard {
         this.dados.set(lista);
         this.total.set(total);
         this.carregando.set(false);
+        this.totalCalculado.emit(total);
+        this.dadosCalculados.emit(lista.map((d) => ({ label: d.label, valor: d.valor })));
       },
       error: () => this.carregando.set(false),
     });
