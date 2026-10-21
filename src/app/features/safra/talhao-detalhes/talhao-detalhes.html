@@ -216,7 +216,7 @@
           </div>
         </div>
       </div>
-      
+
       <div #graficoReceitaGastosWrap>
         <app-receita-gastos-talhao-card [nomeTalhao]="talhao()?.nome ?? ''" [receita]="receitaTotalColheita()"
           [custoRateioTotal]="custoEstimadoTalhao()" [custoCombustivel]="custoCombustivelEstimado()"
@@ -225,7 +225,7 @@
       </div>
 
       <div #graficoManejoWrap>
-        <app-custo-talhao-card [talhaoId]="talhaoId" [nomeTalhao]="talhao()?.nome ?? ''"
+        <app-custo-talhao-card #custoManejoCardRef [talhaoId]="talhaoId" [nomeTalhao]="talhao()?.nome ?? ''"
           (totalCalculado)="onCustoManejoCalculado($event)" (dadosCalculados)="onManejoDetalhadoCalculado($event)" />
       </div>
       }
@@ -233,7 +233,7 @@
 
     <div hlmTabsContent="manejos" class="talhao-detalhes__content">
       @if (abaAtiva() === 'manejos') {
-      <!-- vazio por enquanto -->
+      <app-manejos-talhao-tab [talhaoId]="talhaoId" [safraId]="safraId" (manejoAlterado)="recarregarCustoManejo()" />
       }
     </div>
 

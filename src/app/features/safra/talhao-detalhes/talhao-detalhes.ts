@@ -26,6 +26,7 @@ import { CustoTalhaoCard } from '../custo-talhao-card/custo-talhao-card';
 import { ReceitaGastosTalhaoCard } from '../receita-gastos-talhao-card/receita-gastos-talhao-card';
 import { CustosFixosTalhaoTab } from '../custos-fixos-talhao-tab/custos-fixos-talhao-tab';
 import { ColheitaTalhaoTab } from '../colheita-talhao-tab/colheita-talhao-tab';
+import { ManejosTalhaoTab } from '../manejos-talhao-tab/manejos-talhao-tab';
 import { ICustosCombustivelManutencao } from '../../../shared/interfaces/ICustosCombustivelManutencao';
 import html2canvas from 'html2canvas-pro';
 import jsPDF from 'jspdf';
@@ -51,6 +52,7 @@ interface ManejoDetalhado {
     ReceitaGastosTalhaoCard,
     CustosFixosTalhaoTab,
     ColheitaTalhaoTab,
+    ManejosTalhaoTab,
   ],
   providers: [
     provideIcons({
@@ -78,6 +80,7 @@ export class TalhaoDetalhes implements OnInit {
 
   graficoManejoRef = viewChild<ElementRef<HTMLElement>>('graficoManejoWrap');
   graficoReceitaGastosRef = viewChild<ElementRef<HTMLElement>>('graficoReceitaGastosWrap');
+  custoManejoCardRef = viewChild<CustoTalhaoCard>('custoManejoCardRef');
 
   fazendaId!: number;
   safraId!: number;
@@ -180,6 +183,10 @@ export class TalhaoDetalhes implements OnInit {
     this.custoManejoDetalhado.set(dados);
   }
 
+  recarregarCustoManejo(): void {
+    this.custoManejoCardRef()?.recarregar();
+  }
+
   private carregar(): void {
     this.carregando.set(true);
 
@@ -270,46 +277,79 @@ export class TalhaoDetalhes implements OnInit {
         }
       };
 
-      const addTituloSecao = (titulo: string) => {
+     const addTituloSecao = (titulo: string) => {
         garantirEspaco(30);
         doc.setTextColor(...TEXTO);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(13);
         doc.text(titulo, margin, y);
-        y += 8;
+        y += 12;
       };
+      const LARGURA_TABELA = pageWidth - margin * 2;
+      const LARGURA_COLUNA_VALOR = 110;
 
       const addTabela = (
         body: (string | number)[][],
-        opcoes?: { head?: string[][]; destaqueApartirDe?: number },
+        opcoes?: { head?: string[]; destaqueApartirDe?: number },
       ) => {
-        const numColunas = (opcoes?.head?.[0]?.length ?? body[0]?.length ?? 2) - 1;
+        const temCabecalho = !!opcoes?.head;
+        const linhas: (string | number)[][] = temCabecalho ? [opcoes!.head as string[], ...body] : body;
+        const numColunas = linhas[0]?.length ?? 2;
+        const ultimaColuna = numColunas - 1;
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const columnStyles: Record<number, any> = {
+          0: { halign: 'left' as const },
+          [ultimaColuna]: { halign: 'right' as const, cellWidth: LARGURA_COLUNA_VALOR },
+        };
+        for (let i = 1; i < ultimaColuna; i++) {
+          columnStyles[i] = { halign: 'right' as const };
+        }
+
         autoTable(doc, {
           startY: y,
           margin: { left: margin, right: margin },
-          head: opcoes?.head,
-          body,
-          theme: opcoes?.head ? 'striped' : 'plain',
-          styles: { fontSize: 10, cellPadding: 5, textColor: TEXTO },
-          headStyles: { fillColor: VERDE_TABELA, textColor: BRANCO, fontStyle: 'bold' },
-          alternateRowStyles: { fillColor: LINHA_ALTERNADA },
-          columnStyles: Object.fromEntries(
-            Array.from({ length: numColunas }, (_, i) => [i + 1, { halign: 'right' as const }]),
-          ),
+          tableWidth: LARGURA_TABELA,
+          body: linhas,
+          theme: 'plain',
+          styles: {
+            fontSize: 10,
+            cellPadding: 5,
+            textColor: TEXTO,
+            font: 'helvetica',
+            fontStyle: 'normal',
+            halign: 'left',
+            valign: 'middle',
+            lineWidth: 0,
+          },
+          columnStyles,
           didParseCell: (data) => {
-            if (
-              opcoes?.destaqueApartirDe !== undefined &&
-              !opcoes.head &&
-              data.row.index >= opcoes.destaqueApartirDe
-            ) {
+            if (temCabecalho && data.row.index === 0) {
+              data.cell.styles.fillColor = VERDE_TABELA;
+              data.cell.styles.textColor = BRANCO;
+              data.cell.styles.fontStyle = 'bold';
+              return;
+            }
+
+            const indiceDestaque =
+              opcoes?.destaqueApartirDe !== undefined
+                ? opcoes.destaqueApartirDe + (temCabecalho ? 1 : 0)
+                : undefined;
+
+            if (indiceDestaque !== undefined && data.row.index >= indiceDestaque) {
               data.cell.styles.fillColor = VERDE_CLARO;
               data.cell.styles.textColor = VERDE_TEXTO;
               data.cell.styles.fontStyle = 'bold';
+              return;
+            }
+
+            if (temCabecalho && (data.row.index - 1) % 2 === 1) {
+              data.cell.styles.fillColor = LINHA_ALTERNADA;
             }
           },
         });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        y = (doc as any).lastAutoTable.finalY + 20;
+        y = (doc as any).lastAutoTable.finalY + 32;
       };
 
       // Rateio geral
@@ -325,16 +365,17 @@ export class TalhaoDetalhes implements OnInit {
         { destaqueApartirDe: 3 },
       );
 
-      // Custos Fixos
+      // Custos Fixos (itens + total na MESMA tabela, pra alinhar com precisão)
       addTituloSecao(`Custos Fixos (${this.custosFixos().length})`);
-      if (this.custosFixos().length > 0) {
-        addTabela(
-          this.custosFixos().map((c) => [c.descricao, this.formatarValor(c.valor)]),
-          { head: [['Descrição', 'Valor']] },
-        );
-      }
-      addTabela([['Total de Custos Fixos', this.formatarValor(this.totalCustosFixos())]], {
-        destaqueApartirDe: 0,
+      const linhasCustosFixos: (string | number)[][] = this.custosFixos().map((c) => [
+        c.descricao,
+        this.formatarValor(c.valor),
+      ]);
+      const indiceTotalCustosFixos = linhasCustosFixos.length;
+      linhasCustosFixos.push(['Total de Custos Fixos', this.formatarValor(this.totalCustosFixos())]);
+      addTabela(linhasCustosFixos, {
+        head: ['Descrição', 'Valor'],
+        destaqueApartirDe: indiceTotalCustosFixos,
       });
 
       // Combustível e Manutenção
@@ -354,32 +395,29 @@ export class TalhaoDetalhes implements OnInit {
             this.formatarValor(this.custoManutencaoPorHa()),
           ],
         ],
-        { head: [['Categoria', 'Total Safra', 'Valor Atribuído ao Talhão', 'Por Hectare']] },
+        { head: ['Categoria', 'Total Safra', 'Valor Atribuído ao Talhão', 'Por Hectare'] },
       );
 
-      // Colheita
+      // Colheita (itens + totais na MESMA tabela, cada total na coluna certa)
       addTituloSecao(`Colheita (${this.colheitas().length} registro(s))`);
-      if (this.colheitas().length > 0) {
-        addTabela(
-          this.colheitas().map((c) => [
-            c.descricao || '—',
-            this.formatarSacas(c.quantidadeColhida),
-            this.formatarValor(c.valorUnitario),
-            this.formatarValor(c.quantidadeColhida * c.valorUnitario),
-          ]),
-          { head: [['Descrição', 'Quantidade', 'Valor Unitário', 'Receita']] },
-        );
-      }
-      addTabela(
-        [
-          ['Total de sc', this.formatarSacas(this.producaoTotalColheita())],
-          ['Média de valor', this.formatarValor(this.mediaValorColheita())],
-          ['Produção por hectare', this.formatarSacas(this.producaoPorHaColheita())],
-          ['Receita Total', this.formatarValor(this.receitaTotalColheita())],
-          ['Receita por Hectare', this.formatarValor(this.receitaPorHaColheita())],
-        ],
-        { destaqueApartirDe: 3 },
+      const linhasColheita: (string | number)[][] = this.colheitas().map((c) => [
+        c.descricao || '—',
+        this.formatarSacas(c.quantidadeColhida),
+        this.formatarValor(c.valorUnitario),
+        this.formatarValor(c.quantidadeColhida * c.valorUnitario),
+      ]);
+      const indiceInicioTotaisColheita = linhasColheita.length;
+      linhasColheita.push(
+        ['Total de sc', this.formatarSacas(this.producaoTotalColheita()), '', ''],
+        ['Produção por hectare', this.formatarSacas(this.producaoPorHaColheita()), '', ''],
+        ['Média de valor', '', this.formatarValor(this.mediaValorColheita()), ''],
+        ['Receita Total', '', '', this.formatarValor(this.receitaTotalColheita())],
+        ['Receita por Hectare', '', '', this.formatarValor(this.receitaPorHaColheita())],
       );
+      addTabela(linhasColheita, {
+        head: ['Descrição', 'Quantidade', 'Valor Unitário', 'Receita'],
+        destaqueApartirDe: indiceInicioTotaisColheita,
+      });
 
       // Gráfico de Custo de Manejo
       const elManejo = this.graficoManejoRef()?.nativeElement;

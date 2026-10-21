@@ -160,7 +160,7 @@ export class CustoTalhaoCard {
     return n * (LARGURA_BARRA + ESPACO_ENTRE) + ESPACO_ENTRE / 2;
   });
 
-   constructor() {
+  constructor() {
     effect(() => {
       const id = this.talhaoId();
       if (id) {
@@ -198,5 +198,12 @@ export class CustoTalhaoCard {
       },
       error: () => this.carregando.set(false),
     });
+  }
+
+  recarregar(): void {
+    const id = this.talhaoId();
+    if (id) {
+      this.carregar(id);
+    }
   }
 }
