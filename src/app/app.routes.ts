@@ -71,6 +71,11 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/animais/animais').then((m) => m.Animais),
           },
+           {
+            path: 'animais/piquete/:piqueteId',
+            loadComponent: () =>
+              import('./features/animais/piquete-detalhes/piquete-detalhes').then((m) => m.PiqueteDetalhes),
+          },
           {
             path: 'manutencao',
             loadComponent: () =>

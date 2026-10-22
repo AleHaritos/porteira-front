@@ -1,0 +1,81 @@
+.piquete-detalhes {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.piquete-detalhes__header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.piquete-detalhes__titulo-bloco {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.piquete-detalhes__voltar {
+  color: #278a4c;
+}
+
+.piquete-detalhes__voltar:hover {
+  background-color: #e3f5e8;
+}
+
+.piquete-detalhes__icone {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #4fae70, #278a4c);
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.piquete-detalhes__titulo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.piquete-detalhes__subtitulo {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.piquete-detalhes__tabs-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+  width: 50%;
+  margin-inline: auto;
+  margin-bottom: 1.5rem;
+}
+
+.piquete-detalhes__tabs-list button[hlmTabsTrigger] {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.25rem;
+}
+
+::ng-deep [hlmTabsTrigger][data-state='active'] {
+  color: #278a4c;
+}
+
+::ng-deep [hlmTabsTrigger][data-state='active']::after {
+  background-color: #2f9e58 !important;
+}
+
+.piquete-detalhes__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 150px;
+}

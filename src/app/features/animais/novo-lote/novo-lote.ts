@@ -36,7 +36,6 @@ export class NovoLote implements OnInit {
 
   form = this.fb.group({
     nome: ['', Validators.required],
-    quantidade: [null as number | null, [Validators.required, Validators.min(1)]],
     observacoes: [''],
   });
 
@@ -44,8 +43,7 @@ export class NovoLote implements OnInit {
     if (this.context.lote) {
       this.form.patchValue({
         nome: this.context.lote.nome,
-        quantidade: this.context.lote.quantidade,
-        observacoes: this.context.lote.observacoes,
+        observacoes: this.context.lote.observacoes ?? '',
       });
     }
   }
@@ -60,10 +58,9 @@ export class NovoLote implements OnInit {
       return;
     }
 
-    const { nome, quantidade, observacoes } = this.form.value;
+    const { nome, observacoes } = this.form.value;
     const request = {
       nome: nome!,
-      quantidade: quantidade!,
       observacoes: observacoes || undefined,
       fazendaId: this.context.fazendaId,
     };

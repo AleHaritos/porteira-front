@@ -1,0 +1,42 @@
+<div class="piquete-detalhes">
+  <div class="piquete-detalhes__header">
+    <div class="piquete-detalhes__titulo-bloco">
+      <button hlmBtn variant="ghost" size="icon" class="piquete-detalhes__voltar cursor-pointer" (click)="voltar()" title="Voltar">
+        <ng-icon name="lucideArrowLeft" size="20" />
+      </button>
+      <div class="piquete-detalhes__icone">
+        <ng-icon name="lucideMapPin" size="22" />
+      </div>
+      <div>
+        <div class="piquete-detalhes__titulo">{{ piquete()?.nome || 'Piquete' }}</div>
+        <div class="piquete-detalhes__subtitulo">{{ piquete()?.areaHectares }} ha · {{ piquete()?.quantidadeAnimais }} animais</div>
+      </div>
+    </div>
+  </div>
+
+  <hlm-tabs [tab]="abaAtiva()" class="w-full">
+    <hlm-tabs-list variant="line" class="piquete-detalhes__tabs-list">
+      <button hlmTabsTrigger="animais" (click)="selecionarAba('animais')" class="cursor-pointer">Animais</button>
+      <button hlmTabsTrigger="vacinacao" (click)="selecionarAba('vacinacao')" class="cursor-pointer">Vacinação</button>
+      <button hlmTabsTrigger="alimentacao" (click)="selecionarAba('alimentacao')" class="cursor-pointer">Alimentação</button>
+    </hlm-tabs-list>
+
+    <div hlmTabsContent="animais" class="piquete-detalhes__content">
+      @if (abaAtiva() === 'animais' && fazendaId() && piqueteId()) {
+      <app-animais-tab [fazendaId]="fazendaId()!" [piqueteFixo]="piqueteId()!" />
+      }
+    </div>
+
+    <div hlmTabsContent="vacinacao" class="piquete-detalhes__content">
+      @if (abaAtiva() === 'vacinacao' && fazendaId() && piqueteId()) {
+      <app-cuidado-animal-tab tipo="VACINACAO" [fazendaId]="fazendaId()!" [piqueteId]="piqueteId()!" />
+      }
+    </div>
+
+    <div hlmTabsContent="alimentacao" class="piquete-detalhes__content">
+      @if (abaAtiva() === 'alimentacao' && fazendaId() && piqueteId()) {
+      <app-cuidado-animal-tab tipo="ALIMENTACAO" [fazendaId]="fazendaId()!" [piqueteId]="piqueteId()!" />
+      }
+    </div>
+  </hlm-tabs>
+</div>

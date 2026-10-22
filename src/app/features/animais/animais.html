@@ -1,64 +1,90 @@
 <div class="animais-page">
   <div class="animais-page__header">
-    <h2 class="animais-page__titulo">Animais</h2>
+    <div class="animais-page__titulo-bloco">
+      <div class="animais-page__icone">
+        <ng-icon name="lucidePawPrint" size="22" />
+      </div>
+      <div>
+        <div class="animais-page__titulo">Animais</div>
+        <div class="animais-page__subtitulo">Piquetes e lotes da fazenda</div>
+      </div>
+    </div>
 
+    @if (abaAtiva() === 'lotes') {
     <button hlmBtn class="animais-page__btn-novo cursor-pointer" (click)="abrirNovoLote()">
       <ng-icon name="lucidePlus" size="16" />
       Novo Lote
     </button>
+    }
   </div>
 
-  <div class="fazenda-table">
-    <div hlmTableContainer>
-      <table hlmTable>
-        <thead hlmTHead>
-          <tr hlmTr class="fazenda-table__head-row">
-            <th hlmTh>Nome</th>
-            <th hlmTh>Quantidade</th>
-            <th hlmTh>Observações</th>
-            <th hlmTh class="w-[160px] text-right pr-7">Ações</th>
-          </tr>
-        </thead>
+  <hlm-tabs [tab]="abaAtiva()" class="w-full">
+    <hlm-tabs-list variant="line" class="animais-page__tabs-list">
+      <button hlmTabsTrigger="piquetes" (click)="selecionarAba('piquetes')" class="cursor-pointer">
+        Piquetes
+      </button>
+      <button hlmTabsTrigger="lotes" (click)="selecionarAba('lotes')" class="cursor-pointer">
+        Lotes
+      </button>
+    </hlm-tabs-list>
 
-        <tbody hlmTBody>
-          @for (lote of lotes(); track lote.id) {
-          <tr hlmTr class="fazenda-table__row">
-            <td hlmTd class="fazenda-table__nome animais-table__nome-clicavel" (click)="abrirHistorico(lote)">{{ lote.nome }}</td>
-            <td hlmTd>{{ lote.quantidade }}</td>
-            <td hlmTd [title]="lote.observacoes || ''">{{ (lote.observacoes | truncar: 30) || '-' }}</td>
-            <td hlmTd class="text-right">
-              <div class="animais-table__acoes">
-                <button hlmBtn variant="ghost" size="icon"
-                  class="fazenda-table__action-btn fazenda-table__action-btn--editar cursor-pointer"
-                  (click)="abrirNovaConsulta(lote)" title="Nova Consulta/Vacinação">
-                  <ng-icon name="lucideSyringe" size="16" />
-                </button>
-                <button hlmBtn variant="ghost" size="icon"
-                  class="fazenda-table__action-btn fazenda-table__action-btn--editar cursor-pointer"
-                  (click)="abrirNovoLote(lote)" title="Editar">
-                  <ng-icon name="lucideSquarePen" size="16" />
-                </button>
-                <button hlmBtn variant="ghost" size="icon"
-                  class="fazenda-table__action-btn fazenda-table__action-btn--excluir cursor-pointer"
-                  (click)="inativar(lote)" title="Inativar">
-                  <ng-icon name="lucideTrash2" size="16" />
-                </button>
-              </div>
-            </td>
-          </tr>
-          } @empty {
-          <tr hlmTr>
-            <td hlmTd [attr.colSpan]="4" class="fazenda-table__empty">
-              @if (carregando()) {
-              Carregando lotes...
-              } @else {
-              Nenhum lote cadastrado
-              }
-            </td>
-          </tr>
-          }
-        </tbody>
-      </table>
+    <div hlmTabsContent="piquetes" class="animais-page__content">
+      @if (abaAtiva() === 'piquetes' && fazendaId(); as fId) {
+      <app-piquetes-tab [fazendaId]="fId" />
+      }
     </div>
-  </div>
+
+    <div hlmTabsContent="lotes" class="animais-page__content">
+      @if (abaAtiva() === 'lotes') {
+      <div class="fazenda-table">
+        <div hlmTableContainer>
+          <table hlmTable>
+            <thead hlmTHead>
+              <tr hlmTr class="fazenda-table__head-row">
+                <th hlmTh>Nome</th>
+                <th hlmTh>Quantidade</th>
+                <th hlmTh>Observações</th>
+                <th hlmTh class="w-[120px] text-right pr-7">Ações</th>
+              </tr>
+            </thead>
+
+            <tbody hlmTBody>
+              @for (lote of lotes(); track lote.id) {
+              <tr hlmTr class="fazenda-table__row">
+                <td hlmTd class="fazenda-table__nome">{{ lote.nome }}</td>
+                <td hlmTd>{{ lote.quantidadeAnimais }}</td>
+                <td hlmTd [title]="lote.observacoes || ''">{{ (lote.observacoes | truncar: 30) || '-' }}</td>
+                <td hlmTd class="text-right">
+                  <div class="animais-table__acoes">
+                    <button hlmBtn variant="ghost" size="icon"
+                      class="fazenda-table__action-btn fazenda-table__action-btn--editar cursor-pointer"
+                      (click)="abrirNovoLote(lote)" title="Editar">
+                      <ng-icon name="lucideSquarePen" size="16" />
+                    </button>
+                    <button hlmBtn variant="ghost" size="icon"
+                      class="fazenda-table__action-btn fazenda-table__action-btn--excluir cursor-pointer"
+                      (click)="inativar(lote)" title="Inativar">
+                      <ng-icon name="lucideTrash2" size="16" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              } @empty {
+              <tr hlmTr>
+                <td hlmTd [attr.colSpan]="4" class="fazenda-table__empty">
+                  @if (carregando()) {
+                  Carregando lotes...
+                  } @else {
+                  Nenhum lote cadastrado
+                  }
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      }
+    </div>
+  </hlm-tabs>
 </div>
