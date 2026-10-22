@@ -121,7 +121,7 @@ export class TalhaoDetalhes implements OnInit {
     if (!talhao || !talhao.areaHectares) return 0;
     return this.gastosTotalTalhao() / talhao.areaHectares;
   });
-  
+
   totalCustosFixos = computed(() => this.custosFixos().reduce((soma, c) => soma + c.valor, 0));
   custosFixosPreview = computed(() => this.custosFixos().slice(0, 5));
 
@@ -379,8 +379,8 @@ export class TalhaoDetalhes implements OnInit {
           ['Área do talhão', `${areaHectares} ha`],
           ['Área total da safra', `${this.safra()?.areaTotal ?? 0} ha`],
           ['Gastos totais da safra', this.formatarValor(this.custoTotalSafra())],
-          ['Custo estimado do talhão', this.formatarValor(this.custoEstimadoTalhao())],
-          ['Custo estimado por hectare', this.formatarValor(this.custoPorHectare())],
+          ['Custo estimado do talhão', this.formatarValor(this.gastosTotalTalhao())],
+          ['Custo estimado por hectare', this.formatarValor(this.custoTotalPorHectare())],
         ],
         { destaqueApartirDe: 3 },
       );
