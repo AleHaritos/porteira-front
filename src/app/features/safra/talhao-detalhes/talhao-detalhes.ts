@@ -31,6 +31,7 @@ import { ICustosCombustivelManutencao } from '../../../shared/interfaces/ICustos
 import html2canvas from 'html2canvas-pro';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { ManejoService } from '../../../core/services/safra/manejo-service';
 
 const moeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 const numeroFormatter = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -73,6 +74,7 @@ export class TalhaoDetalhes implements OnInit {
   private router = inject(Router);
   private talhaoService = inject(TalhaoService);
   private safraService = inject(SafraService);
+  private manejoService = inject(ManejoService);
   private transacoesService = inject(TransacoesService);
   private custoFixoTalhaoService = inject(CustoFixoTalhaoService);
   private custoCategoriaSafraService = inject(CustoCategoriaSafraService);
@@ -114,6 +116,12 @@ export class TalhaoDetalhes implements OnInit {
     return this.custoEstimadoTalhao() / talhao.areaHectares;
   });
 
+  custoTotalPorHectare = computed(() => {
+    const talhao = this.talhao();
+    if (!talhao || !talhao.areaHectares) return 0;
+    return this.gastosTotalTalhao() / talhao.areaHectares;
+  });
+  
   totalCustosFixos = computed(() => this.custosFixos().reduce((soma, c) => soma + c.valor, 0));
   custosFixosPreview = computed(() => this.custosFixos().slice(0, 5));
 
@@ -175,6 +183,12 @@ export class TalhaoDetalhes implements OnInit {
     });
   }
 
+  recarregarCustosFixos(): void {
+    this.custoFixoTalhaoService.listarPorTalhao(this.talhaoId).subscribe({
+      next: (custos) => this.custosFixos.set(custos),
+    });
+  }
+
   onCustoManejoCalculado(valor: number): void {
     this.custoManejoTotal.set(valor);
   }
@@ -185,6 +199,12 @@ export class TalhaoDetalhes implements OnInit {
 
   recarregarCustoManejo(): void {
     this.custoManejoCardRef()?.recarregar();
+    this.manejoService.listarTodosPorTalhao(this.talhaoId).subscribe({
+      next: (manejos) => {
+        const total = manejos.reduce((soma, m) => soma + m.custoTotal, 0);
+        this.custoManejoTotal.set(total);
+      },
+    });
   }
 
   private carregar(): void {
@@ -277,7 +297,7 @@ export class TalhaoDetalhes implements OnInit {
         }
       };
 
-     const addTituloSecao = (titulo: string) => {
+      const addTituloSecao = (titulo: string) => {
         garantirEspaco(30);
         doc.setTextColor(...TEXTO);
         doc.setFont('helvetica', 'bold');

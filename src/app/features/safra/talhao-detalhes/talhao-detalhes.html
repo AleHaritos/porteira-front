@@ -76,14 +76,14 @@
           <div class="talhao-detalhes__rateio-item talhao-detalhes__rateio-item--destaque">
             <span class="talhao-detalhes__rateio-item-label">Custo estimado do talhão</span>
             <span class="talhao-detalhes__rateio-item-valor talhao-detalhes__rateio-item-valor--destaque">
-              {{ formatarValor(custoEstimadoTalhao()) }}
+              {{ formatarValor(gastosTotalTalhao()) }}
             </span>
           </div>
 
           <div class="talhao-detalhes__rateio-item talhao-detalhes__rateio-item--destaque">
             <span class="talhao-detalhes__rateio-item-label">Custo estimado por hectare</span>
             <span class="talhao-detalhes__rateio-item-valor talhao-detalhes__rateio-item-valor--destaque">
-              {{ formatarValor(custoPorHectare()) }}
+              {{ formatarValor(custoTotalPorHectare()) }}
             </span>
           </div>
         </div>
@@ -239,7 +239,7 @@
 
     <div hlmTabsContent="custosFixos" class="talhao-detalhes__content">
       @if (abaAtiva() === 'custosFixos') {
-      <app-custos-fixos-talhao-tab [talhaoId]="talhaoId" />
+      <app-custos-fixos-talhao-tab [talhaoId]="talhaoId" (custosFixosAlterado)="recarregarCustosFixos()" />
       }
     </div>
 
