@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, input, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, input, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideTrash2, lucidePlus } from '@ng-icons/lucide';
@@ -21,6 +21,8 @@ const moeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL
 })
 export class CustosFixosTalhaoTab implements OnInit {
   talhaoId = input.required<number>();
+
+  custosFixosAlterado = output<void>();
 
   private custoFixoTalhaoService = inject(CustoFixoTalhaoService);
   private fb = inject(FormBuilder);
@@ -82,6 +84,7 @@ export class CustosFixosTalhaoTab implements OnInit {
           this.salvando.set(false);
           this.toastService.showSuccess('Sucesso', 'Custo fixo adicionado');
           this.carregar();
+          this.custosFixosAlterado.emit();
         },
         error: () => {
           this.salvando.set(false);
@@ -95,6 +98,7 @@ export class CustosFixosTalhaoTab implements OnInit {
       next: () => {
         this.toastService.showSuccess('Sucesso', 'Custo fixo removido');
         this.carregar();
+        this.custosFixosAlterado.emit();
       },
       error: () => this.toastService.showError('Erro', 'Não foi possível remover o custo fixo'),
     });
