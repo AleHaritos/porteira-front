@@ -148,7 +148,7 @@ export class NovaConsulta implements OnInit {
       return;
     }
 
-    if (this.quantidadeAnimaisRaw()! > this.context.lote.quantidade) {
+    if (this.quantidadeAnimaisRaw()! > this.context.lote.quantidadeAnimais) {
       this.toastService.showError('Erro', 'A quantidade não pode ser maior que a do lote');
       return;
     }

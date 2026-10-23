@@ -1,0 +1,37 @@
+<hlm-dialog-header>
+  <div class="transferir-animais__header-linha">
+    <div class="transferir-animais__icone">
+      <ng-icon name="lucideArrowRightLeft" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Transferir Animais</h3>
+      <p class="transferir-animais__subtitulo">
+        {{ context.animais.length }} animal(is) selecionado(s) serão movidos para o piquete escolhido
+      </p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<div class="transferir-animais__form">
+  <div class="transferir-animais__campo">
+    <label hlmLabel>Piquete de destino</label>
+    <hlm-select [value]="piqueteDestinoId()" (valueChange)="onPiqueteDestinoChange($event)"
+      [itemToString]="itemToStringPiquete">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Selecione o piquete" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (piquete of context.piquetes; track piquete.id) {
+        <hlm-select-item [value]="piquete.id">{{ piquete.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+</div>
+
+<hlm-dialog-footer class="mt-2">
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" [disabled]="salvando()" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn class="transferir-animais__btn-confirmar cursor-pointer" type="button" [disabled]="salvando()" (click)="confirmar()">
+    {{ salvando() ? 'Transferindo...' : 'Transferir' }}
+  </button>
+</hlm-dialog-footer>

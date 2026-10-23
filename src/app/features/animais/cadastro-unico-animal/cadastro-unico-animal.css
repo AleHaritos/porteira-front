@@ -1,0 +1,59 @@
+.cadastro-unico-animal__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cadastro-unico-animal__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #dcfce7;
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.cadastro-unico-animal__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cadastro-unico-animal__subtitulo {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.cadastro-unico-animal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 4px 0 0;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.cadastro-unico-animal__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.cadastro-unico-animal__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cadastro-unico-animal__btn-salvar {
+  background: #16a34a;
+  color: white;
+}
+
+.cadastro-unico-animal__btn-salvar:hover:not(:disabled) {
+  background: #15803d;
+}

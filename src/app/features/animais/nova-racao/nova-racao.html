@@ -1,0 +1,63 @@
+<hlm-dialog-header class="mb-2">
+  <div class="nova-racao__header-linha">
+    <div class="nova-racao__icone">
+      <ng-icon name="lucideWheat" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>{{ editando ? 'Editar Ração' : 'Nova Ração' }}</h3>
+      <p class="nova-racao__subtitulo">Combine ingredientes pra calcular o custo</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<div class="nova-racao__form">
+  <div class="nova-racao__campo">
+    <label hlmLabel for="nome">Nome da ração</label>
+    <input hlmInput id="nome" type="text" placeholder="Ex: Ração de engorda" [value]="nome()" (input)="onNomeInput($event)" />
+  </div>
+
+  <div class="nova-racao__ingredientes">
+    <div class="nova-racao__ingredientes-header">
+      <label hlmLabel>Ingredientes</label>
+      <button hlmBtn variant="outline" size="sm" type="button" class="cursor-pointer" (click)="adicionarLinha()">
+        <ng-icon name="lucidePlus" size="14" />
+        Adicionar
+      </button>
+    </div>
+
+    @for (linha of linhas(); track $index) {
+    <div class="nova-racao__linha">
+      <hlm-select [value]="linha.ingredienteId" (valueChange)="onIngredienteChange($index, $event)"
+        [itemToString]="itemToStringIngrediente" class="nova-racao__select">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value placeholder="Selecione o ingrediente" />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (ingrediente of context.ingredientes; track ingrediente.id) {
+          <hlm-select-item [value]="ingrediente.id">{{ ingrediente.nome }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+
+      <input hlmInput type="text" placeholder="Quantidade" class="nova-racao__quantidade"
+        [value]="linha.quantidadeRaw" (input)="onQuantidadeInput($index, $event)" />
+
+      <button hlmBtn variant="ghost" size="icon" type="button" class="nova-racao__btn-remover cursor-pointer" (click)="removerLinha($index)">
+        <ng-icon name="lucideTrash2" size="16" />
+      </button>
+    </div>
+    }
+  </div>
+
+  <div class="nova-racao__preview">
+    <span>Custo total estimado</span>
+    <strong>R$ {{ custoTotalPreview().toFixed(2) }}</strong>
+  </div>
+</div>
+
+<hlm-dialog-footer class="mt-2">
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" [disabled]="salvando()" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn class="nova-racao__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
+    {{ salvando() ? 'Salvando...' : 'Salvar' }}
+  </button>
+</hlm-dialog-footer>

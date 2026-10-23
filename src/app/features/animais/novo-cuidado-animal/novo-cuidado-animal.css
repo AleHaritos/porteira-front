@@ -1,0 +1,99 @@
+.novo-cuidado-animal__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.novo-cuidado-animal__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #dcfce7;
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.novo-cuidado-animal__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.novo-cuidado-animal__subtitulo {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.novo-cuidado-animal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 0;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+.novo-cuidado-animal__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.novo-cuidado-animal__linha {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.novo-cuidado-animal__opcoes-vinculo {
+  display: flex;
+  gap: 8px;
+}
+
+.novo-cuidado-animal__opcao-vinculo {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.novo-cuidado-animal__opcao-vinculo:hover {
+  border-color: #16a34a;
+}
+
+.novo-cuidado-animal__opcao-vinculo--ativa {
+  background: #dcfce7;
+  border-color: #16a34a;
+  color: #15803d;
+}
+
+.novo-cuidado-animal__btn-salvar {
+  background: #16a34a;
+  color: white;
+}
+
+.novo-cuidado-animal__btn-salvar:hover {
+  background: #15803d;
+}
+
+.novo-cuidado-animal__dica {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.3rem;
+}
+
+.novo-cuidado-animal__input-readonly {
+  background: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}

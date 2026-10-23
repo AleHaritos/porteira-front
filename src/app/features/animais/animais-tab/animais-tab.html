@@ -1,0 +1,162 @@
+<div class="animais-tab__header">
+  <div class="animais-tab__filtros">
+    @if (!piqueteFixo()) {
+    <hlm-select [value]="filtroPiqueteId()" (valueChange)="onFiltroPiqueteChange($event)"
+      [itemToString]="itemToStringPiquete" class="w-[200px]">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Todos os piquetes" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-item [value]="null">Todos os piquetes</hlm-select-item>
+        @for (piquete of piquetes(); track piquete.id) {
+        <hlm-select-item [value]="piquete.id">{{ piquete.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+    }
+
+    <hlm-select [value]="filtroLoteId()" (valueChange)="onFiltroLoteChange($event)" [itemToString]="itemToStringLote"
+      class="w-[200px]">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Todos os lotes" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-item [value]="null">Todos os lotes</hlm-select-item>
+        @for (lote of lotes(); track lote.id) {
+        <hlm-select-item [value]="lote.id">{{ lote.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+
+    <hlm-select [value]="filtroTipo()" (valueChange)="onFiltroTipoChange($event)" [itemToString]="itemToStringTipo"
+      class="w-[180px]">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Todos os tipos" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-item [value]="null">Todos os tipos</hlm-select-item>
+        @for (opcao of tipoOptions; track opcao.value) {
+        <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+
+  <div class="animais-tab__btns-cadastro">
+    <button hlmBtn variant="outline" class="animais-tab__btn-unico cursor-pointer" (click)="abrirCadastroUnico()">
+      <ng-icon name="lucidePlus" size="16" />
+      Cadastro Único
+    </button>
+    <button hlmBtn class="animais-tab__btn-novo cursor-pointer" (click)="abrirCadastroLote()">
+      <ng-icon name="lucideListPlus" size="16" />
+      Cadastro em Lote
+    </button>
+  </div>
+</div>
+
+@if (selecionados().size > 0) {
+<div class="animais-tab__barra-selecao">
+  <span>{{ selecionados().size }} animal(is) selecionado(s)</span>
+  <div class="animais-tab__barra-selecao-acoes">
+    <button hlmBtn variant="outline" size="sm" class="cursor-pointer" (click)="limparSelecao()">
+      Limpar seleção
+    </button>
+    <button hlmBtn size="sm" class="animais-tab__btn-transferir cursor-pointer" (click)="abrirTransferencia()">
+      <ng-icon name="lucideArrowRightLeft" size="16" />
+      Transferir Selecionados
+    </button>
+    <button hlmBtn size="sm" class="animais-tab__btn-vender cursor-pointer" (click)="abrirVenda()">
+      <ng-icon name="lucideCoins" size="16" />
+      Vender Selecionados
+    </button>
+  </div>
+</div>
+}
+
+<div class="fazenda-table">
+  <div hlmTableContainer>
+    <table hlmTable>
+      <thead hlmTHead>
+        <tr hlmTr class="fazenda-table__head-row">
+          <th hlmTh class="w-[40px]">
+            <input type="checkbox" class="animais-tab__checkbox" [checked]="todosDaPaginaSelecionados"
+              (change)="toggleSelecionarTodos()" />
+          </th>
+          <th hlmTh>Tipo</th>
+          <th hlmTh>Brinco</th>
+          <th hlmTh>Lote</th>
+          @if (!piqueteFixo()) {
+          <th hlmTh>Piquete</th>
+          }
+          <th hlmTh>Descrição</th>
+          <th hlmTh class="w-[140px] text-right pr-7">Ações</th>
+        </tr>
+      </thead>
+
+      <tbody hlmTBody>
+        @for (animal of animais(); track animal.id) {
+        <tr hlmTr class="fazenda-table__row">
+          <td hlmTd>
+            <input type="checkbox" class="animais-tab__checkbox" [checked]="selecionados().has(animal.id)"
+              (change)="toggleSelecionado(animal.id)" />
+          </td>
+          <td hlmTd>{{ tipoLabel(animal.tipo) }}</td>
+          <td hlmTd>{{ animal.brinco || '-' }}</td>
+          <td hlmTd>{{ animal.loteNome || '-' }}</td>
+          @if (!piqueteFixo()) {
+          <td hlmTd>{{ animal.piqueteNome }}</td>
+          }
+          <td hlmTd [title]="animal.descricao || ''">{{ animal.descricao || '-' }}</td>
+          <td hlmTd class="text-right">
+            <button hlmBtn variant="ghost" size="icon" class="fazenda-table__action-btn cursor-pointer"
+              (click)="abrirEdicao(animal)" title="Editar">
+              <ng-icon name="lucidePencil" size="16" />
+            </button>
+            <button hlmBtn variant="ghost" size="icon" class="fazenda-table__action-btn cursor-pointer"
+              (click)="abrirHistorico(animal)" title="Histórico">
+              <ng-icon name="lucideHistory" size="16" />
+            </button>
+            <button hlmBtn variant="ghost" size="icon"
+              class="fazenda-table__action-btn fazenda-table__action-btn--excluir cursor-pointer"
+              (click)="excluir(animal)" title="Excluir">
+              <ng-icon name="lucideTrash2" size="16" />
+            </button>
+          </td>
+        </tr>
+        } @empty {
+        <tr hlmTr>
+          <td hlmTd [attr.colSpan]="piqueteFixo() ? 6 : 7" class="fazenda-table__empty">
+            @if (carregando()) {
+            Carregando animais...
+            } @else {
+            Nenhum animal cadastrado
+            }
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (totalPaginas() > 1) {
+  <nav hlmPagination class="fazenda-table__pagination">
+    <ul hlmPaginationContent>
+      <li hlmPaginationItem>
+        <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+      </li>
+
+      @for (pagina of paginasVisiveis(); track pagina) {
+      <li hlmPaginationItem>
+        <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+          {{ pagina + 1 }}
+        </button>
+      </li>
+      }
+
+      <li hlmPaginationItem>
+        <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+      </li>
+    </ul>
+  </nav>
+  }
+</div>

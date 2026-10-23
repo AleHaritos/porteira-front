@@ -1,0 +1,38 @@
+<div class="resumo-animais-tab">
+  <div class="resumo-animais-tab__header">
+    <div class="resumo-animais-tab__filtros">
+      <div class="resumo-animais-tab__campo-filtro">
+        <label hlmLabel for="dataInicio">De</label>
+        <hlm-date-picker [formControl]="dataInicioControl" [maxDate]="maxDate" class="w-full">
+          <hlm-date-picker-trigger buttonId="dataInicio" class="w-full">Selecionar data</hlm-date-picker-trigger>
+        </hlm-date-picker>
+      </div>
+
+      <div class="resumo-animais-tab__campo-filtro">
+        <label hlmLabel for="dataFim">Até</label>
+        <hlm-date-picker [formControl]="dataFimControl" [maxDate]="maxDate" class="w-full">
+          <hlm-date-picker-trigger buttonId="dataFim" class="w-full">Selecionar data</hlm-date-picker-trigger>
+        </hlm-date-picker>
+      </div>
+    </div>
+
+    <button type="button" class="resumo-animais-tab__btn-exportar cursor-pointer" (click)="exportarPdf()"
+      [disabled]="exportandoPdf() || !resumo()">
+      <ng-icon name="lucideFileText" size="18" />
+      {{ exportandoPdf() ? 'Gerando PDF...' : 'Exportar PDF' }}
+    </button>
+  </div>
+
+  @if (carregando()) {
+  <p class="resumo-animais-tab__estado">Carregando resumo...</p>
+  } @else if (resumo(); as r) {
+  <div class="resumo-animais-tab__cards">
+    <div #graficoGastosWrap class="h-full">
+      <app-gastos-animais-card [gastoAlimentacao]="r.gastoAlimentacao" [gastoVacinacao]="r.gastoVacinacao" />
+    </div>
+    <div #graficoReceitaGastosWrap class="h-full">
+      <app-receita-gastos-animais-card [receita]="r.receitaVendas" [gastoAlimentacao]="r.gastoAlimentacao" [gastoVacinacao]="r.gastoVacinacao" />
+    </div>
+  </div>
+  }
+</div>

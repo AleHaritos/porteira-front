@@ -1,0 +1,62 @@
+.resumo-animais-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.resumo-animais-tab__filtros {
+  display: flex;
+  gap: 1rem;
+}
+
+.resumo-animais-tab__campo-filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 180px;
+}
+
+.resumo-animais-tab__estado {
+  text-align: center;
+  color: #9ca3af;
+  padding: 2rem 0;
+}
+
+.resumo-animais-tab__cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.resumo-animais-tab__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.resumo-animais-tab__btn-exportar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid #278a4c;
+  background: #ffffff;
+  color: #278a4c;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.resumo-animais-tab__btn-exportar:hover:not(:disabled) {
+  background: #278a4c;
+  color: #ffffff;
+}
+
+.resumo-animais-tab__btn-exportar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

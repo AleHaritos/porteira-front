@@ -1,0 +1,105 @@
+.nova-racao__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nova-racao__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #dcfce7;
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.nova-racao__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nova-racao__subtitulo {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.nova-racao__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 4px 0 0;
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.nova-racao__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.nova-racao__ingredientes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nova-racao__ingredientes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nova-racao__linha {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.nova-racao__select {
+  flex: 2;
+}
+
+.nova-racao__quantidade {
+  flex: 1;
+}
+
+.nova-racao__btn-remover {
+  color: #dc2626;
+  flex-shrink: 0;
+}
+
+.nova-racao__btn-remover:hover {
+  background: #fee2e2;
+}
+
+.nova-racao__preview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f2f9f4;
+  border: 1px solid #d8e6dc;
+  border-radius: 8px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.9rem;
+  color: #2f4d3a;
+}
+
+.nova-racao__preview strong {
+  color: #278a4c;
+  font-size: 1rem;
+}
+
+.nova-racao__btn-salvar {
+  background: #16a34a;
+  color: white;
+}
+
+.nova-racao__btn-salvar:hover:not(:disabled) {
+  background: #15803d;
+}

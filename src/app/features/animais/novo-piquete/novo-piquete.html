@@ -1,0 +1,30 @@
+<hlm-dialog-header>
+  <div class="novo-piquete__header-linha">
+    <div class="novo-piquete__icone">
+      <ng-icon name="lucideMapPin" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>{{ editando ? 'Editar Piquete' : 'Novo Piquete' }}</h3>
+      <p class="novo-piquete__subtitulo">Área de pasto da fazenda</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="novo-piquete__form">
+  <div class="novo-piquete__campo">
+    <label hlmLabel for="nome">Nome</label>
+    <input hlmInput id="nome" formControlName="nome" placeholder="Ex: Piquete 1 - Pasto Norte" />
+  </div>
+
+  <div class="novo-piquete__campo">
+    <label hlmLabel for="area">Área (ha)</label>
+    <input hlmInput id="area" [value]="areaRaw() ?? ''" (input)="onAreaInput($any($event.target).value)" placeholder="0" />
+  </div>
+</form>
+
+<hlm-dialog-footer class="mt-2">
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn class="novo-piquete__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
+    {{ salvando() ? 'Salvando...' : 'Salvar' }}
+  </button>
+</hlm-dialog-footer>

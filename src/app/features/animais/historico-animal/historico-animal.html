@@ -1,0 +1,63 @@
+<hlm-dialog-header>
+  <div class="historico-animal__header-linha">
+    <div class="historico-animal__icone">
+      <ng-icon name="lucideHistory" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Histórico do Animal</h3>
+      <p class="historico-animal__subtitulo">Custos de vacinação e alimentação atribuídos a ele</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<div class="historico-animal__form">
+  @if (custo()) {
+  <div class="historico-animal__resumo">
+    <div class="historico-animal__resumo-item">
+      <span>Vacinação</span>
+      <strong>R$ {{ custo()!.custoVacinacao.toFixed(2) }}</strong>
+    </div>
+    <div class="historico-animal__resumo-item">
+      <span>Alimentação</span>
+      <strong>R$ {{ custo()!.custoAlimentacao.toFixed(2) }}</strong>
+    </div>
+    <div class="historico-animal__resumo-item">
+      <span>Valor de compra</span>
+      <strong>R$ {{ custo()!.valorCompra.toFixed(2) }}</strong>
+    </div>
+    <div class="historico-animal__resumo-item historico-animal__resumo-item--total">
+      <span>Custo total</span>
+      <strong>R$ {{ custo()!.custoTotal.toFixed(2) }}</strong>
+    </div>
+  </div>
+  }
+
+  <div class="historico-animal__lista">
+    @if (carregando()) {
+    <p class="historico-animal__vazio">Carregando histórico...</p>
+    } @else if (historico().length === 0) {
+    <p class="historico-animal__vazio">Nenhum registro de cuidado para este animal</p>
+    } @else {
+    @for (item of historico(); track item.id) {
+    <div class="historico-animal__item">
+      <div class="historico-animal__item-topo">
+        <span class="historico-animal__item-tipo">{{ tipoLabel(item.tipo) }}</span>
+        <span class="historico-animal__item-data">{{ item.data | date: 'dd/MM/yyyy' }}</span>
+      </div>
+      <p class="historico-animal__item-origem">{{ item.origem }}</p>
+      @if (item.descricao) {
+      <p class="historico-animal__item-desc">{{ item.descricao }}</p>
+      }
+      <div class="historico-animal__item-custos">
+        <span>Evento total: R$ {{ item.custoTotalEvento.toFixed(2) }}</span>
+        <span class="historico-animal__item-atribuido">Atribuído a este animal: R$ {{ item.custoAtribuido.toFixed(2) }}</span>
+      </div>
+    </div>
+    }
+    }
+  </div>
+</div>
+
+<hlm-dialog-footer class="mt-2">
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="fechar()">Fechar</button>
+</hlm-dialog-footer>

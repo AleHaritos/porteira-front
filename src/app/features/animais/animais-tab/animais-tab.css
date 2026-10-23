@@ -1,0 +1,151 @@
+.animais-tab__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.animais-tab__filtros {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.animais-tab__btn-novo {
+  background: #2f9e58;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.animais-tab__btn-novo:hover:not(:disabled) {
+  background: #278a4c;
+}
+
+.fazenda-table {
+  background: #ffffff;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.fazenda-table__head-row th {
+  background: #f2f9f4;
+  color: #2f4d3a;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #d8e6dc;
+}
+
+.fazenda-table__row td {
+  border-bottom: 1px solid #eef4f0;
+}
+
+.fazenda-table__row:last-child td {
+  border-bottom: none;
+}
+
+.fazenda-table__row:hover {
+  background-color: #f7fbf8;
+}
+
+.fazenda-table__empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.fazenda-table__pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  border-top: 1px solid #eef4f0;
+}
+
+.fazenda-table__action-btn {
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.fazenda-table__action-btn--excluir {
+  color: #dc2626;
+}
+
+.fazenda-table__action-btn.fazenda-table__action-btn--excluir:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+.animais-tab__barra-selecao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #e3f5e8;
+  border: 1px solid #d8e6dc;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  color: #1f7a3d;
+  font-weight: 500;
+}
+
+.animais-tab__barra-selecao-acoes {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.animais-tab__btn-vender {
+  background: #278a4c;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.animais-tab__btn-vender:hover:not(:disabled) {
+  background: #1f7a3d;
+}
+
+.animais-tab__checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #278a4c;
+}
+
+.animais-tab__btn-transferir {
+  background: #2563eb;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.animais-tab__btns-cadastro {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.animais-tab__btn-transferir:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+
+.animais-tab__btn-unico {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #278a4c;
+  border-color: #d8e6dc;
+}
+
+.animais-tab__btn-unico:hover {
+  background: #f2f9f4;
+  border-color: #278a4c;
+  color: #1f7a3d;
+}

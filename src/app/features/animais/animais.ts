@@ -2,23 +2,39 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucidePlus, lucideSquarePen, lucideTrash2, lucideSyringe } from '@ng-icons/lucide';
+import { lucidePawPrint, lucidePlus, lucideSquarePen, lucideTrash2 } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmTableImports } from '@spartan-ng/helm/table';
+import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { LoteService } from '../../core/services/animais/lote-service';
 import { ToastService } from '../../core/services/toast-service';
 import { ConfirmDialog } from '../../shared/confirm-dialog/confirm-dialog';
 import { ILote } from '../../shared/interfaces/ILote';
 import { NovoLote } from './novo-lote/novo-lote';
-import { NovaConsulta } from './nova-consulta/nova-consulta';
-import { HistoricoConsultas } from './historico-consultas/historico-consultas';
 import { TruncarPipe } from '../../shared/pipes/TruncarPipe';
+import { PiquetesTab } from './piquetes-tab/piquetes-tab';
+import { RacaoTab } from './racao-tab/racao-tab';
+import { OperacoesVendaTab } from './operacoes-venda-tab/operacoes-venda-tab';
+import { ResumoAnimaisTab } from './resumo-animais-tab/resumo-animais-tab';
+
+type AbaAnimais = 'piquetes' | 'lotes' | 'racao' | 'vendas' | 'resumo';
 
 @Component({
   selector: 'app-animais',
-  imports: [CommonModule, HlmTableImports, HlmButtonImports, TruncarPipe, NgIcon],
-  providers: [provideIcons({ lucidePlus, lucideSquarePen, lucideTrash2, lucideSyringe })],
+  imports: [
+    CommonModule,
+    HlmTableImports,
+    HlmButtonImports,
+    HlmTabsImports,
+    TruncarPipe,
+    NgIcon,
+    PiquetesTab,
+    RacaoTab,
+    OperacoesVendaTab,
+    ResumoAnimaisTab
+  ],
+  providers: [provideIcons({ lucidePawPrint, lucidePlus, lucideSquarePen, lucideTrash2 })],
   styleUrl: './animais.css',
   templateUrl: './animais.html',
 })
@@ -32,12 +48,18 @@ export class Animais implements OnInit {
   lotes = signal<ILote[]>([]);
   carregando = signal(false);
 
+  abaAtiva = signal<AbaAnimais>('piquetes');
+
   ngOnInit(): void {
     this.route.parent?.paramMap.subscribe((params) => {
       const id = params.get('id');
       this.fazendaId.set(id ? Number(id) : null);
       this.carregar();
     });
+  }
+
+  selecionarAba(aba: AbaAnimais): void {
+    this.abaAtiva.set(aba);
   }
 
   carregar(): void {
@@ -68,27 +90,6 @@ export class Animais implements OnInit {
 
     dialogRef.closed$.subscribe((salvo) => {
       if (salvo) this.carregar();
-    });
-  }
-
-  abrirHistorico(lote: ILote): void {
-    this.dialogService.open(HistoricoConsultas, {
-      context: { lote },
-      contentClass: 'sm:!max-w-[720px], sm:!min-w-[620px]',
-    });
-  }
-
-  abrirNovaConsulta(lote: ILote): void {
-    const fazendaId = this.fazendaId();
-    if (fazendaId == null) return;
-
-    const dialogRef = this.dialogService.open(NovaConsulta, {
-      context: { fazendaId, lote },
-      contentClass: 'sm:!max-w-[720px], sm:!min-w-[620px]',
-    });
-
-    dialogRef.closed$.subscribe((salvo) => {
-      if (salvo) this.toastService.showSuccess('Sucesso', 'Consulta registrada com sucesso!');
     });
   }
 

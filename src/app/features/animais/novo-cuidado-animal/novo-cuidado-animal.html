@@ -1,0 +1,118 @@
+<hlm-dialog-header>
+  <div class="novo-cuidado-animal__header-linha">
+    <div class="novo-cuidado-animal__icone">
+      <ng-icon [name]="icone" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Nova {{ titulo }}</h3>
+      <p class="novo-cuidado-animal__subtitulo">Pode ser aplicada a um animal, um lote ou todo o piquete</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="novo-cuidado-animal__form">
+  <div class="novo-cuidado-animal__campo">
+    <label hlmLabel>Aplicar para</label>
+    <div class="novo-cuidado-animal__opcoes-vinculo">
+      <button type="button" class="novo-cuidado-animal__opcao-vinculo"
+        [class.novo-cuidado-animal__opcao-vinculo--ativa]="vinculoTipo() === 'PIQUETE'"
+        (click)="selecionarVinculoTipo('PIQUETE')">
+        Todo o piquete
+      </button>
+      <button type="button" class="novo-cuidado-animal__opcao-vinculo"
+        [class.novo-cuidado-animal__opcao-vinculo--ativa]="vinculoTipo() === 'LOTE'"
+        (click)="selecionarVinculoTipo('LOTE')">
+        Um lote
+      </button>
+      <button type="button" class="novo-cuidado-animal__opcao-vinculo"
+        [class.novo-cuidado-animal__opcao-vinculo--ativa]="vinculoTipo() === 'ANIMAL'"
+        (click)="selecionarVinculoTipo('ANIMAL')">
+        Um animal
+      </button>
+    </div>
+  </div>
+
+  @if (vinculoTipo() === 'LOTE') {
+  <div class="novo-cuidado-animal__campo">
+    <label hlmLabel for="lote">Lote</label>
+    <hlm-select [value]="loteId()" (valueChange)="onLoteChange($event)" [itemToString]="itemToStringLote"
+      class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (lote of context.lotes; track lote.id) {
+        <hlm-select-item [value]="lote.id">{{ lote.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  }
+
+  @if (vinculoTipo() === 'ANIMAL') {
+  <div class="novo-cuidado-animal__campo">
+    <label hlmLabel for="animal">Animal</label>
+    <hlm-select [value]="animalId()" (valueChange)="onAnimalChange($event)" [itemToString]="itemToStringAnimal"
+      class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (animal of context.animais; track animal.id) {
+        <hlm-select-item [value]="animal.id">{{ itemToStringAnimal(animal.id) }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  }
+
+  @if (ehAlimentacao) {
+  <div class="novo-cuidado-animal__campo">
+    <label hlmLabel for="racao">Ração cadastrada *</label>
+    <div class="novo-cuidado-animal__linha">
+      <hlm-select [value]="racaoId()" (valueChange)="onRacaoChange($event)" [itemToString]="itemToStringRacao"
+        class="w-full">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value placeholder="Selecione a ração" />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (racao of racoes(); track racao.id) {
+          <hlm-select-item [value]="racao.id">{{ racao.nome }} (R$ {{ racao.custoTotal.toFixed(2) }})</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+
+      <input hlmInput placeholder="Quantidade" inputmode="decimal" [value]="quantidadeRacaoRaw()"
+        (input)="onQuantidadeRacaoInput($event)" />
+    </div>
+    <p class="novo-cuidado-animal__dica">O custo é calculado automaticamente a partir da ração e quantidade
+      selecionadas.</p>
+  </div>
+  }
+
+  <div class="novo-cuidado-animal__linha">
+    <div class="novo-cuidado-animal__campo">
+      <label hlmLabel for="data">Data</label>
+      <input hlmInput id="data" type="date" formControlName="data" />
+    </div>
+
+    <div class="novo-cuidado-animal__campo">
+      <label hlmLabel for="custo">Custo (R$)</label>
+      <input hlmInput id="custo" [value]="custoRaw() ?? ''" (input)="onCustoInput($any($event.target).value)"
+        placeholder="0,00" [readOnly]="ehAlimentacao" [class.novo-cuidado-animal__input-readonly]="ehAlimentacao" />
+    </div>
+  </div>
+
+  <div class="novo-cuidado-animal__campo">
+    <label hlmLabel for="descricao">Descrição</label>
+    <textarea hlmTextarea id="descricao" formControlName="descricao" rows="2" placeholder="Opcional"></textarea>
+  </div>
+</form>
+
+<hlm-dialog-footer class="mt-2">
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn class="novo-cuidado-animal__btn-salvar cursor-pointer" type="button" [disabled]="salvando()"
+    (click)="salvar()">
+    {{ salvando() ? 'Salvando...' : 'Salvar' }}
+  </button>
+</hlm-dialog-footer>

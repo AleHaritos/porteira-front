@@ -1,36 +1,104 @@
+.animais-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 .animais-page__header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.animais-page__titulo-bloco {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.animais-page__icone {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #4fae70, #278a4c);
+  color: #ffffff;
+  flex-shrink: 0;
 }
 
 .animais-page__titulo {
   font-size: 1.25rem;
-  font-weight: 600;
-  color: #2f4d3a;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.animais-page__subtitulo {
+  font-size: 0.85rem;
+  color: #6b7280;
 }
 
 .animais-page__btn-novo {
-  background: #2f9e58;
-  color: white;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  flex-shrink: 0;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid #278a4c;
+  background: #278a4c;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .animais-page__btn-novo:hover:not(:disabled) {
-  background: #278a4c;
+  background: #1f7a3d;
+}
+
+.animais-page__tabs-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  width: auto;
+  max-width: 100%;
+  margin-inline: auto;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.animais-page__tabs-list button[hlmTabsTrigger] {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.25rem;
+}
+
+::ng-deep [hlmTabsTrigger][data-state='active'] {
+  color: #278a4c;
+}
+
+::ng-deep [hlmTabsTrigger][data-state='active']::after {
+  background-color: #2f9e58 !important;
+}
+
+.animais-page__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 150px;
 }
 
 .fazenda-table {
-  background: #ffffff;
-  border: 1px solid #d8e6dc;
-  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .fazenda-table__head-row th {
@@ -55,7 +123,7 @@
 
 .fazenda-table__nome {
   font-weight: 600;
-  color: #2f4d3a;
+  color: #1f2937;
 }
 
 .fazenda-table__empty {
@@ -65,11 +133,19 @@
   font-size: 0.9rem;
 }
 
-.fazenda-table__pagination {
+.animais-table__nome-clicavel {
+  cursor: pointer;
+  color: #278a4c;
+}
+
+.animais-table__nome-clicavel:hover {
+  text-decoration: underline;
+}
+
+.animais-table__acoes {
   display: flex;
-  justify-content: center;
-  padding: 1rem;
-  border-top: 1px solid #eef4f0;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
 .fazenda-table__action-btn {
@@ -93,18 +169,4 @@
 .fazenda-table__action-btn.fazenda-table__action-btn--excluir:hover {
   background: #fee2e2;
   color: #b91c1c;
-}
-
-.animais-table__acoes {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-}
-
-.animais-table__nome-clicavel {
-  cursor: pointer;
-}
-
-.animais-table__nome-clicavel:hover {
-  text-decoration: underline;
 }
