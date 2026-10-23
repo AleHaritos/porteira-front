@@ -64,6 +64,33 @@
   </div>
   }
 
+  @if (ehAlimentacao) {
+  <div class="novo-cuidado-animal__campo">
+    <label hlmLabel for="racao">Ração cadastrada (opcional)</label>
+    <div class="novo-cuidado-animal__linha">
+      <hlm-select [value]="racaoId()" (valueChange)="onRacaoChange($event)" [itemToString]="itemToStringRacao" class="w-full">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value placeholder="Nenhuma" />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          <hlm-select-item [value]="null">Nenhuma</hlm-select-item>
+          @for (racao of racoes(); track racao.id) {
+          <hlm-select-item [value]="racao.id">{{ racao.nome }} (R$ {{ racao.custoTotal.toFixed(2) }})</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+
+      @if (racaoId()) {
+      <input hlmInput placeholder="Quantidade" [value]="quantidadeRacaoRaw()"
+        (input)="onQuantidadeRacaoInput($any($event.target).value)" />
+      }
+    </div>
+    @if (racaoId()) {
+    <p class="novo-cuidado-animal__dica">O custo abaixo foi calculado automaticamente — pode ajustar se precisar.</p>
+    }
+  </div>
+  }
+
   <div class="novo-cuidado-animal__linha">
     <div class="novo-cuidado-animal__campo">
       <label hlmLabel for="data">Data</label>
@@ -80,54 +107,6 @@
     <label hlmLabel for="descricao">Descrição</label>
     <textarea hlmTextarea id="descricao" formControlName="descricao" rows="2" placeholder="Opcional"></textarea>
   </div>
-
-  <div class="novo-cuidado-animal__campo">
-    <label hlmLabel>Vínculo financeiro</label>
-    <div class="novo-cuidado-animal__opcoes-vinculo">
-      <button type="button" class="novo-cuidado-animal__opcao-vinculo"
-        [class.novo-cuidado-animal__opcao-vinculo--ativa]="tipoVinculoFinanceiro() === 'NEGOCIO'"
-        (click)="selecionarVinculoFinanceiro('NEGOCIO')">
-        Negócio
-      </button>
-      <button type="button" class="novo-cuidado-animal__opcao-vinculo"
-        [class.novo-cuidado-animal__opcao-vinculo--ativa]="tipoVinculoFinanceiro() === 'SAFRA'"
-        (click)="selecionarVinculoFinanceiro('SAFRA')">
-        Safra
-      </button>
-    </div>
-  </div>
-
-  @if (tipoVinculoFinanceiro() === 'NEGOCIO') {
-  <div class="novo-cuidado-animal__campo">
-    <label hlmLabel for="negocio">Negócio</label>
-    <hlm-select [value]="negocioId()" (valueChange)="onNegocioChange($event)" [itemToString]="itemToStringNegocio" class="w-full">
-      <hlm-select-trigger class="w-full">
-        <hlm-select-value />
-      </hlm-select-trigger>
-      <hlm-select-content *hlmSelectPortal>
-        @for (negocio of negocios(); track negocio.id) {
-        <hlm-select-item [value]="negocio.id">{{ negocio.nome }}</hlm-select-item>
-        }
-      </hlm-select-content>
-    </hlm-select>
-  </div>
-  }
-
-  @if (tipoVinculoFinanceiro() === 'SAFRA') {
-  <div class="novo-cuidado-animal__campo">
-    <label hlmLabel for="safra">Safra</label>
-    <hlm-select [value]="safraId()" (valueChange)="onSafraChange($event)" [itemToString]="itemToStringSafra" class="w-full">
-      <hlm-select-trigger class="w-full">
-        <hlm-select-value />
-      </hlm-select-trigger>
-      <hlm-select-content *hlmSelectPortal>
-        @for (safra of safras(); track safra.id) {
-        <hlm-select-item [value]="safra.id">{{ safra.nome }}</hlm-select-item>
-        }
-      </hlm-select-content>
-    </hlm-select>
-  </div>
-  }
 </form>
 
 <hlm-dialog-footer class="mt-2">

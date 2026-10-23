@@ -1,0 +1,37 @@
+<hlm-dialog-header>
+  <div class="novo-ingrediente__header-linha">
+    <div class="novo-ingrediente__icone">
+      <ng-icon name="lucideWheat" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>{{ editando ? 'Editar Ingrediente' : 'Novo Ingrediente' }}</h3>
+      <p class="novo-ingrediente__subtitulo">Usado no cálculo de custo das rações</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<div class="novo-ingrediente__form">
+  <div class="novo-ingrediente__campo">
+    <label hlmLabel for="nome">Nome</label>
+    <input hlmInput id="nome" type="text" placeholder="Ex: Milho" [value]="nome()" (input)="onNomeInput($event)" />
+  </div>
+
+  <div class="novo-ingrediente__linha">
+    <div class="novo-ingrediente__campo">
+      <label hlmLabel for="valorUnitario">Valor unitário</label>
+      <input hlmInput id="valorUnitario" type="text" placeholder="0,00" [value]="valorUnitarioRaw()" (input)="onValorInput($event)" />
+    </div>
+
+    <div class="novo-ingrediente__campo">
+      <label hlmLabel for="unidade">Unidade (opcional)</label>
+      <input hlmInput id="unidade" type="text" placeholder="kg, L, saco..." [value]="unidade()" (input)="onUnidadeInput($event)" />
+    </div>
+  </div>
+</div>
+
+<hlm-dialog-footer class="mt-2">
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" [disabled]="salvando()" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn class="novo-ingrediente__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
+    {{ salvando() ? 'Salvando...' : 'Salvar' }}
+  </button>
+</hlm-dialog-footer>

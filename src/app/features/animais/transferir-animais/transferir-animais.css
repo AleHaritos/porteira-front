@@ -1,0 +1,51 @@
+.transferir-animais__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.transferir-animais__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #dbeafe;
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+.transferir-animais__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.transferir-animais__subtitulo {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.transferir-animais__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 4px 0 0;
+}
+
+.transferir-animais__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.transferir-animais__btn-confirmar {
+  background: #2563eb;
+  color: white;
+}
+
+.transferir-animais__btn-confirmar:hover:not(:disabled) {
+  background: #1d4ed8;
+}

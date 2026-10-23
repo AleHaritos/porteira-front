@@ -65,10 +65,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2.5rem;
-  width: 50%;
+  gap: 2rem;
+  width: auto;
+  max-width: 100%;
   margin-inline: auto;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .animais-page__tabs-list button[hlmTabsTrigger] {

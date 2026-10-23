@@ -117,3 +117,15 @@
   cursor: pointer;
   accent-color: #278a4c;
 }
+
+.animais-tab__btn-transferir {
+  background: #2563eb;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.animais-tab__btn-transferir:hover:not(:disabled) {
+  background: #1d4ed8;
+}

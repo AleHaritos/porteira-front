@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { AnimalEmMassaRequest, AnimalRequest, IAnimal, TipoAnimal, VendaAnimalRequest } from '../../../shared/interfaces/IAnimal';
+import { AnimalCusto, AnimalEmMassaRequest, AnimalRequest, HistoricoCuidadoAnimal, IAnimal, OperacaoVenda, TipoAnimal, TransferenciaAnimalRequest, VendaAnimalRequest } from '../../../shared/interfaces/IAnimal';
 import { PageResponse } from '../../../shared/interfaces/IPage';
 import { UtilService } from '../util-service';
 
@@ -48,8 +48,32 @@ export class AnimalService {
     );
   }
 
-  venderAnimais(request: VendaAnimalRequest): Observable<void> {
-    return this.http.post<void>(this.API_URL + '/vender', request).pipe(
+  transferir(request: TransferenciaAnimalRequest): Observable<void> {
+    return this.http.post<void>(`${this.API_URL}/transferir`, request).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
+  vender(request: VendaAnimalRequest): Observable<OperacaoVenda> {
+    return this.http.post<OperacaoVenda>(`${this.API_URL}/vender`, request).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
+  listarOperacoesVenda(fazendaId: number): Observable<OperacaoVenda[]> {
+    return this.http.get<OperacaoVenda[]>(`${this.API_URL}/vendas/fazenda/${fazendaId}`).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
+  calcularCusto(animalId: number): Observable<AnimalCusto> {
+    return this.http.get<AnimalCusto>(`${this.API_URL}/${animalId}/custo`).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
+  listarHistorico(animalId: number): Observable<HistoricoCuidadoAnimal[]> {
+    return this.http.get<HistoricoCuidadoAnimal[]>(`${this.API_URL}/${animalId}/historico`).pipe(
       catchError(e => this.util.errorHandler(e))
     );
   }

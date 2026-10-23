@@ -1,91 +1,44 @@
-<hlm-dialog-header>
+<hlm-dialog-header class="mb-2">
   <div class="vender-animais__header-linha">
     <div class="vender-animais__icone">
       <ng-icon name="lucideCoins" size="20" />
     </div>
     <div>
       <h3 hlmDialogTitle>Vender Animais</h3>
-      <p class="vender-animais__subtitulo">{{ context.animais.length }} animal(is) selecionado(s) — serão removidos do sistema após a venda</p>
     </div>
   </div>
 </hlm-dialog-header>
 
-<div class="vender-animais__lista">
-  @for (animal of context.animais; track animal.id) {
-  <div class="vender-animais__lista-item">{{ animalLabel(animal) }}</div>
-  }
+<div class="vender-animais__form">
+  <ul class="vender-animais__lista">
+    @for (animal of context.animais; track animal.id) {
+    <li class="vender-animais__item">
+      <span>{{ animal.tipo }}</span>
+      <span class="vender-animais__item-brinco">Brinco: {{ animal.brinco || '-' }}</span>
+      <span class="vender-animais__item-desc">{{ animal.descricao || '-' }}</span>
+    </li>
+    }
+  </ul>
+
+  <div class="vender-animais__campo">
+    <label hlmLabel for="valor">Valor total da venda</label>
+    <input hlmInput id="valor" type="text" placeholder="0,00" [value]="valorRaw()" (input)="onValorInput($event)" />
+  </div>
+
+  <div class="vender-animais__campo">
+    <label hlmLabel for="data">Data da venda</label>
+    <input hlmInput id="data" type="date" [value]="data()" (input)="onDataInput($event)" />
+  </div>
+
+  <div class="vender-animais__campo">
+    <label hlmLabel for="descricao">Descrição (opcional)</label>
+    <textarea hlmTextarea id="descricao" rows="2" [value]="descricao()" (input)="onDescricaoInput($event)"></textarea>
+  </div>
 </div>
 
-<form [formGroup]="form" class="vender-animais__form">
-  <div class="vender-animais__linha">
-    <div class="vender-animais__campo">
-      <label hlmLabel for="data">Data da venda</label>
-      <input hlmInput id="data" type="date" formControlName="data" />
-    </div>
-
-    <div class="vender-animais__campo">
-      <label hlmLabel for="valor">Valor total (R$)</label>
-      <input hlmInput id="valor" [value]="valorRaw() ?? ''" (input)="onValorInput($any($event.target).value)" placeholder="0,00" />
-    </div>
-  </div>
-
-  <div class="vender-animais__campo">
-    <label hlmLabel for="descricao">Descrição</label>
-    <textarea hlmTextarea id="descricao" formControlName="descricao" rows="2" placeholder="Opcional"></textarea>
-  </div>
-
-  <div class="vender-animais__campo">
-    <label hlmLabel>Vínculo financeiro</label>
-    <div class="vender-animais__opcoes-vinculo">
-      <button type="button" class="vender-animais__opcao-vinculo"
-        [class.vender-animais__opcao-vinculo--ativa]="tipoVinculoFinanceiro() === 'NEGOCIO'"
-        (click)="selecionarVinculoFinanceiro('NEGOCIO')">
-        Negócio
-      </button>
-      <button type="button" class="vender-animais__opcao-vinculo"
-        [class.vender-animais__opcao-vinculo--ativa]="tipoVinculoFinanceiro() === 'SAFRA'"
-        (click)="selecionarVinculoFinanceiro('SAFRA')">
-        Safra
-      </button>
-    </div>
-  </div>
-
-  @if (tipoVinculoFinanceiro() === 'NEGOCIO') {
-  <div class="vender-animais__campo">
-    <label hlmLabel for="negocio">Negócio</label>
-    <hlm-select [value]="negocioId()" (valueChange)="onNegocioChange($event)" [itemToString]="itemToStringNegocio" class="w-full">
-      <hlm-select-trigger class="w-full">
-        <hlm-select-value placeholder="Selecione o negócio" />
-      </hlm-select-trigger>
-      <hlm-select-content *hlmSelectPortal>
-        @for (negocio of negocios(); track negocio.id) {
-        <hlm-select-item [value]="negocio.id">{{ negocio.nome }}</hlm-select-item>
-        }
-      </hlm-select-content>
-    </hlm-select>
-  </div>
-  }
-
-  @if (tipoVinculoFinanceiro() === 'SAFRA') {
-  <div class="vender-animais__campo">
-    <label hlmLabel for="safra">Safra</label>
-    <hlm-select [value]="safraId()" (valueChange)="onSafraChange($event)" [itemToString]="itemToStringSafra" class="w-full">
-      <hlm-select-trigger class="w-full">
-        <hlm-select-value placeholder="Selecione a safra" />
-      </hlm-select-trigger>
-      <hlm-select-content *hlmSelectPortal>
-        @for (safra of safras(); track safra.id) {
-        <hlm-select-item [value]="safra.id">{{ safra.nome }}</hlm-select-item>
-        }
-      </hlm-select-content>
-    </hlm-select>
-  </div>
-  }
-</form>
-
 <hlm-dialog-footer class="mt-2">
-  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
-  <button hlmBtn class="vender-animais__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
-    {{ salvando() ? 'Salvando...' : 'Confirmar Venda' }}
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" [disabled]="salvando()" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn class="vender-animais__btn-confirmar cursor-pointer" type="button" [disabled]="salvando()" (click)="confirmar()">
+    {{ salvando() ? 'Registrando...' : 'Confirmar Venda' }}
   </button>
 </hlm-dialog-footer>

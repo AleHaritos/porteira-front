@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideCoins, lucidePlus, lucideTrash2 } from '@ng-icons/lucide';
+import { lucideArrowRightLeft, lucideCoins, lucideHistory, lucidePencil, lucidePlus, lucideTrash2 } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
@@ -15,13 +15,17 @@ import { ConfirmDialog } from '../../../shared/confirm-dialog/confirm-dialog';
 import { IAnimal, TipoAnimal } from '../../../shared/interfaces/IAnimal';
 import { ILote } from '../../../shared/interfaces/ILote';
 import { IPiquete } from '../../../shared/interfaces/IPiquete';
+import { EditarAnimal } from '../editar-animal/editar-animal';
+import { HistoricoAnimal } from '../historico-animal/historico-animal';
 import { NovoAnimalEmMassa } from '../novo-animal-em-massa/novo-animal-em-massa';
+
 import { VenderAnimais } from '../vender-animais/vender-animais';
+import { TransferirAnimais } from '../transferir-animais/transferir-animais';
 
 @Component({
   selector: 'app-animais-tab',
   imports: [CommonModule, HlmTableImports, HlmButtonImports, HlmPaginationImports, HlmSelectImports, NgIcon],
-  providers: [provideIcons({ lucidePlus, lucideTrash2, lucideCoins })],
+  providers: [provideIcons({ lucidePlus, lucideTrash2, lucideCoins, lucideArrowRightLeft, lucidePencil, lucideHistory })],
   styleUrl: './animais-tab.css',
   templateUrl: './animais-tab.html',
 })
@@ -190,6 +194,41 @@ export class AnimaisTab implements OnInit {
         this.limparSelecao();
         this.carregar();
       }
+    });
+  }
+
+  abrirTransferencia(): void {
+    const animaisSelecionados = this.animais().filter((a) => this.selecionados().has(a.id));
+    if (animaisSelecionados.length === 0) return;
+
+    const dialogRef = this.dialogService.open(TransferirAnimais, {
+      context: { fazendaId: this.fazendaId(), animais: animaisSelecionados, piquetes: this.piquetes() },
+      contentClass: 'sm:!max-w-[480px]',
+    });
+
+    dialogRef.closed$.subscribe((transferido) => {
+      if (transferido) {
+        this.limparSelecao();
+        this.carregar();
+      }
+    });
+  }
+
+  abrirEdicao(animal: IAnimal): void {
+    const dialogRef = this.dialogService.open(EditarAnimal, {
+      context: { animal, fazendaId: this.fazendaId(), lotes: this.lotes(), tipoOptions: this.tipoOptions },
+      contentClass: 'sm:!max-w-[640px], sm:!min-w-[520px]',
+    });
+
+    dialogRef.closed$.subscribe((salvo) => {
+      if (salvo) this.carregar();
+    });
+  }
+
+  abrirHistorico(animal: IAnimal): void {
+    this.dialogService.open(HistoricoAnimal, {
+      context: { animal },
+      contentClass: 'sm:!max-w-[560px]',
     });
   }
 

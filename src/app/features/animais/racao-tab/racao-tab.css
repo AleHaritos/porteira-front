@@ -1,0 +1,167 @@
+.racao-tab__secao {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.racao-tab__secao-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.racao-tab__secao-titulo {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2a24;
+}
+
+.racao-tab__btn-novo {
+  background: #2f9e58;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.racao-tab__btn-novo:hover:not(:disabled) {
+  background: #278a4c;
+}
+
+.racao-tab__vazio {
+  text-align: center;
+  color: #9ca3af;
+  padding: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.racao-tab__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.racao-tab__card {
+  background: #fff;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.racao-tab__card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.racao-tab__card-header h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2a24;
+  margin: 0;
+}
+
+.racao-tab__card-acoes {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.racao-tab__btn-remover {
+  color: #dc2626;
+}
+
+.racao-tab__btn-remover:hover {
+  background: #fee2e2;
+}
+
+.racao-tab__card-ingredientes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.racao-tab__card-ingredientes li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: #6b7280;
+}
+
+.racao-tab__card-total {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #eef4f0;
+  padding-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #2f4d3a;
+}
+
+.racao-tab__card-total strong {
+  color: #278a4c;
+}
+
+.fazenda-table {
+  background: #ffffff;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.fazenda-table__head-row th {
+  background: #f2f9f4;
+  color: #2f4d3a;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #d8e6dc;
+}
+
+.fazenda-table__row td {
+  border-bottom: 1px solid #eef4f0;
+}
+
+.fazenda-table__row:last-child td {
+  border-bottom: none;
+}
+
+.fazenda-table__row:hover {
+  background-color: #f7fbf8;
+}
+
+.fazenda-table__empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.fazenda-table__action-btn {
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.fazenda-table__action-btn--editar {
+  color: #278a4c;
+}
+
+.fazenda-table__action-btn.fazenda-table__action-btn--editar:hover {
+  background: #e3f5e8;
+  color: #1f7a3d;
+}
+
+.fazenda-table__action-btn--excluir {
+  color: #dc2626;
+}
+
+.fazenda-table__action-btn.fazenda-table__action-btn--excluir:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}

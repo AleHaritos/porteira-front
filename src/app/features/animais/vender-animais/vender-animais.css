@@ -11,8 +11,8 @@
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: #e3f5e8;
-  color: #278a4c;
+  background: #dcfce7;
+  color: #16a34a;
   flex-shrink: 0;
 }
 
@@ -28,75 +28,55 @@
   color: #6b7280;
 }
 
-.vender-animais__lista {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  max-height: 120px;
-  overflow-y: auto;
-  background: #fbfefc;
-  border: 1px solid #f0f4f1;
-  border-radius: 8px;
-  padding: 10px 12px;
-  margin: 12px 0;
-}
-
-.vender-animais__lista-item {
-  font-size: 13px;
-  color: #1f2937;
-}
-
 .vender-animais__form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
+  padding: 4px 0 0;
+}
+
+.vender-animais__lista {
+  max-height: 160px;
+  overflow-y: auto;
+  border: 1px solid #d8e6dc;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: #f7fbf8;
+}
+
+.vender-animais__item {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: #2f4d3a;
+}
+
+.vender-animais__item-brinco {
+  color: #6b7280;
+}
+
+.vender-animais__item-desc {
+  color: #6b7280;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .vender-animais__campo {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.35rem;
 }
 
-.vender-animais__linha {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.vender-animais__opcoes-vinculo {
-  display: flex;
-  gap: 8px;
-}
-
-.vender-animais__opcao-vinculo {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  background: white;
-  color: #6b7280;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.vender-animais__opcao-vinculo:hover {
-  border-color: #278a4c;
-}
-
-.vender-animais__opcao-vinculo--ativa {
-  background: #e3f5e8;
-  border-color: #278a4c;
-  color: #1f7a3d;
-}
-
-.vender-animais__btn-salvar {
-  background: #278a4c;
+.vender-animais__btn-confirmar {
+  background: #16a34a;
   color: white;
 }
 
-.vender-animais__btn-salvar:hover {
-  background: #1f7a3d;
+.vender-animais__btn-confirmar:hover:not(:disabled) {
+  background: #15803d;
 }

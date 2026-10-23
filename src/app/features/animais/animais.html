@@ -26,6 +26,12 @@
       <button hlmTabsTrigger="lotes" (click)="selecionarAba('lotes')" class="cursor-pointer">
         Lotes
       </button>
+      <button hlmTabsTrigger="racao" (click)="selecionarAba('racao')" class="cursor-pointer">
+        Ração
+      </button>
+      <button hlmTabsTrigger="vendas" (click)="selecionarAba('vendas')" class="cursor-pointer">
+        Operações de Venda
+      </button>
     </hlm-tabs-list>
 
     <div hlmTabsContent="piquetes" class="animais-page__content">
@@ -84,6 +90,18 @@
           </table>
         </div>
       </div>
+      }
+    </div>
+
+    <div hlmTabsContent="racao" class="animais-page__content">
+      @if (abaAtiva() === 'racao' && fazendaId(); as fId) {
+      <app-racao-tab [fazendaId]="fId" />
+      }
+    </div>
+
+    <div hlmTabsContent="vendas" class="animais-page__content">
+      @if (abaAtiva() === 'vendas' && fazendaId(); as fId) {
+      <app-operacoes-venda-tab [fazendaId]="fId" />
       }
     </div>
   </hlm-tabs>

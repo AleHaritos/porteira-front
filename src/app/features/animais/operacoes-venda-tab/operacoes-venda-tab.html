@@ -1,0 +1,43 @@
+<div class="fazenda-table">
+  <div hlmTableContainer>
+    <table hlmTable>
+      <thead hlmTHead>
+        <tr hlmTr class="fazenda-table__head-row">
+          <th hlmTh>Data</th>
+          <th hlmTh>Descrição</th>
+          <th hlmTh>Animais</th>
+          <th hlmTh>Valor da Venda</th>
+          <th hlmTh>Custo Total</th>
+          <th hlmTh>Lucro</th>
+          <th hlmTh class="w-[120px] text-right pr-7">Ações</th>
+        </tr>
+      </thead>
+      <tbody hlmTBody>
+        @for (operacao of operacoes(); track operacao.id) {
+        <tr hlmTr class="fazenda-table__row">
+          <td hlmTd>{{ operacao.data | date: 'dd/MM/yyyy' }}</td>
+          <td hlmTd [title]="operacao.descricao || ''">{{ operacao.descricao || '-' }}</td>
+          <td hlmTd>{{ operacao.itens.length }}</td>
+          <td hlmTd>R$ {{ operacao.valorVenda.toFixed(2) }}</td>
+          <td hlmTd>R$ {{ operacao.custoTotal.toFixed(2) }}</td>
+          <td hlmTd class="operacoes-venda-tab__lucro" [class.operacoes-venda-tab__lucro-negativo]="operacao.lucro < 0">
+            R$ {{ operacao.lucro.toFixed(2) }}
+          </td>
+          <td hlmTd class="text-right">
+            <button hlmBtn variant="outline" size="sm" class="operacoes-venda-tab__btn-detalhes cursor-pointer" (click)="verDetalhes(operacao)">
+              <ng-icon name="lucideEye" size="14" />
+              Ver detalhes
+            </button>
+          </td>
+        </tr>
+        } @empty {
+        <tr hlmTr>
+          <td hlmTd colSpan="7" class="fazenda-table__empty">
+            @if (carregando()) { Carregando operações de venda... } @else { Nenhuma venda registrada ainda }
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

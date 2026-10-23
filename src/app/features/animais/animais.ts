@@ -14,12 +14,24 @@ import { ILote } from '../../shared/interfaces/ILote';
 import { NovoLote } from './novo-lote/novo-lote';
 import { TruncarPipe } from '../../shared/pipes/TruncarPipe';
 import { PiquetesTab } from './piquetes-tab/piquetes-tab';
+import { RacaoTab } from './racao-tab/racao-tab';
+import { OperacoesVendaTab } from './operacoes-venda-tab/operacoes-venda-tab';
 
-type AbaAnimais = 'piquetes' | 'lotes';
+type AbaAnimais = 'piquetes' | 'lotes' | 'racao' | 'vendas';
 
 @Component({
   selector: 'app-animais',
-  imports: [CommonModule, HlmTableImports, HlmButtonImports, HlmTabsImports, TruncarPipe, NgIcon, PiquetesTab],
+  imports: [
+    CommonModule,
+    HlmTableImports,
+    HlmButtonImports,
+    HlmTabsImports,
+    TruncarPipe,
+    NgIcon,
+    PiquetesTab,
+    RacaoTab,
+    OperacoesVendaTab,
+  ],
   providers: [provideIcons({ lucidePawPrint, lucidePlus, lucideSquarePen, lucideTrash2 })],
   styleUrl: './animais.css',
   templateUrl: './animais.html',

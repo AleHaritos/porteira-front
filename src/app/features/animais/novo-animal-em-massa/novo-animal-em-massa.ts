@@ -129,8 +129,8 @@ export class NovoAnimalEmMassa implements OnInit {
         piqueteId: this.piqueteId()!,
         animais: this.linhas().map((l) => ({
           tipo: l.tipo,
-          loteId: l.loteId ?? undefined,
-          descricao: l.descricao.trim() || undefined,
+          loteId: l.loteId,
+          descricao: l.descricao,
         })),
       })
       .subscribe({

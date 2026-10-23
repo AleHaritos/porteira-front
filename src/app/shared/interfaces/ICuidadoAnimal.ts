@@ -15,10 +15,9 @@ export interface ICuidadoAnimal {
   loteNome: string | null;
   piqueteId: number;
   piqueteNome: string;
-  negocioId: number | null;
-  negocioNome: string | null;
-  safraId: number | null;
-  safraNome: string | null;
+  racaoId: number | null;
+  racaoNome: string | null;
+  quantidadeRacao: number | null;
 }
 
 export interface CuidadoAnimalRequest {
@@ -27,10 +26,10 @@ export interface CuidadoAnimalRequest {
   descricao?: string;
   custo: number;
   data: string;
-  animalId?: number | null;
-  loteId?: number | null;
+  animalId?: number;
+  loteId?: number;
   piqueteId: number;
   fazendaId: number;
-  negocioId?: number | null;
-  safraId?: number | null;
+  racaoId?: number;
+  quantidadeRacao?: number;
 }

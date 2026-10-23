@@ -10,14 +10,12 @@ import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
 import { CuidadoAnimalService } from '../../../core/services/animais/cuidado-animal-service';
-import { NegocioService } from '../../../core/services/negocio-service';
-import { SafraService } from '../../../core/services/safra/safra-service';
+import { RacaoService } from '../../../core/services/animais/racao-service';
 import { ToastService } from '../../../core/services/toast-service';
 import { IAnimal } from '../../../shared/interfaces/IAnimal';
 import { TipoCuidado, TipoVinculoCuidado } from '../../../shared/interfaces/ICuidadoAnimal';
 import { ILote } from '../../../shared/interfaces/ILote';
-import { INegocio } from '../../../shared/interfaces/INegocio';
-import { ISafra } from '../../../shared/interfaces/ISafras';
+import { IRacao } from '../../../shared/interfaces/IRacao';
 
 interface NovoCuidadoAnimalContext {
   tipo: TipoCuidado;
@@ -26,8 +24,6 @@ interface NovoCuidadoAnimalContext {
   animais: IAnimal[];
   lotes: ILote[];
 }
-
-type TipoVinculoFinanceiro = 'NEGOCIO' | 'SAFRA';
 
 @Component({
   selector: 'app-novo-cuidado-animal',
@@ -50,22 +46,19 @@ export class NovoCuidadoAnimal implements OnInit {
   context = injectBrnDialogContext<NovoCuidadoAnimalContext>();
   private fb = inject(FormBuilder);
   private cuidadoService = inject(CuidadoAnimalService);
-  private negocioService = inject(NegocioService);
-  private safraService = inject(SafraService);
+  private racaoService = inject(RacaoService);
   private toastService = inject(ToastService);
 
   salvando = signal(false);
 
-  negocios = signal<INegocio[]>([]);
-  safras = signal<ISafra[]>([]);
+  racoes = signal<IRacao[]>([]);
 
   vinculoTipo = signal<TipoVinculoCuidado>('PIQUETE');
-  tipoVinculoFinanceiro = signal<TipoVinculoFinanceiro>('NEGOCIO');
 
   loteId = signal<number | null>(null);
   animalId = signal<number | null>(null);
-  negocioId = signal<number | null>(null);
-  safraId = signal<number | null>(null);
+  racaoId = signal<number | null>(null);
+  quantidadeRacaoRaw = signal<string>('');
 
   custoRaw = signal<number | null>(null);
 
@@ -82,6 +75,10 @@ export class NovoCuidadoAnimal implements OnInit {
     return this.context.tipo === 'VACINACAO' ? 'lucideSyringe' : 'lucideWheat';
   }
 
+  get ehAlimentacao(): boolean {
+    return this.context.tipo === 'ALIMENTACAO';
+  }
+
   itemToStringLote = (id: number | null | undefined) =>
     this.context.lotes.find((l) => l.id === id)?.nome ?? '';
 
@@ -93,11 +90,8 @@ export class NovoCuidadoAnimal implements OnInit {
       : `${this.tipoAnimalLabel(animal.tipo)} #${animal.id}`;
   };
 
-  itemToStringNegocio = (id: number | null | undefined) =>
-    this.negocios().find((n) => n.id === id)?.nome ?? '';
-
-  itemToStringSafra = (id: number | null | undefined) =>
-    this.safras().find((s) => s.id === id)?.nome ?? '';
+  itemToStringRacao = (id: number | null | undefined) =>
+    this.racoes().find((r) => r.id === id)?.nome ?? 'Nenhuma';
 
   private tipoAnimalLabel(tipo: string): string {
     const labels: Record<string, string> = {
@@ -113,25 +107,17 @@ export class NovoCuidadoAnimal implements OnInit {
   }
 
   ngOnInit(): void {
-    this.negocioService.listarTodosPorFazenda(this.context.fazendaId).subscribe({
-      next: (res) => this.negocios.set(res),
-    });
-
-    this.safraService.buscarSafrasPorFazenda(this.context.fazendaId, 0, 1000).subscribe({
-      next: (res) => this.safras.set(res.content),
-    });
+    if (this.ehAlimentacao) {
+      this.racaoService.listarPorFazenda(this.context.fazendaId).subscribe({
+        next: (res) => this.racoes.set(res),
+      });
+    }
   }
 
   selecionarVinculoTipo(tipo: TipoVinculoCuidado): void {
     this.vinculoTipo.set(tipo);
     this.loteId.set(null);
     this.animalId.set(null);
-  }
-
-  selecionarVinculoFinanceiro(tipo: TipoVinculoFinanceiro): void {
-    this.tipoVinculoFinanceiro.set(tipo);
-    this.negocioId.set(null);
-    this.safraId.set(null);
   }
 
   onLoteChange(id: number | null | undefined): void {
@@ -142,12 +128,23 @@ export class NovoCuidadoAnimal implements OnInit {
     this.animalId.set(id ?? null);
   }
 
-  onNegocioChange(id: number | null | undefined): void {
-    this.negocioId.set(id ?? null);
+  onRacaoChange(id: number | null | undefined): void {
+    this.racaoId.set(id ?? null);
+    this.recalcularCustoPelaRacao();
   }
 
-  onSafraChange(id: number | null | undefined): void {
-    this.safraId.set(id ?? null);
+  onQuantidadeRacaoInput(valor: string): void {
+    const normalizado = valor.replace(',', '.').replace(/[^\d.]/g, '');
+    this.quantidadeRacaoRaw.set(normalizado);
+    this.recalcularCustoPelaRacao();
+  }
+
+  private recalcularCustoPelaRacao(): void {
+    const racao = this.racoes().find((r) => r.id === this.racaoId());
+    const quantidade = Number(this.quantidadeRacaoRaw());
+    if (racao && quantidade > 0) {
+      this.custoRaw.set(Number((racao.custoTotal * quantidade).toFixed(2)));
+    }
   }
 
   onCustoInput(valor: string): void {
@@ -177,16 +174,6 @@ export class NovoCuidadoAnimal implements OnInit {
       return;
     }
 
-    if (this.tipoVinculoFinanceiro() === 'NEGOCIO' && !this.negocioId()) {
-      this.toastService.showError('Erro', 'Selecione o negócio');
-      return;
-    }
-
-    if (this.tipoVinculoFinanceiro() === 'SAFRA' && !this.safraId()) {
-      this.toastService.showError('Erro', 'Selecione a safra');
-      return;
-    }
-
     this.salvando.set(true);
 
     this.cuidadoService
@@ -200,8 +187,8 @@ export class NovoCuidadoAnimal implements OnInit {
         loteId: this.vinculoTipo() === 'LOTE' ? this.loteId()! : undefined,
         piqueteId: this.context.piqueteId,
         fazendaId: this.context.fazendaId,
-        negocioId: this.tipoVinculoFinanceiro() === 'NEGOCIO' ? this.negocioId()! : undefined,
-        safraId: this.tipoVinculoFinanceiro() === 'SAFRA' ? this.safraId()! : undefined,
+        racaoId: this.racaoId() ?? undefined,
+        quantidadeRacao: this.racaoId() ? Number(this.quantidadeRacaoRaw()) : undefined,
       })
       .subscribe({
         next: () => {

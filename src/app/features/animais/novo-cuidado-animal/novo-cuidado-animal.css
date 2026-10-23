@@ -85,3 +85,8 @@
 .novo-cuidado-animal__btn-salvar:hover {
   background: #15803d;
 }
+.novo-cuidado-animal__dica {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.3rem;
+}
