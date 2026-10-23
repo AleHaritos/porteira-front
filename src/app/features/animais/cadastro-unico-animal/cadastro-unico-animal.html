@@ -1,0 +1,119 @@
+<hlm-dialog-header>
+  <div class="cadastro-unico-animal__header-linha">
+    <div class="cadastro-unico-animal__icone">
+      <ng-icon name="lucidePawPrint" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Cadastro de Animal</h3>
+      <p class="cadastro-unico-animal__subtitulo">Cadastre um animal individualmente</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<div class="cadastro-unico-animal__form">
+  <div class="cadastro-unico-animal__grid">
+    @if (precisaEscolherPiquete) {
+    <div class="cadastro-unico-animal__campo">
+      <label hlmLabel>Piquete</label>
+      <hlm-select [value]="piqueteId()" (valueChange)="onPiqueteChange($event)" [itemToString]="itemToStringPiquete">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value placeholder="Selecione o piquete" />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (piquete of context.piquetes; track piquete.id) {
+          <hlm-select-item [value]="piquete.id">{{ piquete.nome }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+    }
+
+    <div class="cadastro-unico-animal__campo">
+      <label hlmLabel>Tipo</label>
+      <hlm-select [value]="tipo()" (valueChange)="onTipoChange($event)" [itemToString]="itemToStringTipo">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (opcao of tipoOptions; track opcao.value) {
+          <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+
+    <div class="cadastro-unico-animal__campo">
+      <label hlmLabel>Lote</label>
+      <hlm-select [value]="loteId()" (valueChange)="onLoteChange($event)" [itemToString]="itemToStringLote">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value placeholder="Sem lote" />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          <hlm-select-item [value]="null">Sem lote</hlm-select-item>
+          @for (lote of context.lotes; track lote.id) {
+          <hlm-select-item [value]="lote.id">{{ lote.nome }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+
+    <div class="cadastro-unico-animal__campo">
+      <label hlmLabel>Sexo</label>
+      <hlm-select [value]="sexo()" (valueChange)="onSexoChange($event)" [itemToString]="itemToStringSexo">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value placeholder="Não informado" />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          <hlm-select-item [value]="null">Não informado</hlm-select-item>
+          @for (opcao of sexoOptions; track opcao.value) {
+          <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+
+    <div class="cadastro-unico-animal__campo">
+      <label hlmLabel for="brinco">Brinco (opcional)</label>
+      <input hlmInput id="brinco" type="text" placeholder="Gerado automaticamente" [value]="brinco()" (input)="onBrincoInput($event)" />
+    </div>
+
+    <div class="cadastro-unico-animal__campo">
+      <label hlmLabel for="raca">Raça</label>
+      <input hlmInput id="raca" type="text" [value]="raca()" (input)="onRacaInput($event)" />
+    </div>
+
+    <div class="cadastro-unico-animal__campo">
+      <label hlmLabel for="peso">Peso (kg)</label>
+      <input hlmInput id="peso" type="text" inputmode="decimal" placeholder="0,0" [value]="pesoRaw()" (input)="onPesoInput($event)" />
+    </div>
+
+    <div class="cadastro-unico-animal__campo">
+      <label hlmLabel for="idadeMeses">Idade (meses)</label>
+      <input hlmInput id="idadeMeses" type="text" inputmode="decimal" placeholder="0" [value]="idadeMesesRaw()" (input)="onIdadeMesesInput($event)" />
+    </div>
+
+    <div class="cadastro-unico-animal__campo">
+      <label hlmLabel for="dataCompra">Data de compra</label>
+      <hlm-date-picker [formControl]="dataCompraControl" [maxDate]="maxDate" class="w-full">
+        <hlm-date-picker-trigger buttonId="dataCompra" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <div class="cadastro-unico-animal__campo">
+      <label hlmLabel for="valorCompra">Valor de compra</label>
+      <input hlmInput id="valorCompra" type="text" inputmode="decimal" placeholder="0,00" [value]="valorCompraRaw()" (input)="onValorCompraInput($event)" />
+    </div>
+  </div>
+
+  <div class="cadastro-unico-animal__campo">
+    <label hlmLabel for="descricao">Descrição</label>
+    <textarea hlmTextarea id="descricao" rows="2" [value]="descricao()" (input)="onDescricaoInput($event)"></textarea>
+  </div>
+</div>
+
+<hlm-dialog-footer class="mt-2">
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" [disabled]="salvando()" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn class="cadastro-unico-animal__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
+    {{ salvando() ? 'Salvando...' : 'Cadastrar' }}
+  </button>
+</hlm-dialog-footer>

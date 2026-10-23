@@ -133,8 +133,16 @@ export class NovoCuidadoAnimal implements OnInit {
     this.recalcularCustoPelaRacao();
   }
 
-  onQuantidadeRacaoInput(valor: string): void {
-    const normalizado = valor.replace(',', '.').replace(/[^\d.]/g, '');
+  onQuantidadeRacaoInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let normalizado = input.value.replace(',', '.').replace(/[^\d.]/g, '');
+
+    const partes = normalizado.split('.');
+    if (partes.length > 2) {
+      normalizado = partes[0] + '.' + partes.slice(1).join('');
+    }
+
+    input.value = normalizado;
     this.quantidadeRacaoRaw.set(normalizado);
     this.recalcularCustoPelaRacao();
   }
@@ -158,9 +166,19 @@ export class NovoCuidadoAnimal implements OnInit {
   }
 
   salvar(): void {
-    if (this.form.invalid || !this.custoRaw() || this.custoRaw()! <= 0) {
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
-      this.toastService.showError('Erro', 'Preencha a data e o custo');
+      this.toastService.showError('Erro', 'Preencha a data');
+      return;
+    }
+
+    if (this.ehAlimentacao) {
+      if (!this.racaoId() || !(Number(this.quantidadeRacaoRaw()) > 0)) {
+        this.toastService.showError('Erro', 'Selecione a ração cadastrada e informe a quantidade');
+        return;
+      }
+    } else if (!this.custoRaw() || this.custoRaw()! <= 0) {
+      this.toastService.showError('Erro', 'Preencha o custo');
       return;
     }
 
@@ -187,8 +205,8 @@ export class NovoCuidadoAnimal implements OnInit {
         loteId: this.vinculoTipo() === 'LOTE' ? this.loteId()! : undefined,
         piqueteId: this.context.piqueteId,
         fazendaId: this.context.fazendaId,
-        racaoId: this.racaoId() ?? undefined,
-        quantidadeRacao: this.racaoId() ? Number(this.quantidadeRacaoRaw()) : undefined,
+        racaoId: this.ehAlimentacao ? this.racaoId()! : undefined,
+        quantidadeRacao: this.ehAlimentacao ? Number(this.quantidadeRacaoRaw()) : undefined,
       })
       .subscribe({
         next: () => {

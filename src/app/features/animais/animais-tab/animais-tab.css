@@ -126,6 +126,26 @@
   gap: 0.4rem;
 }
 
+.animais-tab__btns-cadastro {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .animais-tab__btn-transferir:hover:not(:disabled) {
   background: #1d4ed8;
+}
+
+
+.animais-tab__btn-unico {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #278a4c;
+  border-color: #d8e6dc;
+}
+
+.animais-tab__btn-unico:hover {
+  background: #f2f9f4;
+  border-color: #278a4c;
+  color: #1f7a3d;
 }

@@ -33,3 +33,10 @@ export interface CuidadoAnimalRequest {
   racaoId?: number;
   quantidadeRacao?: number;
 }
+
+export interface PaginaCuidadoAnimal {
+  content: ICuidadoAnimal[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
+}

@@ -32,6 +32,9 @@
       <button hlmTabsTrigger="vendas" (click)="selecionarAba('vendas')" class="cursor-pointer">
         Operações de Venda
       </button>
+      <button hlmTabsTrigger="resumo" (click)="selecionarAba('resumo')" class="cursor-pointer">
+        Resumo
+      </button>
     </hlm-tabs-list>
 
     <div hlmTabsContent="piquetes" class="animais-page__content">
@@ -102,6 +105,11 @@
     <div hlmTabsContent="vendas" class="animais-page__content">
       @if (abaAtiva() === 'vendas' && fazendaId(); as fId) {
       <app-operacoes-venda-tab [fazendaId]="fId" />
+      }
+    </div>
+    <div hlmTabsContent="resumo" class="animais-page__content">
+      @if (abaAtiva() === 'resumo' && fazendaId(); as fId) {
+      <app-resumo-animais-tab [fazendaId]="fId" />
       }
     </div>
   </hlm-tabs>

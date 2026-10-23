@@ -64,3 +64,31 @@
   background: #fee2e2;
   color: #b91c1c;
 }
+
+.cuidado-animal-tab__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.cuidado-animal-tab__filtros {
+  display: flex;
+  gap: 1rem;
+}
+
+.cuidado-animal-tab__campo-filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 180px;
+}
+
+.fazenda-table__pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  border-top: 1px solid #eef4f0;
+}

@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { CuidadoAnimalRequest, ICuidadoAnimal, TipoCuidado } from '../../../shared/interfaces/ICuidadoAnimal';
+import { CuidadoAnimalRequest, ICuidadoAnimal, PaginaCuidadoAnimal, TipoCuidado } from '../../../shared/interfaces/ICuidadoAnimal';
 import { UtilService } from '../util-service';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class CuidadoAnimalService {
   private http = inject(HttpClient);
   private util = inject(UtilService);
@@ -17,8 +17,10 @@ export class CuidadoAnimalService {
     );
   }
 
-  listarPorPiquete(piqueteId: number, tipo: TipoCuidado): Observable<ICuidadoAnimal[]> {
-    return this.http.get<ICuidadoAnimal[]>(`${this.API_URL}/piquete/${piqueteId}`, { params: { tipo } }).pipe(
+  listarPorPiquete(piqueteId: number, tipo: TipoCuidado, dataInicio: string, dataFim: string, page: number, size: number): Observable<PaginaCuidadoAnimal> {
+    return this.http.get<PaginaCuidadoAnimal>(`${this.API_URL}/piquete/${piqueteId}`, {
+      params: { tipo, dataInicio, dataFim, page, size },
+    }).pipe(
       catchError(e => this.util.errorHandler(e))
     );
   }

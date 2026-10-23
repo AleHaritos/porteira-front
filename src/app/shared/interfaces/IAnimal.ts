@@ -24,6 +24,11 @@ export interface AnimalEmMassaItem {
   tipo: TipoAnimal;
   loteId: number | null;
   descricao: string | null;
+  sexo?: SexoAnimal | null;
+  peso?: number | null;
+  dataNascimento?: string | null;
+  raca?: string | null;
+  valorCompra?: number | null;
 }
 
 export interface AnimalEmMassaRequest {
@@ -70,6 +75,13 @@ export interface OperacaoVendaItem {
   custoAlimentacao: number;
   valorCompra: number;
   custoTotal: number;
+}
+
+export interface PaginaOperacaoVenda {
+  content: OperacaoVenda[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
 }
 
 export interface OperacaoVenda {

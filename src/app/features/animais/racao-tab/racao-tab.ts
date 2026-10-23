@@ -70,11 +70,14 @@ export class RacaoTab implements OnInit {
   abrirNovoIngrediente(ingrediente?: IIngrediente): void {
     const dialogRef = this.dialogService.open(NovoIngrediente, {
       context: { fazendaId: this.fazendaId(), ingrediente: ingrediente ?? null },
-      contentClass: 'sm:!max-w-[480px]',
+      contentClass: 'sm:!max-w-[640px], sm:!min-w-[520px]',
     });
 
     dialogRef.closed$.subscribe((salvo) => {
-      if (salvo) this.carregarIngredientes();
+      if (salvo) {
+        this.carregarIngredientes();
+        this.carregarRacoes();
+      }
     });
   }
 

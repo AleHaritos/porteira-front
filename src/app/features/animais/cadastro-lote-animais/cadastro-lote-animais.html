@@ -1,0 +1,184 @@
+<hlm-dialog-header>
+  <div class="cadastro-lote-animais__header-linha">
+    <div class="cadastro-lote-animais__icone">
+      <ng-icon name="lucideLayers" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Cadastro em Lote</h3>
+      <p class="cadastro-lote-animais__subtitulo">Passo {{ passo() }} de {{ totalPassos }}</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<div class="cadastro-lote-animais__steps">
+  @for (i of [1, 2, 3, 4]; track i) {
+  <span class="cadastro-lote-animais__step-dot" [class.cadastro-lote-animais__step-dot--ativo]="passo() === i"></span>
+  }
+</div>
+
+<div class="cadastro-lote-animais__form">
+  @if (passo() === 1) {
+  <div class="cadastro-lote-animais__step1-wrapper">
+    <div class="cadastro-lote-animais__grid">
+      @if (precisaEscolherPiquete) {
+      <div class="cadastro-lote-animais__campo">
+        <label hlmLabel>
+          <ng-icon name="lucideMapPin" size="14" />
+          Piquete
+        </label>
+        <hlm-select [value]="piqueteId()" (valueChange)="onPiqueteChange($event)" [itemToString]="itemToStringPiquete">
+          <hlm-select-trigger class="w-full">
+            <hlm-select-value placeholder="Selecione o piquete" />
+          </hlm-select-trigger>
+          <hlm-select-content *hlmSelectPortal>
+            @for (piquete of context.piquetes; track piquete.id) {
+            <hlm-select-item [value]="piquete.id">{{ piquete.nome }}</hlm-select-item>
+            }
+          </hlm-select-content>
+        </hlm-select>
+      </div>
+      }
+
+      <div class="cadastro-lote-animais__campo">
+        <label hlmLabel>
+          <ng-icon name="lucideTag" size="14" />
+          Tipo
+        </label>
+        <hlm-select [value]="tipo()" (valueChange)="onTipoChange($event)" [itemToString]="itemToStringTipo">
+          <hlm-select-trigger class="w-full">
+            <hlm-select-value />
+          </hlm-select-trigger>
+          <hlm-select-content *hlmSelectPortal>
+            @for (opcao of tipoOptions; track opcao.value) {
+            <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+            }
+          </hlm-select-content>
+        </hlm-select>
+        <p class="cadastro-lote-animais__campo-dica">Aplicado a todos os animais deste lote</p>
+      </div>
+
+      <div class="cadastro-lote-animais__campo">
+        <label hlmLabel>
+          <ng-icon name="lucideLayers" size="14" />
+          Lote (opcional)
+        </label>
+        <hlm-select [value]="loteId()" (valueChange)="onLoteChange($event)" [itemToString]="itemToStringLote">
+          <hlm-select-trigger class="w-full">
+            <hlm-select-value placeholder="Sem lote" />
+          </hlm-select-trigger>
+          <hlm-select-content *hlmSelectPortal>
+            <hlm-select-item [value]="null">Sem lote</hlm-select-item>
+            @for (lote of context.lotes; track lote.id) {
+            <hlm-select-item [value]="lote.id">{{ lote.nome }}</hlm-select-item>
+            }
+          </hlm-select-content>
+        </hlm-select>
+        <p class="cadastro-lote-animais__campo-dica">Deixe em branco se não quiser vincular a um lote</p>
+      </div>
+    </div>
+  </div>
+  }
+
+  @if (passo() === 2) {
+  <label hlmLabel>Sexo</label>
+  <div class="cadastro-lote-animais__sexo-cards">
+    <button type="button" class="cadastro-lote-animais__sexo-card cadastro-lote-animais__sexo-card--macho"
+      [class.cadastro-lote-animais__sexo-card--selecionado]="sexo() === 'MACHO'" (click)="selecionarSexo('MACHO')">
+      <ng-icon name="lucideMars" size="22" />
+      <span>Macho</span>
+    </button>
+    <button type="button" class="cadastro-lote-animais__sexo-card cadastro-lote-animais__sexo-card--femea"
+      [class.cadastro-lote-animais__sexo-card--selecionado]="sexo() === 'FEMEA'" (click)="selecionarSexo('FEMEA')">
+      <ng-icon name="lucideVenus" size="22" />
+      <span>Fêmea</span>
+    </button>
+    <button type="button" class="cadastro-lote-animais__sexo-card cadastro-lote-animais__sexo-card--neutro"
+      [class.cadastro-lote-animais__sexo-card--selecionado]="sexo() === null" (click)="selecionarSexo(null)">
+      <ng-icon name="lucideCircleHelp" size="22" />
+      <span>Não informado</span>
+    </button>
+  </div>
+  }
+
+  @if (passo() === 3) {
+  <div class="cadastro-lote-animais__grid">
+    <div class="cadastro-lote-animais__campo">
+      <label hlmLabel for="peso">Peso (kg) *</label>
+      <input hlmInput id="peso" type="text" placeholder="0,0" [value]="pesoRaw()" (input)="onPesoInput($event)" />
+    </div>
+
+    <div class="cadastro-lote-animais__campo">
+      <label hlmLabel for="idadeMeses">Idade (meses) *</label>
+      <input hlmInput id="idadeMeses" type="text" placeholder="0" [value]="idadeMesesRaw()"
+        (input)="onIdadeMesesInput($event)" />
+    </div>
+
+    <div class="cadastro-lote-animais__campo">
+      <label hlmLabel for="raca">Raça</label>
+      <input hlmInput id="raca" type="text" [value]="raca()" (input)="onRacaInput($event)" />
+    </div>
+  </div>
+
+  <div class="cadastro-lote-animais__campo">
+    <label hlmLabel for="descricao">Descrição</label>
+    <textarea hlmTextarea id="descricao" rows="2" [value]="descricao()" (input)="onDescricaoInput($event)"></textarea>
+  </div>
+  }
+
+    @if (passo() === 4) {
+  <div class="cadastro-lote-animais__quantidade-wrapper">
+    <label hlmLabel>Quantidade de animais</label>
+    <div class="cadastro-lote-animais__stepper">
+      <button type="button" class="cadastro-lote-animais__stepper-btn" [disabled]="quantidade <= 1"
+        (click)="decrementarQuantidade()">
+        <ng-icon name="lucideMinus" size="18" />
+      </button>
+      <input hlmInput type="number" min="1" class="cadastro-lote-animais__stepper-input" [value]="quantidadeRaw()"
+        (input)="onQuantidadeInput($event)" />
+      <button type="button" class="cadastro-lote-animais__stepper-btn" (click)="incrementarQuantidade()">
+        <ng-icon name="lucidePlus" size="18" />
+      </button>
+    </div>
+
+    <div class="cadastro-lote-animais__campo cadastro-lote-animais__valor-pago">
+      <label hlmLabel for="valorPago">Valor pago</label>
+      <input hlmInput id="valorPago" type="text" inputmode="decimal" placeholder="0,00" [value]="valorPagoRaw()"
+        (input)="onValorPagoInput($event)" />
+    </div>
+
+    <p class="cadastro-lote-animais__dica">
+      Serão criados <strong>{{ quantidade }}</strong> animal(is) idêntico(s) com os dados informados.
+      O brinco de cada um é gerado automaticamente.
+      @if (valorPorAnimal != null) {
+      <br />Valor de compra dividido: <strong>{{ formatarMoeda(valorPorAnimal) }}</strong> por animal.
+      }
+    </p>
+  </div>
+  }
+</div>
+
+<hlm-dialog-footer class="mt-2">
+  @if (passo() > 1) {
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" [disabled]="salvando()" (click)="voltar()">
+    <ng-icon name="lucideArrowLeft" size="16" />
+    Voltar
+  </button>
+  } @else {
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" [disabled]="salvando()" (click)="cancelar()">
+    Cancelar
+  </button>
+  }
+
+  @if (passo() < totalPassos) { <button hlmBtn class="cadastro-lote-animais__btn-avancar cursor-pointer" type="button"
+    (click)="avancar()">
+    Próximo
+    <ng-icon name="lucideArrowRight" size="16" />
+    </button>
+    } @else {
+    <button hlmBtn class="cadastro-lote-animais__btn-avancar cursor-pointer" type="button" [disabled]="salvando()"
+      (click)="confirmar()">
+      <ng-icon name="lucideCheck" size="16" />
+      {{ salvando() ? 'Cadastrando...' : 'Cadastrar' }}
+    </button>
+    }
+</hlm-dialog-footer>

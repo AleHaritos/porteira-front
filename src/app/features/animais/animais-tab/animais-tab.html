@@ -15,8 +15,8 @@
     </hlm-select>
     }
 
-    <hlm-select [value]="filtroLoteId()" (valueChange)="onFiltroLoteChange($event)"
-      [itemToString]="itemToStringLote" class="w-[200px]">
+    <hlm-select [value]="filtroLoteId()" (valueChange)="onFiltroLoteChange($event)" [itemToString]="itemToStringLote"
+      class="w-[200px]">
       <hlm-select-trigger class="w-full">
         <hlm-select-value placeholder="Todos os lotes" />
       </hlm-select-trigger>
@@ -28,8 +28,8 @@
       </hlm-select-content>
     </hlm-select>
 
-    <hlm-select [value]="filtroTipo()" (valueChange)="onFiltroTipoChange($event)"
-      [itemToString]="itemToStringTipo" class="w-[180px]">
+    <hlm-select [value]="filtroTipo()" (valueChange)="onFiltroTipoChange($event)" [itemToString]="itemToStringTipo"
+      class="w-[180px]">
       <hlm-select-trigger class="w-full">
         <hlm-select-value placeholder="Todos os tipos" />
       </hlm-select-trigger>
@@ -42,10 +42,16 @@
     </hlm-select>
   </div>
 
-  <button hlmBtn class="animais-tab__btn-novo cursor-pointer" (click)="abrirCadastroEmMassa()">
-    <ng-icon name="lucidePlus" size="16" />
-    Cadastrar Animais
-  </button>
+  <div class="animais-tab__btns-cadastro">
+    <button hlmBtn variant="outline" class="animais-tab__btn-unico cursor-pointer" (click)="abrirCadastroUnico()">
+      <ng-icon name="lucidePlus" size="16" />
+      Cadastro Único
+    </button>
+    <button hlmBtn class="animais-tab__btn-novo cursor-pointer" (click)="abrirCadastroLote()">
+      <ng-icon name="lucideListPlus" size="16" />
+      Cadastro em Lote
+    </button>
+  </div>
 </div>
 
 @if (selecionados().size > 0) {
@@ -73,8 +79,8 @@
       <thead hlmTHead>
         <tr hlmTr class="fazenda-table__head-row">
           <th hlmTh class="w-[40px]">
-            <input type="checkbox" class="animais-tab__checkbox"
-              [checked]="todosDaPaginaSelecionados" (change)="toggleSelecionarTodos()" />
+            <input type="checkbox" class="animais-tab__checkbox" [checked]="todosDaPaginaSelecionados"
+              (change)="toggleSelecionarTodos()" />
           </th>
           <th hlmTh>Tipo</th>
           <th hlmTh>Brinco</th>
@@ -91,8 +97,8 @@
         @for (animal of animais(); track animal.id) {
         <tr hlmTr class="fazenda-table__row">
           <td hlmTd>
-            <input type="checkbox" class="animais-tab__checkbox"
-              [checked]="selecionados().has(animal.id)" (change)="toggleSelecionado(animal.id)" />
+            <input type="checkbox" class="animais-tab__checkbox" [checked]="selecionados().has(animal.id)"
+              (change)="toggleSelecionado(animal.id)" />
           </td>
           <td hlmTd>{{ tipoLabel(animal.tipo) }}</td>
           <td hlmTd>{{ animal.brinco || '-' }}</td>

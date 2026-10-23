@@ -1,4 +1,20 @@
 <div class="cuidado-animal-tab__header">
+  <div class="cuidado-animal-tab__filtros">
+    <div class="cuidado-animal-tab__campo-filtro">
+      <label hlmLabel for="dataInicio">De</label>
+      <hlm-date-picker [formControl]="dataInicioControl" [maxDate]="maxDate" class="w-full">
+        <hlm-date-picker-trigger buttonId="dataInicio" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <div class="cuidado-animal-tab__campo-filtro">
+      <label hlmLabel for="dataFim">Até</label>
+      <hlm-date-picker [formControl]="dataFimControl" [maxDate]="maxDate" class="w-full">
+        <hlm-date-picker-trigger buttonId="dataFim" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+  </div>
+
   <button hlmBtn class="cuidado-animal-tab__btn-novo cursor-pointer" (click)="abrirNovoRegistro()">
     <ng-icon name="lucidePlus" size="16" />
     Nova {{ titulo }}
@@ -39,7 +55,7 @@
             @if (carregando()) {
             Carregando...
             } @else {
-            Nenhum registro de {{ titulo.toLowerCase() }} cadastrado
+            Nenhum registro de {{ titulo.toLowerCase() }} no período selecionado
             }
           </td>
         </tr>
@@ -47,4 +63,26 @@
       </tbody>
     </table>
   </div>
+
+  @if (totalPaginas() > 1) {
+  <nav hlmPagination class="fazenda-table__pagination">
+    <ul hlmPaginationContent>
+      <li hlmPaginationItem>
+        <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+      </li>
+
+      @for (pagina of paginasVisiveis(); track pagina) {
+      <li hlmPaginationItem>
+        <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+          {{ pagina + 1 }}
+        </button>
+      </li>
+      }
+
+      <li hlmPaginationItem>
+        <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+      </li>
+    </ul>
+  </nav>
+  }
 </div>

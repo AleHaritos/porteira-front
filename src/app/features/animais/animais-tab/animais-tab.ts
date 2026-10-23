@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideArrowRightLeft, lucideCoins, lucideHistory, lucidePencil, lucidePlus, lucideTrash2 } from '@ng-icons/lucide';
+import { lucideArrowRightLeft, lucideCoins, lucideHistory, lucideListPlus, lucidePencil, lucidePlus, lucideTrash2 } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
@@ -17,15 +17,16 @@ import { ILote } from '../../../shared/interfaces/ILote';
 import { IPiquete } from '../../../shared/interfaces/IPiquete';
 import { EditarAnimal } from '../editar-animal/editar-animal';
 import { HistoricoAnimal } from '../historico-animal/historico-animal';
-import { NovoAnimalEmMassa } from '../novo-animal-em-massa/novo-animal-em-massa';
 
 import { VenderAnimais } from '../vender-animais/vender-animais';
 import { TransferirAnimais } from '../transferir-animais/transferir-animais';
+import { CadastroLoteAnimais } from '../cadastro-lote-animais/cadastro-lote-animais';
+import { CadastroUnicoAnimal } from '../cadastro-unico-animal/cadastro-unico-animal';
 
 @Component({
   selector: 'app-animais-tab',
   imports: [CommonModule, HlmTableImports, HlmButtonImports, HlmPaginationImports, HlmSelectImports, NgIcon],
-  providers: [provideIcons({ lucidePlus, lucideTrash2, lucideCoins, lucideArrowRightLeft, lucidePencil, lucideHistory })],
+  providers: [provideIcons({ lucidePlus, lucideTrash2, lucideCoins, lucideArrowRightLeft, lucidePencil, lucideHistory, lucideListPlus })],
   styleUrl: './animais-tab.css',
   templateUrl: './animais-tab.html',
 })
@@ -164,15 +165,31 @@ export class AnimaisTab implements OnInit {
     this.selecionados.set(new Set());
   }
 
-  abrirCadastroEmMassa(): void {
-    const dialogRef = this.dialogService.open(NovoAnimalEmMassa, {
+  abrirCadastroUnico(): void {
+    const dialogRef = this.dialogService.open(CadastroUnicoAnimal, {
       context: {
         fazendaId: this.fazendaId(),
+        piqueteFixo: this.piqueteFixo() ?? null,
         piquetes: this.piquetes(),
         lotes: this.lotes(),
-        piqueteFixo: this.piqueteFixo() ?? null,
       },
-      contentClass: 'sm:!max-w-[900px], sm:!min-w-[700px]',
+      contentClass: 'sm:!max-w-[720px], sm:!min-w-[600px]',
+    });
+
+    dialogRef.closed$.subscribe((salvo) => {
+      if (salvo) this.carregar();
+    });
+  }
+
+  abrirCadastroLote(): void {
+    const dialogRef = this.dialogService.open(CadastroLoteAnimais, {
+      context: {
+        fazendaId: this.fazendaId(),
+        piqueteFixo: this.piqueteFixo() ?? null,
+        piquetes: this.piquetes(),
+        lotes: this.lotes(),
+      },
+      contentClass: 'sm:!max-w-[820px], sm:!min-w-[700px]',
     });
 
     dialogRef.closed$.subscribe((salvo) => {

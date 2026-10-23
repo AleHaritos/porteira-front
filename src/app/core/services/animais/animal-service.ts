@@ -18,8 +18,32 @@ export class AnimalService {
     );
   }
 
+  salvar(request: AnimalRequest): Observable<IAnimal> {
+    return this.http.post<IAnimal>(this.API_URL, request).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
   atualizar(id: number, request: AnimalRequest): Observable<IAnimal> {
     return this.http.put<IAnimal>(`${this.API_URL}/${id}`, request).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
+  listarOperacoesVendaPorPeriodo(
+    fazendaId: number,
+    dataInicio: string,
+    dataFim: string,
+    page: number = 0,
+    size: number = 10,
+  ): Observable<PageResponse<OperacaoVenda>> {
+    const params = new HttpParams()
+      .set('dataInicio', dataInicio)
+      .set('dataFim', dataFim)
+      .set('page', page)
+      .set('size', size);
+
+    return this.http.get<PageResponse<OperacaoVenda>>(`${this.API_URL}/vendas/fazenda/${fazendaId}/periodo`, { params }).pipe(
       catchError(e => this.util.errorHandler(e))
     );
   }

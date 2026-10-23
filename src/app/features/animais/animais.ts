@@ -16,8 +16,9 @@ import { TruncarPipe } from '../../shared/pipes/TruncarPipe';
 import { PiquetesTab } from './piquetes-tab/piquetes-tab';
 import { RacaoTab } from './racao-tab/racao-tab';
 import { OperacoesVendaTab } from './operacoes-venda-tab/operacoes-venda-tab';
+import { ResumoAnimaisTab } from './resumo-animais-tab/resumo-animais-tab';
 
-type AbaAnimais = 'piquetes' | 'lotes' | 'racao' | 'vendas';
+type AbaAnimais = 'piquetes' | 'lotes' | 'racao' | 'vendas' | 'resumo';
 
 @Component({
   selector: 'app-animais',
@@ -31,6 +32,7 @@ type AbaAnimais = 'piquetes' | 'lotes' | 'racao' | 'vendas';
     PiquetesTab,
     RacaoTab,
     OperacoesVendaTab,
+    ResumoAnimaisTab
   ],
   providers: [provideIcons({ lucidePawPrint, lucidePlus, lucideSquarePen, lucideTrash2 })],
   styleUrl: './animais.css',
