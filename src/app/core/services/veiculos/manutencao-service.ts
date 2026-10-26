@@ -33,6 +33,13 @@ export class ManutencaoService {
     );
   }
 
+  listarPorFornecedorEStatus(fornecedorId: number, status: 'PENDENTE' | 'BAIXADO'): Observable<IManutencao[]> {
+    const params = new HttpParams().set('status', status);
+    return this.http.get<IManutencao[]>(this.API_URL + '/fornecedor/' + fornecedorId, { params }).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
   buscarResumoPorVeiculo(veiculoId: number, dataInicio: string, dataFim: string): Observable<IManutencaoResumo> {
     const params = new HttpParams().set('dataInicio', dataInicio).set('dataFim', dataFim);
     return this.http.get<IManutencaoResumo>(this.API_URL + '/veiculo/' + veiculoId + '/resumo', { params }).pipe(

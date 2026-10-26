@@ -1,0 +1,86 @@
+.pagar-debitos-selecionados__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pagar-debitos-selecionados__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #fef3c7;
+  color: #d97706;
+  flex-shrink: 0;
+}
+
+.pagar-debitos-selecionados__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pagar-debitos-selecionados__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 0;
+}
+
+.pagar-debitos-selecionados__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid #eef4f0;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.pagar-debitos-selecionados__item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+.pagar-debitos-selecionados__item:not(:last-child) {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.pagar-debitos-selecionados__item-nome {
+  color: #374151;
+}
+
+.pagar-debitos-selecionados__item-valor {
+  color: #111827;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.pagar-debitos-selecionados__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pagar-debitos-selecionados__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.pagar-debitos-selecionados__btn-salvar {
+  background: #16a34a;
+  color: white;
+}
+
+.pagar-debitos-selecionados__btn-salvar:hover {
+  background: #15803d;
+}

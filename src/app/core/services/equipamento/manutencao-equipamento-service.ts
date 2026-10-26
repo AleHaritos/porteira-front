@@ -26,6 +26,13 @@ export class ManutencaoEquipamentoService {
     );
   }
 
+  listarPorFornecedorEStatus(fornecedorId: number, status: 'PENDENTE' | 'BAIXADO'): Observable<IManutencaoEquipamento[]> {
+    const params = new HttpParams().set('status', status);
+    return this.http.get<IManutencaoEquipamento[]>(this.API_URL + '/fornecedor/' + fornecedorId, { params }).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
   buscarPorEquipamento(equipamentoId: number, page: number = 0, size: number = 6): Observable<PageResponse<IManutencaoEquipamento>> {
     const params = new HttpParams().set('page', page).set('size', size);
     return this.http.get<PageResponse<IManutencaoEquipamento>>(this.API_URL + '/equipamento/' + equipamentoId, { params }).pipe(
