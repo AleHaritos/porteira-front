@@ -1,40 +1,32 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideArrowLeft, lucideHandshake, lucideTruck, lucideWrench, lucideReceipt, lucidePlus } from '@ng-icons/lucide';
+import { lucideArrowLeft, lucideHandshake, lucideTruck, lucideWrench, lucideReceipt, lucidePlus, lucideHandCoins } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import { FornecedorService } from '../../../core/services/equipamento/fornecedor-service';
-import { ManutencaoService } from '../../../core/services/veiculos/manutencao-service';
-import { ManutencaoEquipamentoService } from '../../../core/services/equipamento/manutencao-equipamento-service';
-import { ContaFornecedorService } from '../../../core/services/equipamento/conta-fornecedor-service';
+import { FornecedorDebitoService } from '../../../core/services/equipamento/fornecedor-debito-service';
 import { ToastService } from '../../../core/services/toast-service';
 import { IFornecedor } from '../../../shared/interfaces/IFornecedor';
+import { IFornecedorDebito } from '../../../shared/interfaces/IFornecedorDebito';
 import { PagarDebitoFornecedor } from '../pagar-debito-fornecedor/pagar-debito-fornecedor';
+import { PagarDebitosSelecionados } from '../pagar-debitos-selecionados/pagar-debitos-selecionados';
 import { NovaContaFornecedor } from '../nova-conta-fornecedor/nova-conta-fornecedor';
 
-type OrigemDebito = 'VEICULO' | 'EQUIPAMENTO' | 'CONTA';
-
-interface DebitoPendente {
-  id: number;
-  origem: OrigemDebito;
-  nomeAtivo: string;
-  tipo: string;
-  descricao?: string;
-  data: string;
-  valor: number;
-}
+type StatusDebito = 'PENDENTE' | 'BAIXADO';
 
 const moeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 const TAMANHO_PAGINA = 10;
 
 @Component({
   selector: 'app-fornecedor-detalhe',
-  imports: [CommonModule, HlmTableImports, HlmPaginationImports, HlmButtonImports, NgIcon],
-  providers: [provideIcons({ lucideArrowLeft, lucideHandshake, lucideTruck, lucideWrench, lucideReceipt, lucidePlus })],
+  imports: [CommonModule, ReactiveFormsModule, HlmTableImports, HlmPaginationImports, HlmButtonImports, HlmDatePickerImports, NgIcon],
+  providers: [provideIcons({ lucideArrowLeft, lucideHandshake, lucideTruck, lucideWrench, lucideReceipt, lucidePlus, lucideHandCoins })],
   styleUrl: './fornecedor-detalhe.css',
   templateUrl: './fornecedor-detalhe.html',
 })
@@ -42,9 +34,7 @@ export class FornecedorDetalhe implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private fornecedorService = inject(FornecedorService);
-  private manutencaoService = inject(ManutencaoService);
-  private manutencaoEquipamentoService = inject(ManutencaoEquipamentoService);
-  private contaFornecedorService = inject(ContaFornecedorService);
+  private fornecedorDebitoService = inject(FornecedorDebitoService);
   private dialogService = inject(HlmDialogService);
   private toastService = inject(ToastService);
 
@@ -52,17 +42,24 @@ export class FornecedorDetalhe implements OnInit {
   fornecedorId!: number;
 
   fornecedor = signal<IFornecedor | null>(null);
-  todosDebitos = signal<DebitoPendente[]>([]);
+  debitos = signal<IFornecedorDebito[]>([]);
   paginaAtual = signal(0);
+  totalPaginas = signal(0);
   carregando = signal(false);
+  filtroStatus = signal<StatusDebito>('PENDENTE');
+
+  maxDate = new Date();
+  dataInicioControl = new FormControl<Date | null>(this.primeiroDiaDoMes());
+  dataFimControl = new FormControl<Date | null>(new Date());
+
+  selecionados = signal<Map<string, IFornecedorDebito>>(new Map());
 
   readonly formatarValor = (valor: number) => moeda.format(valor);
 
-  totalPaginas = computed(() => Math.max(1, Math.ceil(this.todosDebitos().length / TAMANHO_PAGINA)));
-
-  debitosPaginados = computed(() => {
-    const inicio = this.paginaAtual() * TAMANHO_PAGINA;
-    return this.todosDebitos().slice(inicio, inicio + TAMANHO_PAGINA);
+  totalSelecionado = computed(() => {
+    let soma = 0;
+    this.selecionados().forEach((d) => (soma += d.valor));
+    return soma;
   });
 
   paginasVisiveis = computed(() => {
@@ -75,74 +72,96 @@ export class FornecedorDetalhe implements OnInit {
     return paginas;
   });
 
+  get todosDaPaginaSelecionados(): boolean {
+    return this.debitos().length > 0 && this.debitos().every((d) => this.selecionados().has(this.chaveDebito(d)));
+  }
+
+  chaveDebito(debito: IFornecedorDebito): string {
+    return `${debito.origem}-${debito.id}`;
+  }
+
+  private primeiroDiaDoMes(): Date {
+    const hoje = new Date();
+    return new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+  }
+
   ngOnInit(): void {
     this.fazendaId = Number(this.route.parent?.snapshot.paramMap.get('id'));
     this.fornecedorId = Number(this.route.snapshot.paramMap.get('fornecedorId'));
-    this.carregar();
-  }
-
-  carregar(): void {
-    this.carregando.set(true);
-    this.paginaAtual.set(0);
 
     this.fornecedorService.buscarPorId(this.fornecedorId).subscribe({
       next: (fornecedor) => this.fornecedor.set(fornecedor),
     });
 
-    this.manutencaoService.listarPendentesPorFornecedor(this.fornecedorId).subscribe({
-      next: (veiculo) => {
-        const debitosVeiculo: DebitoPendente[] = veiculo.map((m) => ({
-          id: m.id,
-          origem: 'VEICULO',
-          nomeAtivo: m.veiculoNome,
-          tipo: m.tipo,
-          descricao: m.descricao,
-          data: m.data,
-          valor: m.valor,
-        }));
+    this.dataInicioControl.valueChanges.subscribe(() => this.onFiltroDataChange());
+    this.dataFimControl.valueChanges.subscribe(() => this.onFiltroDataChange());
 
-        this.manutencaoEquipamentoService.listarPendentesPorFornecedor(this.fornecedorId).subscribe({
-          next: (equipamento) => {
-            const debitosEquipamento: DebitoPendente[] = equipamento.map((m) => ({
-              id: m.id,
-              origem: 'EQUIPAMENTO',
-              nomeAtivo: m.equipamentoNome,
-              tipo: m.tipo,
-              descricao: m.descricao,
-              data: m.data,
-              valor: m.valor,
-            }));
+    this.carregar();
+  }
 
-            this.contaFornecedorService.listarPendentesPorFornecedor(this.fornecedorId).subscribe({
-              next: (contas) => {
-                const debitosContas: DebitoPendente[] = contas.map((c) => ({
-                  id: c.id,
-                  origem: 'CONTA',
-                  nomeAtivo: c.fornecedorNome,
-                  tipo: 'OUTRO',
-                  descricao: c.descricao,
-                  data: c.data,
-                  valor: c.valor,
-                }));
+  onFiltroStatusChange(status: StatusDebito): void {
+    this.filtroStatus.set(status);
+    this.paginaAtual.set(0);
+    this.limparSelecao();
+    this.carregar();
+  }
 
-                const todos = [...debitosVeiculo, ...debitosEquipamento, ...debitosContas]
-                  .sort((a, b) => b.data.localeCompare(a.data));
-                this.todosDebitos.set(todos);
-                this.carregando.set(false);
-              },
-              error: () => this.carregando.set(false),
-            });
-          },
-          error: () => this.carregando.set(false),
-        });
-      },
-      error: () => this.carregando.set(false),
-    });
+  onFiltroDataChange(): void {
+    this.paginaAtual.set(0);
+    this.limparSelecao();
+    this.carregar();
+  }
+
+  carregar(): void {
+    this.carregando.set(true);
+
+    const dataInicio = this.dataInicioControl.value?.toISOString().split('T')[0] ?? '';
+    const dataFim = this.dataFimControl.value?.toISOString().split('T')[0] ?? '';
+
+    this.fornecedorDebitoService
+      .listarPorFornecedorEStatus(this.fornecedorId, this.filtroStatus(), dataInicio, dataFim, this.paginaAtual(), TAMANHO_PAGINA)
+      .subscribe({
+        next: (res) => {
+          this.debitos.set(res.content);
+          this.totalPaginas.set(res.totalPages);
+          this.carregando.set(false);
+        },
+        error: () => {
+          this.carregando.set(false);
+          this.toastService.showError('Erro', 'Não foi possível carregar os débitos');
+        },
+      });
   }
 
   irPara(pagina: number): void {
     if (pagina < 0 || pagina > this.totalPaginas() - 1) return;
     this.paginaAtual.set(pagina);
+    this.carregar();
+  }
+
+  toggleSelecionado(debito: IFornecedorDebito): void {
+    const novo = new Map(this.selecionados());
+    const chave = this.chaveDebito(debito);
+    if (novo.has(chave)) {
+      novo.delete(chave);
+    } else {
+      novo.set(chave, debito);
+    }
+    this.selecionados.set(novo);
+  }
+
+  toggleSelecionarTodos(): void {
+    const novo = new Map(this.selecionados());
+    if (this.todosDaPaginaSelecionados) {
+      this.debitos().forEach((d) => novo.delete(this.chaveDebito(d)));
+    } else {
+      this.debitos().forEach((d) => novo.set(this.chaveDebito(d), d));
+    }
+    this.selecionados.set(novo);
+  }
+
+  limparSelecao(): void {
+    this.selecionados.set(new Map());
   }
 
   abrirLancarConta(): void {
@@ -158,7 +177,7 @@ export class FornecedorDetalhe implements OnInit {
     });
   }
 
-  abrirPagar(debito: DebitoPendente): void {
+  abrirPagar(debito: IFornecedorDebito): void {
     const dialogRef = this.dialogService.open(PagarDebitoFornecedor, {
       context: {
         fazendaId: this.fazendaId,
@@ -173,6 +192,23 @@ export class FornecedorDetalhe implements OnInit {
     dialogRef.closed$.subscribe((sucesso) => {
       if (sucesso) {
         this.toastService.showSuccess('Sucesso', 'Pagamento registrado com sucesso');
+        this.carregar();
+      }
+    });
+  }
+
+  abrirPagarSelecionados(): void {
+    const selecionados = Array.from(this.selecionados().values());
+    if (selecionados.length === 0) return;
+
+    const dialogRef = this.dialogService.open(PagarDebitosSelecionados, {
+      context: { fazendaId: this.fazendaId, debitos: selecionados },
+      contentClass: 'sm:!max-w-[640px], sm:!min-w-[520px]',
+    });
+
+    dialogRef.closed$.subscribe((sucesso) => {
+      if (sucesso) {
+        this.limparSelecao();
         this.carregar();
       }
     });

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { ContaFornecedorRequest, IContaFornecedor } from '../../../shared/interfaces/IContaFornecedor';
@@ -19,6 +19,13 @@ export class ContaFornecedorService {
 
   listarPendentesPorFornecedor(fornecedorId: number): Observable<IContaFornecedor[]> {
     return this.http.get<IContaFornecedor[]>(this.API_URL + '/fornecedor/' + fornecedorId + '/pendentes').pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
+  listarPorFornecedorEStatus(fornecedorId: number, status: 'PENDENTE' | 'BAIXADO'): Observable<IContaFornecedor[]> {
+    const params = new HttpParams().set('status', status);
+    return this.http.get<IContaFornecedor[]>(this.API_URL + '/fornecedor/' + fornecedorId, { params }).pipe(
       catchError(e => this.util.errorHandler(e))
     );
   }

@@ -28,10 +28,52 @@
     }
   </div>
 
+  <div class="fornecedor-detalhe__filtros-linha">
+    <div class="fornecedor-detalhe__toggle">
+      <button [class.ativo]="filtroStatus() === 'PENDENTE'" (click)="onFiltroStatusChange('PENDENTE')">
+        Em aberto
+      </button>
+      <button [class.ativo]="filtroStatus() === 'BAIXADO'" (click)="onFiltroStatusChange('BAIXADO')">
+        Pagos
+      </button>
+    </div>
+
+    <div class="fornecedor-detalhe__datas">
+      <hlm-date-picker [formControl]="dataInicioControl" [maxDate]="maxDate" class="w-[170px]">
+        <hlm-date-picker-trigger buttonId="dataInicio" class="w-full">De</hlm-date-picker-trigger>
+      </hlm-date-picker>
+      <hlm-date-picker [formControl]="dataFimControl" [maxDate]="maxDate" class="w-[170px]">
+        <hlm-date-picker-trigger buttonId="dataFim" class="w-full">Até</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+  </div>
+
+  @if (filtroStatus() === 'PENDENTE' && selecionados().size > 0) {
+  <div class="fornecedor-detalhe__barra-selecao">
+    <span>{{ selecionados().size }} débito(s) selecionado(s) — {{ formatarValor(totalSelecionado()) }}</span>
+    <div class="fornecedor-detalhe__barra-selecao-acoes">
+      <button hlmBtn variant="outline" size="sm" class="cursor-pointer" (click)="limparSelecao()">
+        Limpar seleção
+      </button>
+      <button hlmBtn size="sm" class="fornecedor-detalhe__btn-pagar-selecionados cursor-pointer"
+        (click)="abrirPagarSelecionados()">
+        <ng-icon name="lucideHandCoins" size="16" />
+        Pagar Selecionados
+      </button>
+    </div>
+  </div>
+  }
+
   <div class="fazenda-table">
     <table hlmTable>
       <thead>
         <tr hlmTr class="fazenda-table__head-row">
+          @if (filtroStatus() === 'PENDENTE') {
+          <th hlmTh class="w-[40px]">
+            <input type="checkbox" class="fornecedor-detalhe__checkbox" [checked]="todosDaPaginaSelecionados"
+              (change)="toggleSelecionarTodos()" />
+          </th>
+          }
           <th hlmTh>Origem</th>
           <th hlmTh>Ativo</th>
           <th hlmTh>Descrição</th>
@@ -41,8 +83,14 @@
         </tr>
       </thead>
       <tbody>
-        @for (debito of debitosPaginados(); track debito.origem + '-' + debito.id) {
+        @for (debito of debitos(); track debito.origem + '-' + debito.id) {
         <tr hlmTr class="fazenda-table__row">
+          @if (filtroStatus() === 'PENDENTE') {
+          <td hlmTd>
+            <input type="checkbox" class="fornecedor-detalhe__checkbox"
+              [checked]="selecionados().has(chaveDebito(debito))" (change)="toggleSelecionado(debito)" />
+          </td>
+          }
           <td hlmTd>
             <span class="fornecedor-detalhe__badge"
               [class.fornecedor-detalhe__badge--veiculo]="debito.origem === 'VEICULO'"
@@ -63,18 +111,22 @@
           <td hlmTd>{{ debito.data | date: 'dd/MM/yyyy' }}</td>
           <td hlmTd>{{ formatarValor(debito.valor) }}</td>
           <td hlmTd>
+            @if (debito.statusPagamento === 'BAIXADO') {
+            <span class="fornecedor-detalhe__pago">Pago em {{ debito.dataBaixa | date: 'dd/MM/yyyy' }}</span>
+            } @else {
             <button hlmBtn size="sm" class="fornecedor-detalhe__btn-pagar cursor-pointer" (click)="abrirPagar(debito)">
               Pagar
             </button>
+            }
           </td>
         </tr>
         } @empty {
         <tr hlmTr>
-          <td hlmTd [attr.colSpan]="6" class="fazenda-table__empty">
+          <td hlmTd [attr.colSpan]="filtroStatus() === 'PENDENTE' ? 7 : 6" class="fazenda-table__empty">
             @if (carregando()) {
             Carregando débitos...
             } @else {
-            Nenhum débito pendente
+            {{ filtroStatus() === 'PENDENTE' ? 'Nenhum débito pendente' : 'Nenhum débito pago' }}
             }
           </td>
         </tr>

@@ -20,54 +20,56 @@
       </thead>
       <tbody>
         @for (veiculo of veiculos(); track veiculo.id) {
-          <tr hlmTr class="fazenda-table__row">
-            <td hlmTd class="fazenda-table__nome">{{ veiculo.nome }}</td>
-            <td hlmTd>{{ veiculo.placa }}</td>
-            <td hlmTd>{{ tipoLabel(veiculo.tipo) }}</td>
-            <td hlmTd>{{ veiculo.dataCompra | date: 'dd/MM/yyyy' }}</td>
-            <td hlmTd>
-              <div class="produtos-table__acoes">
-                <button class="fazenda-table__action-btn fazenda-table__action-btn--editar" (click)="editar(veiculo)">
-                  <ng-icon name="lucidePencil" size="16" />
-                </button>
-                <button class="fazenda-table__action-btn fazenda-table__action-btn--excluir" (click)="inativar(veiculo)">
-                  <ng-icon name="lucideTrash2" size="16" />
-                </button>
-              </div>
-            </td>
-          </tr>
+        <tr hlmTr class="fazenda-table__row fazenda-table__row--clicavel" (click)="abrirResumo(veiculo)">
+          <td hlmTd class="fazenda-table__nome">{{ veiculo.nome }}</td>
+          <td hlmTd>{{ veiculo.placa }}</td>
+          <td hlmTd>{{ tipoLabel(veiculo.tipo) }}</td>
+          <td hlmTd>{{ veiculo.dataCompra | date: 'dd/MM/yyyy' }}</td>
+          <td hlmTd>
+            <div class="produtos-table__acoes">
+              <button class="fazenda-table__action-btn fazenda-table__action-btn--editar"
+                (click)="editar(veiculo); $event.stopPropagation()">
+                <ng-icon name="lucidePencil" size="16" />
+              </button>
+              <button class="fazenda-table__action-btn fazenda-table__action-btn--excluir"
+                (click)="inativar(veiculo); $event.stopPropagation()">
+                <ng-icon name="lucideTrash2" size="16" />
+              </button>
+            </div>
+          </td>
+        </tr>
         } @empty {
-          <tr hlmTr>
-            <td hlmTd colspan="5" class="fazenda-table__empty">
-              @if (carregando()) {
-                Carregando veículos...
-              } @else {
-                Nenhum veículo cadastrado ainda.
-              }
-            </td>
-          </tr>
+        <tr hlmTr>
+          <td hlmTd colspan="5" class="fazenda-table__empty">
+            @if (carregando()) {
+            Carregando veículos...
+            } @else {
+            Nenhum veículo cadastrado ainda.
+            }
+          </td>
+        </tr>
         }
       </tbody>
     </table>
 
     @if (totalPaginas() > 1) {
-      <nav hlmPagination class="fazenda-table__pagination">
-        <ul hlmPaginationContent>
-          <li hlmPaginationItem>
-            <button hlmPaginationPrevious (click)="irPara(paginaAtual() - 1)"></button>
-          </li>
-          @for (pagina of paginasVisiveis(); track pagina) {
-            <li hlmPaginationItem>
-              <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
-                {{ pagina + 1 }}
-              </button>
-            </li>
-          }
-          <li hlmPaginationItem>
-            <button hlmPaginationNext (click)="irPara(paginaAtual() + 1)"></button>
-          </li>
-        </ul>
-      </nav>
+    <nav hlmPagination class="fazenda-table__pagination">
+      <ul hlmPaginationContent>
+        <li hlmPaginationItem>
+          <button hlmPaginationPrevious (click)="irPara(paginaAtual() - 1)"></button>
+        </li>
+        @for (pagina of paginasVisiveis(); track pagina) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+            {{ pagina + 1 }}
+          </button>
+        </li>
+        }
+        <li hlmPaginationItem>
+          <button hlmPaginationNext (click)="irPara(paginaAtual() + 1)"></button>
+        </li>
+      </ul>
+    </nav>
     }
   </div>
 </div>

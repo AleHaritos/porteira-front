@@ -12,6 +12,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { HlmTableImports } from '@spartan-ng/helm/table';
+import { ResumoEquipamento } from './resumo-equipamento/resumo-equipamento';
 
 @Component({
   selector: 'app-equipamento',
@@ -84,6 +85,16 @@ export class Equipamento implements OnInit {
         this.toastService.showSuccess('Sucesso', 'Equipamento salvo com sucesso');
         this.carregar();
       }
+    });
+  }
+
+  abrirResumo(equipamento: IEquipamento): void {
+    const fazendaId = this.fazendaId();
+    if (fazendaId == null) return;
+
+    this.dialogService.open(ResumoEquipamento, {
+      context: { equipamento, fazendaId },
+      contentClass: 'sm:!max-w-[850px], sm:!min-w-[650px]',
     });
   }
 

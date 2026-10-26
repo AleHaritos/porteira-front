@@ -1,0 +1,68 @@
+<hlm-dialog-header class="mb-2">
+  <div class="resumo-equipamento__header-linha">
+    <div class="resumo-equipamento__icone">
+      <ng-icon name="lucideWrench" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>{{ context.equipamento.nome }}</h3>
+      <p class="resumo-equipamento__subtitulo">Histórico de manutenção</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<div class="resumo-equipamento__form">
+  <div class="resumo-equipamento__filtros">
+    <div class="resumo-equipamento__campo-filtro">
+      <label hlmLabel for="dataInicio">De</label>
+      <hlm-date-picker [formControl]="dataInicioControl" [maxDate]="maxDate" class="w-full">
+        <hlm-date-picker-trigger buttonId="dataInicio" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <div class="resumo-equipamento__campo-filtro">
+      <label hlmLabel for="dataFim">Até</label>
+      <hlm-date-picker [formControl]="dataFimControl" [maxDate]="maxDate" class="w-full">
+        <hlm-date-picker-trigger buttonId="dataFim" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+  </div>
+
+  <div class="resumo-equipamento__resumo">
+    <div class="resumo-equipamento__resumo-item">
+      <span>Quantidade</span>
+      <strong>{{ manutencoes().length }}</strong>
+    </div>
+    <div class="resumo-equipamento__resumo-item resumo-equipamento__resumo-item--destaque">
+      <span>Total no Período</span>
+      <strong>{{ formatarValor(totalValor()) }}</strong>
+    </div>
+  </div>
+
+  <div class="resumo-equipamento__itens">
+    @for (item of manutencoes(); track item.id) {
+    <div class="resumo-equipamento__item">
+      <div class="resumo-equipamento__item-topo">
+        <span>{{ item.data | date: 'dd/MM/yyyy' }} · {{ item.tipo }}</span>
+        <span class="resumo-equipamento__item-total">{{ formatarValor(item.valor) }}</span>
+      </div>
+      @if (item.descricao) {
+      <p class="resumo-equipamento__item-desc">{{ item.descricao }}</p>
+      }
+      <div class="resumo-equipamento__item-custos">
+        <span>{{ formatarPagamento(item.formaPagamento) }}{{ item.fornecedorNome ? ' - ' + item.fornecedorNome : '' }}</span>
+        @if (item.vinculoNome) {
+        <span>{{ item.vinculoNome }}</span>
+        }
+      </div>
+    </div>
+    } @empty {
+    <p class="resumo-equipamento__vazio">
+      @if (carregando()) { Carregando manutenções... } @else { Nenhuma manutenção no período }
+    </p>
+    }
+  </div>
+</div>
+
+<hlm-dialog-footer class="mt-2">
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="fechar()">Fechar</button>
+</hlm-dialog-footer>
