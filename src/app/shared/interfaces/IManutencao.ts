@@ -19,6 +19,10 @@ export interface IManutencao {
   dataBaixa?: string;
 }
 
+export interface IManutencaoResumo {
+  totalValor: number;
+  quantidade: number;
+}
 
 export interface ManutencaoRequest {
   veiculoId: number;

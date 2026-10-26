@@ -1,0 +1,103 @@
+<hlm-dialog-header class="mb-2">
+  <div class="resumo-veiculo__header-linha">
+    <div class="resumo-veiculo__icone">
+      <ng-icon name="lucideCar" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>{{ context.veiculo.nome }}</h3>
+      <p class="resumo-veiculo__subtitulo">Placa: {{ context.veiculo.placa }}</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<div class="resumo-veiculo__form">
+  <div class="resumo-veiculo__filtros">
+    <div class="resumo-veiculo__campo-filtro">
+      <label hlmLabel for="dataInicio">De</label>
+      <hlm-date-picker [formControl]="dataInicioControl" [maxDate]="maxDate" class="w-full">
+        <hlm-date-picker-trigger buttonId="dataInicio" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <div class="resumo-veiculo__campo-filtro">
+      <label hlmLabel for="dataFim">Até</label>
+      <hlm-date-picker [formControl]="dataFimControl" [maxDate]="maxDate" class="w-full">
+        <hlm-date-picker-trigger buttonId="dataFim" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+  </div>
+
+  <div class="resumo-veiculo__resumo">
+    <div class="resumo-veiculo__resumo-item">
+      <span>Total Abastecimento</span>
+      <strong>{{ formatarValor(resumoAbastecimento()?.totalValor ?? 0) }}</strong>
+    </div>
+    <div class="resumo-veiculo__resumo-item">
+      <span>Litros</span>
+      <strong>{{ (resumoAbastecimento()?.totalLitros ?? 0).toFixed(2) }} L</strong>
+    </div>
+    <div class="resumo-veiculo__resumo-item">
+      <span>Total Manutenção</span>
+      <strong>{{ formatarValor(resumoManutencao()?.totalValor ?? 0) }}</strong>
+    </div>
+    <div class="resumo-veiculo__resumo-item resumo-veiculo__resumo-item--destaque">
+      <span>Total Geral</span>
+      <strong>{{ formatarValor((resumoAbastecimento()?.totalValor ?? 0) + (resumoManutencao()?.totalValor ?? 0)) }}</strong>
+    </div>
+  </div>
+
+  <div class="resumo-veiculo__secao">
+    <div class="resumo-veiculo__secao-titulo">
+      <ng-icon name="lucideFuel" size="16" />
+      Abastecimentos ({{ abastecimentos().length }})
+    </div>
+    <div class="resumo-veiculo__itens">
+      @for (item of abastecimentos(); track item.id) {
+      <div class="resumo-veiculo__item">
+        <div class="resumo-veiculo__item-topo">
+          <span>{{ item.data | date: 'dd/MM/yyyy' }}</span>
+          <span class="resumo-veiculo__item-total">{{ formatarValor(item.valorTotal ?? 0) }}</span>
+        </div>
+        <div class="resumo-veiculo__item-custos">
+          <span>{{ item.litros.toFixed(2) }} L</span>
+          <span>{{ item.tipoCombustivel }}</span>
+          @if (item.postoNome) {
+          <span>{{ item.postoNome }}</span>
+          }
+        </div>
+      </div>
+      } @empty {
+      <p class="resumo-veiculo__vazio">Nenhum abastecimento no período</p>
+      }
+    </div>
+  </div>
+
+  <div class="resumo-veiculo__secao">
+    <div class="resumo-veiculo__secao-titulo">
+      <ng-icon name="lucideWrench" size="16" />
+      Manutenções ({{ manutencoes().length }})
+    </div>
+    <div class="resumo-veiculo__itens">
+      @for (item of manutencoes(); track item.id) {
+      <div class="resumo-veiculo__item">
+        <div class="resumo-veiculo__item-topo">
+          <span>{{ item.data | date: 'dd/MM/yyyy' }}</span>
+          <span class="resumo-veiculo__item-total">{{ formatarValor(item.valor) }}</span>
+        </div>
+        <div class="resumo-veiculo__item-custos">
+          <span>{{ item.tipo }}</span>
+          @if (item.descricao) {
+          <span>{{ item.descricao }}</span>
+          }
+        </div>
+      </div>
+      } @empty {
+      <p class="resumo-veiculo__vazio">Nenhuma manutenção no período</p>
+      }
+    </div>
+  </div>
+</div>
+
+<hlm-dialog-footer class="mt-2">
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="fechar()">Fechar</button>
+</hlm-dialog-footer>

@@ -1,0 +1,136 @@
+.resumo-veiculo__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.resumo-veiculo__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #dcfce7;
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.resumo-veiculo__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.resumo-veiculo__subtitulo {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.resumo-veiculo__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 4px 0 0;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+.resumo-veiculo__filtros {
+  display: flex;
+  gap: 1rem;
+}
+
+.resumo-veiculo__campo-filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 160px;
+}
+
+.resumo-veiculo__resumo {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  background: #f2f9f4;
+  border: 1px solid #d8e6dc;
+  border-radius: 10px;
+  padding: 0.75rem;
+}
+
+.resumo-veiculo__resumo-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+.resumo-veiculo__resumo-item strong {
+  font-size: 0.95rem;
+  color: #278a4c;
+}
+
+.resumo-veiculo__resumo-item--destaque strong {
+  color: #1f7a3d;
+  font-size: 1.05rem;
+}
+
+.resumo-veiculo__secao {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.resumo-veiculo__secao-titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2f4d3a;
+}
+
+.resumo-veiculo__itens {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.resumo-veiculo__item {
+  border: 1px solid #eef4f0;
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  background: #fff;
+}
+
+.resumo-veiculo__item-topo {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2f4d3a;
+}
+
+.resumo-veiculo__item-total {
+  font-weight: 600;
+  color: #278a4c;
+}
+
+.resumo-veiculo__item-custos {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin-top: 0.3rem;
+}
+
+.resumo-veiculo__vazio {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.85rem;
+  padding: 1rem 0;
+  margin: 0;
+}

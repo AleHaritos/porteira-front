@@ -12,6 +12,7 @@ import { VeiculoService } from '../../core/services/veiculos/veiculo-service';
 import { ConfirmDialog } from '../../shared/confirm-dialog/confirm-dialog';
 import { IVeiculo, TipoVeiculo } from '../../shared/interfaces/IVeiculos';
 import { NovaVeiculo } from './nova-veiculo/nova-veiculo';
+import { ResumoVeiculo } from './resumo-veiculo/resumo-veiculo';
 
 @Component({
   selector: 'app-veiculo',
@@ -94,6 +95,16 @@ export class Veiculo implements OnInit {
 
     dialogRef.closed$.subscribe((criado) => {
       if (criado) this.carregar();
+    });
+  }
+
+  abrirResumo(veiculo: IVeiculo): void {
+    const fazendaId = this.fazendaId();
+    if (fazendaId == null) return;
+
+    this.dialogService.open(ResumoVeiculo, {
+      context: { veiculo, fazendaId },
+      contentClass: 'sm:!max-w-[950px], sm:!min-w-[700px]',
     });
   }
 
