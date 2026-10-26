@@ -128,3 +128,7 @@
   white-space: nowrap;
   padding-right: 1rem;
 }
+
+.fazenda-table__row--clicavel {
+  cursor: pointer;
+}
