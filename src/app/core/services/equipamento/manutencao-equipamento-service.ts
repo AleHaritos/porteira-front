@@ -18,6 +18,14 @@ export class ManutencaoEquipamentoService {
     );
   }
 
+  buscarPorFazenda(fazendaId: number, equipamentoId: number | null, dataInicio: string, dataFim: string, page: number = 0, size: number = 6): Observable<PageResponse<IManutencaoEquipamento>> {
+    let params = new HttpParams().set('dataInicio', dataInicio).set('dataFim', dataFim).set('page', page).set('size', size);
+    if (equipamentoId != null) params = params.set('equipamentoId', equipamentoId);
+    return this.http.get<PageResponse<IManutencaoEquipamento>>(this.API_URL + '/fazenda/' + fazendaId, { params }).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
   buscarPorEquipamento(equipamentoId: number, page: number = 0, size: number = 6): Observable<PageResponse<IManutencaoEquipamento>> {
     const params = new HttpParams().set('page', page).set('size', size);
     return this.http.get<PageResponse<IManutencaoEquipamento>>(this.API_URL + '/equipamento/' + equipamentoId, { params }).pipe(

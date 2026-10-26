@@ -25,6 +25,14 @@ export class ManutencaoService {
     );
   }
 
+  buscarPorFazenda(fazendaId: number, veiculoId: number | null, dataInicio: string, dataFim: string, page: number = 0, size: number = 6): Observable<PageResponse<IManutencao>> {
+    let params = new HttpParams().set('dataInicio', dataInicio).set('dataFim', dataFim).set('page', page).set('size', size);
+    if (veiculoId != null) params = params.set('veiculoId', veiculoId);
+    return this.http.get<PageResponse<IManutencao>>(this.API_URL + '/fazenda/' + fazendaId, { params }).pipe(
+      catchError(e => this.util.errorHandler(e))
+    );
+  }
+
   buscarResumoPorVeiculo(veiculoId: number, dataInicio: string, dataFim: string): Observable<IManutencaoResumo> {
     const params = new HttpParams().set('dataInicio', dataInicio).set('dataFim', dataFim);
     return this.http.get<IManutencaoResumo>(this.API_URL + '/veiculo/' + veiculoId + '/resumo', { params }).pipe(

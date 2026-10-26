@@ -19,18 +19,34 @@
 
     <div class="manutencao-page__filtro">
       <label hlmLabel>{{ tipoAtivo() === 'VEICULO' ? 'Veículo' : 'Equipamento' }}</label>
-      <hlm-select [value]="ativoSelecionadoId()" (valueChange)="onAtivoChange($event)" [itemToString]="itemToStringAtivo" class="w-64">
+      <hlm-select [value]="ativoSelecionadoId()" (valueChange)="onAtivoChange($event)"
+        [itemToString]="itemToStringAtivo" class="w-64">
         <hlm-select-trigger class="w-full">
           <hlm-select-value />
         </hlm-select-trigger>
         <hlm-select-content *hlmSelectPortal>
+          <hlm-select-item [value]="0">Todos</hlm-select-item>
           @if (tipoAtivo() === 'VEICULO') {
-            @for (v of veiculos(); track v.id) { <hlm-select-item [value]="v.id">{{ v.nome }}</hlm-select-item> }
+          @for (v of veiculos(); track v.id) { <hlm-select-item [value]="v.id">{{ v.nome }}</hlm-select-item> }
           } @else {
-            @for (e of equipamentos(); track e.id) { <hlm-select-item [value]="e.id">{{ e.nome }}</hlm-select-item> }
+          @for (e of equipamentos(); track e.id) { <hlm-select-item [value]="e.id">{{ e.nome }}</hlm-select-item> }
           }
         </hlm-select-content>
       </hlm-select>
+    </div>
+
+    <div class="manutencao-page__filtro">
+      <label hlmLabel for="dataInicio">De</label>
+      <hlm-date-picker [formControl]="dataInicioControl" [maxDate]="maxDate" class="w-44">
+        <hlm-date-picker-trigger buttonId="dataInicio" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <div class="manutencao-page__filtro">
+      <label hlmLabel for="dataFim">Até</label>
+      <hlm-date-picker [formControl]="dataFimControl" [maxDate]="maxDate" class="w-44">
+        <hlm-date-picker-trigger buttonId="dataFim" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
     </div>
   </div>
 
@@ -38,74 +54,74 @@
     <table hlmTable>
       <thead>
         <tr hlmTr class="fazenda-table__head-row">
+          <th hlmTh>{{ tipoAtivo() === 'VEICULO' ? 'Veículo' : 'Equipamento' }}</th>
           <th hlmTh>Data</th>
           <th hlmTh>Tipo</th>
           <th hlmTh>Descrição</th>
           <th hlmTh>Valor</th>
           <th hlmTh>Pagamento</th>
-          <th hlmTh>Km</th>
           <th hlmTh>Vínculo</th>
         </tr>
       </thead>
       <tbody>
         @if (tipoAtivo() === 'VEICULO') {
-          @for (r of registrosVeiculo(); track r.id) {
-            <tr hlmTr class="fazenda-table__row">
-              <td hlmTd>{{ r.data | date: 'dd/MM/yyyy' }}</td>
-              <td hlmTd>{{ r.tipo }}</td>
-              <td hlmTd>{{ r.descricao || '-' }}</td>
-              <td hlmTd>{{ formatarValor(r.valor) }}</td>
-              <td hlmTd>{{ formatarPagamento(r.formaPagamento) }}{{ r.fornecedorNome ? ' - ' + r.fornecedorNome : '' }}</td>
-              <td hlmTd>{{ r.kmAtual ?? '-' }}</td>
-              <td hlmTd>{{ r.vinculoNome || '-' }}</td>
-            </tr>
-          } @empty {
-            <tr hlmTr>
-              <td hlmTd colspan="7" class="fazenda-table__empty">
-                @if (carregando()) { Carregando manutenções... } @else { Nenhuma manutenção registrada }
-              </td>
-            </tr>
-          }
+        @for (r of registrosVeiculo(); track r.id) {
+        <tr hlmTr class="fazenda-table__row">
+          <td hlmTd>{{ r.veiculoNome }}</td>
+          <td hlmTd>{{ r.data | date: 'dd/MM/yyyy' }}</td>
+          <td hlmTd>{{ r.tipo }}</td>
+          <td hlmTd>{{ r.descricao || '-' }}</td>
+          <td hlmTd>{{ formatarValor(r.valor) }}</td>
+          <td hlmTd>{{ formatarPagamento(r.formaPagamento) }}{{ r.fornecedorNome ? ' - ' + r.fornecedorNome : '' }}</td>
+          <td hlmTd>{{ r.vinculoNome || '-' }}</td>
+        </tr>
+        } @empty {
+        <tr hlmTr>
+          <td hlmTd colspan="7" class="fazenda-table__empty">
+            @if (carregando()) { Carregando manutenções... } @else { Nenhuma manutenção registrada }
+          </td>
+        </tr>
+        }
         } @else {
-          @for (r of registrosEquipamento(); track r.id) {
-            <tr hlmTr class="fazenda-table__row">
-              <td hlmTd>{{ r.data | date: 'dd/MM/yyyy' }}</td>
-              <td hlmTd>{{ r.tipo }}</td>
-              <td hlmTd>{{ r.descricao || '-' }}</td>
-              <td hlmTd>{{ formatarValor(r.valor) }}</td>
-              <td hlmTd>{{ formatarPagamento(r.formaPagamento) }}{{ r.fornecedorNome ? ' - ' + r.fornecedorNome : '' }}</td>
-              <td hlmTd>-</td>
-              <td hlmTd>{{ r.vinculoNome || '-' }}</td>
-            </tr>
-          } @empty {
-            <tr hlmTr>
-              <td hlmTd colspan="7" class="fazenda-table__empty">
-                @if (carregando()) { Carregando manutenções... } @else { Nenhuma manutenção registrada }
-              </td>
-            </tr>
-          }
+        @for (r of registrosEquipamento(); track r.id) {
+        <tr hlmTr class="fazenda-table__row">
+          <td hlmTd>{{ r.equipamentoNome }}</td>
+          <td hlmTd>{{ r.data | date: 'dd/MM/yyyy' }}</td>
+          <td hlmTd>{{ r.tipo }}</td>
+          <td hlmTd>{{ r.descricao || '-' }}</td>
+          <td hlmTd>{{ formatarValor(r.valor) }}</td>
+          <td hlmTd>{{ formatarPagamento(r.formaPagamento) }}{{ r.fornecedorNome ? ' - ' + r.fornecedorNome : '' }}</td>
+          <td hlmTd>{{ r.vinculoNome || '-' }}</td>
+        </tr>
+        } @empty {
+        <tr hlmTr>
+          <td hlmTd colspan="7" class="fazenda-table__empty">
+            @if (carregando()) { Carregando manutenções... } @else { Nenhuma manutenção registrada }
+          </td>
+        </tr>
+        }
         }
       </tbody>
     </table>
 
     @if (totalPaginas() > 1) {
-      <nav hlmPagination class="fazenda-table__pagination">
-        <ul hlmPaginationContent>
-          <li hlmPaginationItem>
-            <button hlmPaginationPrevious (click)="irPara(paginaAtual() - 1)"></button>
-          </li>
-          @for (pagina of paginasVisiveis(); track pagina) {
-            <li hlmPaginationItem>
-              <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
-                {{ pagina + 1 }}
-              </button>
-            </li>
-          }
-          <li hlmPaginationItem>
-            <button hlmPaginationNext (click)="irPara(paginaAtual() + 1)"></button>
-          </li>
-        </ul>
-      </nav>
+    <nav hlmPagination class="fazenda-table__pagination">
+      <ul hlmPaginationContent>
+        <li hlmPaginationItem>
+          <button hlmPaginationPrevious (click)="irPara(paginaAtual() - 1)"></button>
+        </li>
+        @for (pagina of paginasVisiveis(); track pagina) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+            {{ pagina + 1 }}
+          </button>
+        </li>
+        }
+        <li hlmPaginationItem>
+          <button hlmPaginationNext (click)="irPara(paginaAtual() + 1)"></button>
+        </li>
+      </ul>
+    </nav>
     }
   </div>
 </div>
