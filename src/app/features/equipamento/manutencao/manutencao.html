@@ -1,10 +1,16 @@
 <div class="manutencao-page">
   <div class="manutencao-page__header">
     <h1 class="manutencao-page__titulo">Manutenção</h1>
-    <button hlmBtn class="manutencao-page__btn-novo" (click)="abrirNovaManutencao()">
-      <ng-icon hlm name="lucidePlus" size="16" />
-      Nova Manutenção
-    </button>
+    <div class="manutencao-page__btns-header">
+      <button hlmBtn variant="outline" class="manutencao-page__btn-parcelada" (click)="abrirManutencaoParcelada()">
+        <ng-icon hlm name="lucideCalendarClock" size="16" />
+        Manutenção Parcelada
+      </button>
+      <button hlmBtn class="manutencao-page__btn-novo" (click)="abrirNovaManutencao()">
+        <ng-icon hlm name="lucidePlus" size="16" />
+        Nova Manutenção
+      </button>
+    </div>
   </div>
 
   <div class="manutencao-page__filtros">
@@ -61,6 +67,7 @@
           <th hlmTh>Valor</th>
           <th hlmTh>Pagamento</th>
           <th hlmTh>Vínculo</th>
+          <th hlmTh class="text-right pr-3">Ações</th>
         </tr>
       </thead>
       <tbody>
@@ -70,14 +77,28 @@
           <td hlmTd>{{ r.veiculoNome }}</td>
           <td hlmTd>{{ r.data | date: 'dd/MM/yyyy' }}</td>
           <td hlmTd>{{ r.tipo }}</td>
-          <td hlmTd>{{ r.descricao || '-' }}</td>
+          <td hlmTd>
+            {{ r.descricao || '-' }}
+            @if (r.origem === 'PARCELA') {
+            <span class="manutencao-page__badge-parcela">Parcela {{ r.numeroParcela }}/{{ r.totalParcelas }}</span>
+            }
+          </td>
           <td hlmTd>{{ formatarValor(r.valor) }}</td>
           <td hlmTd>{{ formatarPagamento(r.formaPagamento) }}{{ r.fornecedorNome ? ' - ' + r.fornecedorNome : '' }}</td>
           <td hlmTd>{{ r.vinculoNome || '-' }}</td>
+          <td hlmTd class="text-right pr-3">
+            @if (r.origem !== 'PARCELA') {
+            <button hlmBtn variant="destructive" size="icon"
+              class="fazenda-table__action-btn fazenda-table__action-btn--excluir cursor-pointer" (click)="excluir(r)"
+              title="Excluir">
+              <ng-icon name="lucideTrash2" size="16" />
+            </button>
+            }
+          </td>
         </tr>
         } @empty {
         <tr hlmTr>
-          <td hlmTd colspan="7" class="fazenda-table__empty">
+          <td hlmTd colspan="8" class="fazenda-table__empty">
             @if (carregando()) { Carregando manutenções... } @else { Nenhuma manutenção registrada }
           </td>
         </tr>
@@ -88,14 +109,28 @@
           <td hlmTd>{{ r.equipamentoNome }}</td>
           <td hlmTd>{{ r.data | date: 'dd/MM/yyyy' }}</td>
           <td hlmTd>{{ r.tipo }}</td>
-          <td hlmTd>{{ r.descricao || '-' }}</td>
+          <td hlmTd>
+            {{ r.descricao || '-' }}
+            @if (r.origem === 'PARCELA') {
+            <span class="manutencao-page__badge-parcela">Parcela {{ r.numeroParcela }}/{{ r.totalParcelas }}</span>
+            }
+          </td>
           <td hlmTd>{{ formatarValor(r.valor) }}</td>
           <td hlmTd>{{ formatarPagamento(r.formaPagamento) }}{{ r.fornecedorNome ? ' - ' + r.fornecedorNome : '' }}</td>
           <td hlmTd>{{ r.vinculoNome || '-' }}</td>
+          <td hlmTd class="text-right pr-3">
+            @if (r.origem !== 'PARCELA') {
+            <button hlmBtn variant="destructive" size="icon"
+              class="fazenda-table__action-btn fazenda-table__action-btn--excluir cursor-pointer" (click)="excluir(r)"
+              title="Excluir">
+              <ng-icon name="lucideTrash2" size="16" />
+            </button>
+            }
+          </td>
         </tr>
         } @empty {
         <tr hlmTr>
-          <td hlmTd colspan="7" class="fazenda-table__empty">
+          <td hlmTd colspan="8" class="fazenda-table__empty">
             @if (carregando()) { Carregando manutenções... } @else { Nenhuma manutenção registrada }
           </td>
         </tr>

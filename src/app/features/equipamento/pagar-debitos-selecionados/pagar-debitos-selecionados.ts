@@ -13,6 +13,7 @@ import { ContaFornecedorService } from '../../../core/services/equipamento/conta
 import { ToastService } from '../../../core/services/toast-service';
 import { IFornecedorDebito } from '../../../shared/interfaces/IFornecedorDebito';
 import { Observable } from 'rxjs';
+import { ManutencaoParceladaService } from '../../../core/services/veiculos/manutencao-parcelada-service';
 
 interface PagarDebitosSelecionadosContext {
   fazendaId: number;
@@ -41,6 +42,7 @@ export class PagarDebitosSelecionados {
   private manutencaoEquipamentoService = inject(ManutencaoEquipamentoService);
   private contaFornecedorService = inject(ContaFornecedorService);
   private toastService = inject(ToastService);
+  private manutencaoParceladaService = inject(ManutencaoParceladaService);
 
   salvando = signal(false);
   maxDate = new Date();
@@ -90,12 +92,14 @@ export class PagarDebitosSelecionados {
     };
 
     debitos.forEach((debito) => {
-      const chamada: Observable<unknown> =
+           const chamada: Observable<unknown> =
         debito.origem === 'CONTA'
           ? this.contaFornecedorService.darBaixa(debito.id, data)
           : debito.origem === 'VEICULO'
           ? this.manutencaoService.darBaixa(debito.id, data)
-          : this.manutencaoEquipamentoService.darBaixa(debito.id, data);
+          : debito.origem === 'EQUIPAMENTO'
+          ? this.manutencaoEquipamentoService.darBaixa(debito.id, data)
+          : this.manutencaoParceladaService.darBaixa(debito.id, data);
 
       chamada.subscribe({
         next: () => {

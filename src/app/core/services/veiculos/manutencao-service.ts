@@ -66,4 +66,10 @@ export class ManutencaoService {
       catchError(e => this.util.errorHandler(e))
     );
   }
+
+  excluir(id: number): Observable<void> {
+    return this.http.delete<void>(this.API_URL + '/' + id).pipe(
+      catchError((e) => this.util.errorHandler(e))
+    );
+  }
 }

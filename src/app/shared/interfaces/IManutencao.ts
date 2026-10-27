@@ -17,6 +17,9 @@ export interface IManutencao {
   vinculoNome?: string;
   statusPagamento: StatusPagamentoManutencao;
   dataBaixa?: string;
+  origem?: 'SIMPLES' | 'PARCELA';
+  numeroParcela?: number;
+  totalParcelas?: number;
 }
 
 export interface IManutencaoResumo {

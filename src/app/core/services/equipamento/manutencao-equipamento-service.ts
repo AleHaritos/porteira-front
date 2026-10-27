@@ -40,6 +40,12 @@ export class ManutencaoEquipamentoService {
     );
   }
 
+  excluir(id: number): Observable<void> {
+    return this.http.delete<void>(this.API_URL + '/' + id).pipe(
+      catchError((e) => this.util.errorHandler(e))
+    );
+  }
+
   listarPendentesPorFornecedor(fornecedorId: number): Observable<IManutencaoEquipamento[]> {
     return this.http.get<IManutencaoEquipamento[]>(this.API_URL + '/fornecedor/' + fornecedorId + '/pendentes').pipe(
       catchError(e => this.util.errorHandler(e))

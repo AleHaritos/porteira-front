@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideArrowLeft, lucideHandshake, lucideTruck, lucideWrench, lucideReceipt, lucidePlus, lucideHandCoins } from '@ng-icons/lucide';
+import { lucideArrowLeft, lucideHandshake, lucideTruck, lucideWrench, lucideReceipt, lucidePlus, lucideHandCoins, lucideCalendarClock } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
@@ -26,7 +26,7 @@ const TAMANHO_PAGINA = 10;
 @Component({
   selector: 'app-fornecedor-detalhe',
   imports: [CommonModule, ReactiveFormsModule, HlmTableImports, HlmPaginationImports, HlmButtonImports, HlmDatePickerImports, NgIcon],
-  providers: [provideIcons({ lucideArrowLeft, lucideHandshake, lucideTruck, lucideWrench, lucideReceipt, lucidePlus, lucideHandCoins })],
+  providers: [provideIcons({ lucideArrowLeft, lucideHandshake, lucideTruck, lucideWrench, lucideReceipt, lucidePlus, lucideHandCoins, lucideCalendarClock })],
   styleUrl: './fornecedor-detalhe.css',
   templateUrl: './fornecedor-detalhe.html',
 })
