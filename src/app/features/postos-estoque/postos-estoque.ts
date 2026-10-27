@@ -1,25 +1,32 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucidePlus, lucideHandCoins, lucideFuel, lucideChevronRight } from '@ng-icons/lucide';
+import { lucidePlus, lucideHandCoins, lucideFuel, lucideChevronRight, lucideHistory, lucideTrash2 } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
+import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import { ToastService } from '../../core/services/toast-service';
 import { EstoqueCombustivelService } from '../../core/services/veiculos/estoque-combustivel-service';
 import { PostoService } from '../../core/services/veiculos/posto-service';
 import { TipoCombustivel } from '../../shared/interfaces/IAbastecimento';
-import { IEstoqueCombustivel } from '../../shared/interfaces/IEstoqueCombustivel';
+import { IEstoqueCombustivel, IReabastecimentoHistorico } from '../../shared/interfaces/IEstoqueCombustivel';
 import { IPosto } from '../../shared/interfaces/IPosto';
 import { ReabastecerEstoque } from './reabastecer-estoque/reabastecer-estoque';
 import { NovoPosto } from './novo-posto/novo-posto';
+import { ConfirmDialog } from '../../shared/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-postos-estoque',
-  imports: [CommonModule, HlmTableImports, HlmPaginationImports, HlmButtonImports, NgIcon],
-  providers: [provideIcons({ lucidePlus, lucideHandCoins, lucideFuel, lucideChevronRight })],
+  imports: [
+    CommonModule, ReactiveFormsModule, HlmTableImports, HlmPaginationImports,
+    HlmButtonImports, HlmLabelImports, HlmDatePickerImports, NgIcon,
+  ],
+  providers: [provideIcons({ lucidePlus, lucideHandCoins, lucideFuel, lucideChevronRight, lucideHistory, lucideTrash2 })],
   styleUrl: './postos-estoque.css',
   templateUrl: './postos-estoque.html',
 })
@@ -40,6 +47,15 @@ export class PostosEstoque implements OnInit {
 
   estoques = signal<IEstoqueCombustivel[]>([]);
   carregandoEstoques = signal(false);
+
+  maxDate = new Date();
+  dataInicioControl = new FormControl<Date | null>(null);
+  dataFimControl = new FormControl<Date | null>(null);
+
+  historicoDiesel = signal<IReabastecimentoHistorico[]>([]);
+  historicoGasolina = signal<IReabastecimentoHistorico[]>([]);
+  historicoEtanol = signal<IReabastecimentoHistorico[]>([]);
+  carregandoHistorico = signal(false);
 
   tipoCombustivelLabels: Record<TipoCombustivel, string> = {
     DIESEL: 'Diesel',
@@ -63,7 +79,11 @@ export class PostosEstoque implements OnInit {
       this.fazendaId.set(id ? Number(id) : null);
       this.carregarPostos();
       this.carregarEstoques();
+      this.carregarHistoricos();
     });
+
+    this.dataInicioControl.valueChanges.subscribe(() => this.carregarHistoricos());
+    this.dataFimControl.valueChanges.subscribe(() => this.carregarHistoricos());
   }
 
   carregarPostos() {
@@ -107,6 +127,71 @@ export class PostosEstoque implements OnInit {
     });
   }
 
+  private formatarDataIso(data: Date): string {
+    const ano = data.getFullYear();
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const dia = String(data.getDate()).padStart(2, '0');
+    return `${ano}-${mes}-${dia}`;
+  }
+
+  carregarHistoricos() {
+    const fazendaId = this.fazendaId();
+    if (fazendaId == null) return;
+
+    const dataInicio = this.dataInicioControl.value;
+    const dataFim = this.dataFimControl.value;
+    const dataInicioIso = dataInicio ? this.formatarDataIso(dataInicio) : undefined;
+    const dataFimIso = dataFim ? this.formatarDataIso(dataFim) : undefined;
+
+    const alvos: { tipo: TipoCombustivel; destino: WritableSignal<IReabastecimentoHistorico[]> }[] = [
+      { tipo: 'DIESEL', destino: this.historicoDiesel },
+      { tipo: 'GASOLINA', destino: this.historicoGasolina },
+      { tipo: 'ETANOL', destino: this.historicoEtanol },
+    ];
+
+    this.carregandoHistorico.set(true);
+    let pendentes = alvos.length;
+
+    alvos.forEach(({ tipo, destino }) => {
+      this.estoqueCombustivelService.listarHistorico(fazendaId, tipo, dataInicioIso, dataFimIso).subscribe({
+        next: (historico) => {
+          destino.set(historico);
+          pendentes--;
+          if (pendentes === 0) this.carregandoHistorico.set(false);
+        },
+        error: () => {
+          pendentes--;
+          if (pendentes === 0) this.carregandoHistorico.set(false);
+          //this.toastService.showError('Erro', `Não foi possível carregar o histórico de ${this.tipoCombustivelLabel(tipo)}`);
+        },
+      });
+    });
+  }
+
+  excluirPosto(posto: IPosto) {
+  const dialogRef = this.dialogService.open(ConfirmDialog, {
+    context: {
+      titulo: 'Excluir posto',
+      mensagem: `Deseja excluir o posto "${posto.nome}"? Essa ação não pode ser desfeita.`,
+      textoConfirmar: 'Excluir',
+    },
+    contentClass: 'sm:!max-w-[500px]',
+  });
+
+  dialogRef.closed$.subscribe((confirmado) => {
+    if (!confirmado) return;
+    this.postoService.excluir(posto.id).subscribe({
+      next: () => {
+        this.toastService.showSuccess('Sucesso', 'Posto excluído com sucesso!');
+        this.carregarPostos();
+      },
+      error: () => {
+        this.toastService.showError('Erro', 'Não foi possível excluir o posto');
+      },
+    });
+  });
+}
+
   abrirNovoPosto() {
     const fazendaId = this.fazendaId();
     if (fazendaId == null) return;
@@ -137,7 +222,10 @@ export class PostosEstoque implements OnInit {
     });
 
     dialogRef.closed$.subscribe((reabastecido) => {
-      if (reabastecido) this.carregarEstoques();
+      if (reabastecido) {
+        this.carregarEstoques();
+        this.carregarHistoricos();
+      }
     });
   }
 

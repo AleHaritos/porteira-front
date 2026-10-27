@@ -166,3 +166,12 @@
 .abastecimento-page__toggle-btn--ativo:hover {
   background: #278a4c;
 }
+
+.btn-verde {
+  background: #2f9e58 !important;
+  color: white !important;
+}
+
+.btn-verde:hover {
+  background: #278a4c !important;
+}

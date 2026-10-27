@@ -19,12 +19,64 @@
         </span>
       </div>
     </div>
+
+      <div class="posto-detalhe__filtros">
+    <div class="posto-detalhe__toggle">
+      <button type="button" [class.ativo]="statusFiltro() === 'TODOS'" (click)="onStatusFiltroChange('TODOS')">
+        Todos
+      </button>
+      <button type="button" [class.ativo]="statusFiltro() === 'PENDENTE'" (click)="onStatusFiltroChange('PENDENTE')">
+        Pendente
+      </button>
+      <button type="button" [class.ativo]="statusFiltro() === 'BAIXADO'" (click)="onStatusFiltroChange('BAIXADO')">
+        Pago
+      </button>
+    </div>
+
+    <div class="posto-detalhe__filtro">
+      <label hlmLabel for="dataInicio">De</label>
+      <hlm-date-picker [formControl]="dataInicioControl" [maxDate]="maxDate" class="w-44">
+        <hlm-date-picker-trigger buttonId="dataInicio" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <div class="posto-detalhe__filtro">
+      <label hlmLabel for="dataFim">Até</label>
+      <hlm-date-picker [formControl]="dataFimControl" [maxDate]="maxDate" class="w-44">
+        <hlm-date-picker-trigger buttonId="dataFim" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <button hlmBtn variant="outline" type="button" class="cursor-pointer posto-detalhe__btn-limpar" (click)="limparFiltros()">
+      Limpar filtros
+    </button>
+  </div>
+  }
+
+  @if (qtdSelecionados() > 0) {
+    <div class="posto-detalhe__barra-selecao">
+      <span>{{ qtdSelecionados() }} selecionado(s) · {{ formatarValor(valorTotalSelecionado()) }}</span>
+      <div class="posto-detalhe__barra-selecao-acoes">
+        <button hlmBtn variant="outline" class="cursor-pointer" (click)="limparSelecao()">
+          Limpar
+        </button>
+        <button hlmBtn class="posto-detalhe__btn-pagar-selecionados cursor-pointer" [disabled]="pagando()" (click)="pagarSelecionados()">
+          {{ pagando() ? 'Pagando...' : 'Pagar selecionados' }}
+        </button>
+      </div>
+    </div>
   }
 
   <div class="fazenda-table">
     <table hlmTable>
       <thead>
         <tr hlmTr class="fazenda-table__head-row">
+          <th hlmTh class="posto-detalhe__checkbox-col">
+            @if (temPendentes()) {
+              <input type="checkbox" class="posto-detalhe__checkbox"
+                [checked]="todosPendentesSelecionados()" (change)="toggleSelecionarTodos()" />
+            }
+          </th>
           <th hlmTh>Data</th>
           <th hlmTh>Veículo</th>
           <th hlmTh>Combustível</th>
@@ -38,6 +90,12 @@
       <tbody>
         @for (abastecimento of abastecimentos(); track abastecimento.id) {
           <tr hlmTr class="fazenda-table__row">
+            <td hlmTd class="posto-detalhe__checkbox-col">
+              @if (abastecimento.statusPagamento === 'PENDENTE') {
+                <input type="checkbox" class="posto-detalhe__checkbox"
+                  [checked]="selecionados().has(abastecimento.id)" (change)="toggleSelecionado(abastecimento)" />
+              }
+            </td>
             <td hlmTd>{{ abastecimento.data | date: 'dd/MM/yyyy' }}</td>
             <td hlmTd>{{ abastecimento.veiculoNome }}</td>
             <td hlmTd>{{ tipoCombustivelLabel(abastecimento.tipoCombustivel) }}</td>
@@ -59,7 +117,7 @@
           </tr>
         } @empty {
           <tr hlmTr>
-            <td hlmTd colspan="8" class="fazenda-table__empty">
+            <td hlmTd colspan="9" class="fazenda-table__empty">
               @if (carregando()) {
                 Carregando abastecimentos...
               } @else {

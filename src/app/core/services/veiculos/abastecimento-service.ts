@@ -60,10 +60,19 @@ export class AbastecimentoService {
     return this.http.get<IAbastecimentoResumo>(url).pipe(catchError(this.utilService.errorHandler));
   }
 
-  buscarPorPosto(postoId: number, pagina: number, tamanho: number): Observable<PageResponse<IAbastecimento>> {
-    return this.http
-      .get<PageResponse<IAbastecimento>>(`${this.utilService.getUrlBase()}/abastecimento/posto/${postoId}?page=${pagina}&size=${tamanho}`)
-      .pipe(catchError(this.utilService.errorHandler));
+  buscarPorPosto(
+    postoId: number,
+    pagina: number,
+    tamanho: number,
+    statusPagamento?: string | null,
+    dataInicio?: string | null,
+    dataFim?: string | null,
+  ): Observable<PageResponse<IAbastecimento>> {
+    let url = `${this.utilService.getUrlBase()}/abastecimento/posto/${postoId}?page=${pagina}&size=${tamanho}`;
+    if (statusPagamento) url += `&statusPagamento=${statusPagamento}`;
+    if (dataInicio) url += `&dataInicio=${dataInicio}`;
+    if (dataFim) url += `&dataFim=${dataFim}`;
+    return this.http.get<PageResponse<IAbastecimento>>(url).pipe(catchError(this.utilService.errorHandler));
   }
 
   darBaixa(abastecimentoId: number, dataBaixa?: string | null): Observable<IAbastecimento> {

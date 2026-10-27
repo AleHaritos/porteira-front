@@ -246,7 +246,7 @@ export class Abastecimento implements OnInit {
 
     const dialogRef = this.dialogService.open(NovoAbastecimento, {
       context: { fazendaId, veiculoId: veiculo.id, veiculoNome: veiculo.nome },
-      contentClass: 'sm:!max-w-[640px]',
+      contentClass: 'sm:!max-w-[740px]',
     });
 
     dialogRef.closed$.subscribe((criado) => {

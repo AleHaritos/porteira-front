@@ -99,3 +99,59 @@
   padding: 1rem;
   border-top: 1px solid #eef4f0;
 }
+
+.postos-estoque-page__filtros {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 16px;
+}
+
+.postos-estoque-page__filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.postos-estoque-page__historico-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .postos-estoque-page__historico-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.postos-estoque-page__historico-titulo {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2f4d3a;
+  margin-bottom: 8px;
+}
+
+.postos-estoque-page__acoes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.postos-estoque-page__btn-excluir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.postos-estoque-page__btn-excluir:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
