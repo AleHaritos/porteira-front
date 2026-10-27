@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
-import { PostoRequest, IPosto, PostoPagamentoRequest } from '../../../shared/interfaces/IPosto';
+import { PostoRequest, IPosto } from '../../../shared/interfaces/IPosto';
 import { PageResponse } from '../../../shared/interfaces/IPage';
 import { UtilService } from '../util-service';
 
@@ -28,9 +28,9 @@ export class PostoService {
       .pipe(catchError(this.utilService.errorHandler));
   }
 
-  registrarPagamento(postoId: number, request: PostoPagamentoRequest): Observable<IPosto> {
+  excluir(postoId: number): Observable<void> {
     return this.http
-      .post<IPosto>(`${this.utilService.getUrlBase()}/posto/${postoId}/pagamento`, request)
+      .delete<void>(`${this.utilService.getUrlBase()}/posto/${postoId}`)
       .pipe(catchError(this.utilService.errorHandler));
   }
 }

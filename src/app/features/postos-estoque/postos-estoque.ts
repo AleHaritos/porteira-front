@@ -3,7 +3,7 @@ import { Component, computed, inject, OnInit, signal, WritableSignal } from '@an
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucidePlus, lucideHandCoins, lucideFuel, lucideChevronRight, lucideHistory } from '@ng-icons/lucide';
+import { lucidePlus, lucideHandCoins, lucideFuel, lucideChevronRight, lucideHistory, lucideTrash2 } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
@@ -18,6 +18,7 @@ import { IEstoqueCombustivel, IReabastecimentoHistorico } from '../../shared/int
 import { IPosto } from '../../shared/interfaces/IPosto';
 import { ReabastecerEstoque } from './reabastecer-estoque/reabastecer-estoque';
 import { NovoPosto } from './novo-posto/novo-posto';
+import { ConfirmDialog } from '../../shared/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-postos-estoque',
@@ -25,7 +26,7 @@ import { NovoPosto } from './novo-posto/novo-posto';
     CommonModule, ReactiveFormsModule, HlmTableImports, HlmPaginationImports,
     HlmButtonImports, HlmLabelImports, HlmDatePickerImports, NgIcon,
   ],
-  providers: [provideIcons({ lucidePlus, lucideHandCoins, lucideFuel, lucideChevronRight, lucideHistory })],
+  providers: [provideIcons({ lucidePlus, lucideHandCoins, lucideFuel, lucideChevronRight, lucideHistory, lucideTrash2 })],
   styleUrl: './postos-estoque.css',
   templateUrl: './postos-estoque.html',
 })
@@ -166,6 +167,30 @@ export class PostosEstoque implements OnInit {
       });
     });
   }
+
+  excluirPosto(posto: IPosto) {
+  const dialogRef = this.dialogService.open(ConfirmDialog, {
+    context: {
+      titulo: 'Excluir posto',
+      mensagem: `Deseja excluir o posto "${posto.nome}"? Essa ação não pode ser desfeita.`,
+      textoConfirmar: 'Excluir',
+    },
+    contentClass: 'sm:!max-w-[500px]',
+  });
+
+  dialogRef.closed$.subscribe((confirmado) => {
+    if (!confirmado) return;
+    this.postoService.excluir(posto.id).subscribe({
+      next: () => {
+        this.toastService.showSuccess('Sucesso', 'Posto excluído com sucesso!');
+        this.carregarPostos();
+      },
+      error: () => {
+        this.toastService.showError('Erro', 'Não foi possível excluir o posto');
+      },
+    });
+  });
+}
 
   abrirNovoPosto() {
     const fazendaId = this.fazendaId();

@@ -130,3 +130,28 @@
   color: #2f4d3a;
   margin-bottom: 8px;
 }
+
+.postos-estoque-page__acoes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.postos-estoque-page__btn-excluir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.postos-estoque-page__btn-excluir:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}

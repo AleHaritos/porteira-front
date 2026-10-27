@@ -133,3 +133,88 @@
   padding: 1rem;
   border-top: 1px solid #eef4f0;
 }
+
+.posto-detalhe__checkbox-col {
+  width: 40px;
+  text-align: center;
+}
+
+.posto-detalhe__checkbox {
+  accent-color: #2f9e58;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.posto-detalhe__barra-selecao {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f2f9f4;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: #2f4d3a;
+  font-weight: 600;
+}
+
+.posto-detalhe__barra-selecao-acoes {
+  display: flex;
+  gap: 8px;
+}
+
+.posto-detalhe__btn-pagar-selecionados {
+  background: #2f9e58 !important;
+  color: white !important;
+  cursor: pointer;
+}
+
+.posto-detalhe__btn-pagar-selecionados:hover {
+  background: #278a4c !important;
+}
+
+.posto-detalhe__filtros {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.posto-detalhe__toggle {
+  display: flex;
+  border: 1px solid #d8e6dc;
+  border-radius: 8px;
+  overflow: hidden;
+  height: fit-content;
+}
+
+.posto-detalhe__toggle button {
+  padding: 9px 16px;
+  background: #ffffff;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.posto-detalhe__toggle button:not(:last-child) {
+  border-right: 1px solid #d8e6dc;
+}
+
+.posto-detalhe__toggle button.ativo {
+  background: #2f9e58;
+  color: white;
+}
+
+.posto-detalhe__filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.posto-detalhe__btn-limpar {
+  height: fit-content;
+}

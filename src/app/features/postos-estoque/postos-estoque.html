@@ -22,47 +22,53 @@
         </thead>
         <tbody>
           @for (posto of postos(); track posto.id) {
-            <tr hlmTr class="fazenda-table__row postos-estoque-page__row-clicavel" (click)="abrirDetalhePosto(posto)">
-              <td hlmTd class="fazenda-table__nome">{{ posto.nome }}</td>
-              <td hlmTd [class.postos-estoque-page__saldo--positivo]="posto.saldoDevedor > 0">
-                {{ formatarValor(posto.saldoDevedor) }}
-              </td>
-              <td hlmTd class="fazenda-table__acoes-head">
+          <tr hlmTr class="fazenda-table__row postos-estoque-page__row-clicavel" (click)="abrirDetalhePosto(posto)">
+            <td hlmTd class="fazenda-table__nome">{{ posto.nome }}</td>
+            <td hlmTd [class.postos-estoque-page__saldo--positivo]="posto.saldoDevedor > 0">
+              {{ formatarValor(posto.saldoDevedor) }}
+            </td>
+            <td hlmTd class="fazenda-table__acoes-head">
+              <div class="postos-estoque-page__acoes">
+                <button type="button" class="postos-estoque-page__btn-excluir"
+                  (click)="$event.stopPropagation(); excluirPosto(posto)">
+                  <ng-icon name="lucideTrash2" size="16" />
+                </button>
                 <ng-icon name="lucideChevronRight" size="16" class="postos-estoque-page__chevron" />
-              </td>
-            </tr>
+              </div>
+            </td>
+          </tr>
           } @empty {
-            <tr hlmTr>
-              <td hlmTd colspan="3" class="fazenda-table__empty">
-                @if (carregandoPostos()) {
-                  Carregando postos...
-                } @else {
-                  Nenhum posto credenciado cadastrado ainda.
-                }
-              </td>
-            </tr>
+          <tr hlmTr>
+            <td hlmTd colspan="3" class="fazenda-table__empty">
+              @if (carregandoPostos()) {
+              Carregando postos...
+              } @else {
+              Nenhum posto credenciado cadastrado ainda.
+              }
+            </td>
+          </tr>
           }
         </tbody>
       </table>
 
       @if (totalPaginas() > 1) {
-        <nav hlmPagination class="fazenda-table__pagination">
-          <ul hlmPaginationContent>
-            <li hlmPaginationItem>
-              <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
-            </li>
-            @for (pagina of paginasVisiveis(); track pagina) {
-              <li hlmPaginationItem>
-                <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
-                  {{ pagina + 1 }}
-                </button>
-              </li>
-            }
-            <li hlmPaginationItem>
-              <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
-            </li>
-          </ul>
-        </nav>
+      <nav hlmPagination class="fazenda-table__pagination">
+        <ul hlmPaginationContent>
+          <li hlmPaginationItem>
+            <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+          </li>
+          @for (pagina of paginasVisiveis(); track pagina) {
+          <li hlmPaginationItem>
+            <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+              {{ pagina + 1 }}
+            </button>
+          </li>
+          }
+          <li hlmPaginationItem>
+            <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+          </li>
+        </ul>
+      </nav>
       }
     </div>
   </section>
@@ -90,28 +96,28 @@
         </thead>
         <tbody>
           @for (estoque of estoques(); track estoque.id) {
-            <tr hlmTr class="fazenda-table__row">
-              <td hlmTd class="fazenda-table__nome">{{ tipoCombustivelLabel(estoque.tipoCombustivel) }}</td>
-              <td hlmTd>{{ formatarLitros(estoque.quantidadeLitros) }} L</td>
-              <td hlmTd>{{ estoque.ultimoValorPorLitro != null ? formatarValor(estoque.ultimoValorPorLitro) : '-' }}</td>
-            </tr>
+          <tr hlmTr class="fazenda-table__row">
+            <td hlmTd class="fazenda-table__nome">{{ tipoCombustivelLabel(estoque.tipoCombustivel) }}</td>
+            <td hlmTd>{{ formatarLitros(estoque.quantidadeLitros) }} L</td>
+            <td hlmTd>{{ estoque.ultimoValorPorLitro != null ? formatarValor(estoque.ultimoValorPorLitro) : '-' }}</td>
+          </tr>
           } @empty {
-            <tr hlmTr>
-              <td hlmTd colspan="3" class="fazenda-table__empty">
-                @if (carregandoEstoques()) {
-                  Carregando estoque...
-                } @else {
-                  Nenhum estoque registrado ainda. Reabasteça pra começar a usar.
-                }
-              </td>
-            </tr>
+          <tr hlmTr>
+            <td hlmTd colspan="3" class="fazenda-table__empty">
+              @if (carregandoEstoques()) {
+              Carregando estoque...
+              } @else {
+              Nenhum estoque registrado ainda. Reabasteça pra começar a usar.
+              }
+            </td>
+          </tr>
           }
         </tbody>
       </table>
     </div>
   </section>
 
-    <section class="postos-estoque-page__secao">
+  <section class="postos-estoque-page__secao">
     <div class="postos-estoque-page__secao-header">
       <h2 class="postos-estoque-page__secao-titulo">
         <ng-icon name="lucideHistory" size="18" />
@@ -148,17 +154,17 @@
             </thead>
             <tbody>
               @for (item of historicoDiesel(); track item.id) {
-                <tr hlmTr class="fazenda-table__row">
-                  <td hlmTd>{{ item.data | date: 'dd/MM/yyyy' }}</td>
-                  <td hlmTd>{{ formatarLitros(item.litros) }} L</td>
-                  <td hlmTd>{{ formatarValor(item.valorPorLitro) }}</td>
-                </tr>
+              <tr hlmTr class="fazenda-table__row">
+                <td hlmTd>{{ item.data | date: 'dd/MM/yyyy' }}</td>
+                <td hlmTd>{{ formatarLitros(item.litros) }} L</td>
+                <td hlmTd>{{ formatarValor(item.valorPorLitro) }}</td>
+              </tr>
               } @empty {
-                <tr hlmTr>
-                  <td hlmTd colspan="3" class="fazenda-table__empty">
-                    @if (carregandoHistorico()) { Carregando... } @else { Nenhuma compra no período }
-                  </td>
-                </tr>
+              <tr hlmTr>
+                <td hlmTd colspan="3" class="fazenda-table__empty">
+                  @if (carregandoHistorico()) { Carregando... } @else { Nenhuma compra no período }
+                </td>
+              </tr>
               }
             </tbody>
           </table>
@@ -178,17 +184,17 @@
             </thead>
             <tbody>
               @for (item of historicoGasolina(); track item.id) {
-                <tr hlmTr class="fazenda-table__row">
-                  <td hlmTd>{{ item.data | date: 'dd/MM/yyyy' }}</td>
-                  <td hlmTd>{{ formatarLitros(item.litros) }} L</td>
-                  <td hlmTd>{{ formatarValor(item.valorPorLitro) }}</td>
-                </tr>
+              <tr hlmTr class="fazenda-table__row">
+                <td hlmTd>{{ item.data | date: 'dd/MM/yyyy' }}</td>
+                <td hlmTd>{{ formatarLitros(item.litros) }} L</td>
+                <td hlmTd>{{ formatarValor(item.valorPorLitro) }}</td>
+              </tr>
               } @empty {
-                <tr hlmTr>
-                  <td hlmTd colspan="3" class="fazenda-table__empty">
-                    @if (carregandoHistorico()) { Carregando... } @else { Nenhuma compra no período }
-                  </td>
-                </tr>
+              <tr hlmTr>
+                <td hlmTd colspan="3" class="fazenda-table__empty">
+                  @if (carregandoHistorico()) { Carregando... } @else { Nenhuma compra no período }
+                </td>
+              </tr>
               }
             </tbody>
           </table>
@@ -208,17 +214,17 @@
             </thead>
             <tbody>
               @for (item of historicoEtanol(); track item.id) {
-                <tr hlmTr class="fazenda-table__row">
-                  <td hlmTd>{{ item.data | date: 'dd/MM/yyyy' }}</td>
-                  <td hlmTd>{{ formatarLitros(item.litros) }} L</td>
-                  <td hlmTd>{{ formatarValor(item.valorPorLitro) }}</td>
-                </tr>
+              <tr hlmTr class="fazenda-table__row">
+                <td hlmTd>{{ item.data | date: 'dd/MM/yyyy' }}</td>
+                <td hlmTd>{{ formatarLitros(item.litros) }} L</td>
+                <td hlmTd>{{ formatarValor(item.valorPorLitro) }}</td>
+              </tr>
               } @empty {
-                <tr hlmTr>
-                  <td hlmTd colspan="3" class="fazenda-table__empty">
-                    @if (carregandoHistorico()) { Carregando... } @else { Nenhuma compra no período }
-                  </td>
-                </tr>
+              <tr hlmTr>
+                <td hlmTd colspan="3" class="fazenda-table__empty">
+                  @if (carregandoHistorico()) { Carregando... } @else { Nenhuma compra no período }
+                </td>
+              </tr>
               }
             </tbody>
           </table>
