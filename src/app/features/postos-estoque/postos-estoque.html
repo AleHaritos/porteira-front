@@ -110,4 +110,120 @@
       </table>
     </div>
   </section>
+
+    <section class="postos-estoque-page__secao">
+    <div class="postos-estoque-page__secao-header">
+      <h2 class="postos-estoque-page__secao-titulo">
+        <ng-icon name="lucideHistory" size="18" />
+        Histórico de Reabastecimento do Estoque
+      </h2>
+    </div>
+
+    <div class="postos-estoque-page__filtros">
+      <div class="postos-estoque-page__filtro">
+        <label hlmLabel for="dataInicio">De</label>
+        <hlm-date-picker [formControl]="dataInicioControl" [maxDate]="maxDate" class="w-44">
+          <hlm-date-picker-trigger buttonId="dataInicio" class="w-full">Selecionar data</hlm-date-picker-trigger>
+        </hlm-date-picker>
+      </div>
+      <div class="postos-estoque-page__filtro">
+        <label hlmLabel for="dataFim">Até</label>
+        <hlm-date-picker [formControl]="dataFimControl" [maxDate]="maxDate" class="w-44">
+          <hlm-date-picker-trigger buttonId="dataFim" class="w-full">Selecionar data</hlm-date-picker-trigger>
+        </hlm-date-picker>
+      </div>
+    </div>
+
+    <div class="postos-estoque-page__historico-grid">
+      <div class="postos-estoque-page__historico-coluna">
+        <h3 class="postos-estoque-page__historico-titulo">Diesel</h3>
+        <div class="fazenda-table">
+          <table hlmTable>
+            <thead>
+              <tr hlmTr class="fazenda-table__head-row">
+                <th hlmTh>Data</th>
+                <th hlmTh>Litros</th>
+                <th hlmTh>Valor/Litro</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of historicoDiesel(); track item.id) {
+                <tr hlmTr class="fazenda-table__row">
+                  <td hlmTd>{{ item.data | date: 'dd/MM/yyyy' }}</td>
+                  <td hlmTd>{{ formatarLitros(item.litros) }} L</td>
+                  <td hlmTd>{{ formatarValor(item.valorPorLitro) }}</td>
+                </tr>
+              } @empty {
+                <tr hlmTr>
+                  <td hlmTd colspan="3" class="fazenda-table__empty">
+                    @if (carregandoHistorico()) { Carregando... } @else { Nenhuma compra no período }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="postos-estoque-page__historico-coluna">
+        <h3 class="postos-estoque-page__historico-titulo">Gasolina</h3>
+        <div class="fazenda-table">
+          <table hlmTable>
+            <thead>
+              <tr hlmTr class="fazenda-table__head-row">
+                <th hlmTh>Data</th>
+                <th hlmTh>Litros</th>
+                <th hlmTh>Valor/Litro</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of historicoGasolina(); track item.id) {
+                <tr hlmTr class="fazenda-table__row">
+                  <td hlmTd>{{ item.data | date: 'dd/MM/yyyy' }}</td>
+                  <td hlmTd>{{ formatarLitros(item.litros) }} L</td>
+                  <td hlmTd>{{ formatarValor(item.valorPorLitro) }}</td>
+                </tr>
+              } @empty {
+                <tr hlmTr>
+                  <td hlmTd colspan="3" class="fazenda-table__empty">
+                    @if (carregandoHistorico()) { Carregando... } @else { Nenhuma compra no período }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="postos-estoque-page__historico-coluna">
+        <h3 class="postos-estoque-page__historico-titulo">Etanol</h3>
+        <div class="fazenda-table">
+          <table hlmTable>
+            <thead>
+              <tr hlmTr class="fazenda-table__head-row">
+                <th hlmTh>Data</th>
+                <th hlmTh>Litros</th>
+                <th hlmTh>Valor/Litro</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of historicoEtanol(); track item.id) {
+                <tr hlmTr class="fazenda-table__row">
+                  <td hlmTd>{{ item.data | date: 'dd/MM/yyyy' }}</td>
+                  <td hlmTd>{{ formatarLitros(item.litros) }} L</td>
+                  <td hlmTd>{{ formatarValor(item.valorPorLitro) }}</td>
+                </tr>
+              } @empty {
+                <tr hlmTr>
+                  <td hlmTd colspan="3" class="fazenda-table__empty">
+                    @if (carregandoHistorico()) { Carregando... } @else { Nenhuma compra no período }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>

@@ -17,3 +17,12 @@ export interface ReabastecimentoEstoqueRequest {
   safraId?: number;
   observacao?: string;
 }
+
+export interface IReabastecimentoHistorico {
+  id: number;
+  tipoCombustivel: TipoCombustivel;
+  data: string;
+  litros: number;
+  valorPorLitro: number;
+  observacao: string | null;
+}
