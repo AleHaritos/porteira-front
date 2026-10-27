@@ -3,7 +3,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucidePlus, lucideTruck, lucideWrench } from '@ng-icons/lucide';
+import { lucideCalendarClock, lucidePlus, lucideTrash2, lucideTruck, lucideWrench } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
@@ -21,6 +21,8 @@ import { IManutencao } from '../../../shared/interfaces/IManutencao';
 import { IManutencaoEquipamento } from '../../../shared/interfaces/IManutencaoEquipamento';
 import { IVeiculo } from '../../../shared/interfaces/IVeiculos';
 import { NovaManutencao } from '../nova-manutencao/nova-manutencao';
+import { ConfirmDialog } from '../../../shared/confirm-dialog/confirm-dialog';
+import { NovaManutencaoParcelada } from '../nova-manutencao-parcelada/nova-manutencao-parcelada';
 
 type TipoAtivo = 'VEICULO' | 'EQUIPAMENTO';
 
@@ -38,7 +40,7 @@ type TipoAtivo = 'VEICULO' | 'EQUIPAMENTO';
     HlmLabelImports,
     NgIcon,
   ],
-  providers: [provideIcons({ lucidePlus, lucideTruck, lucideWrench })],
+  providers: [provideIcons({ lucidePlus, lucideTruck, lucideWrench, lucideTrash2, lucideCalendarClock })],
   styleUrl: './manutencao.css',
   templateUrl: './manutencao.html',
 })
@@ -105,7 +107,7 @@ export class Manutencao implements OnInit {
     this.paginaAtual.set(0);
     this.carregar();
   }
-  
+
   carregarAtivos(): void {
     const fazendaId = this.fazendaId();
     if (fazendaId == null) return;
@@ -138,7 +140,7 @@ export class Manutencao implements OnInit {
     this.carregar();
   }
 
-    carregar(): void {
+  carregar(): void {
     const fazendaId = this.fazendaId();
     const dataInicio = this.dataInicioControl.value;
     const dataFim = this.dataFimControl.value;
@@ -195,6 +197,46 @@ export class Manutencao implements OnInit {
     });
     dialogRef.closed$.subscribe((criado) => {
       if (criado) this.carregar();
+    });
+  }
+
+  abrirManutencaoParcelada(): void {
+    const dialogRef = this.dialogService.open(NovaManutencaoParcelada, {
+      context: {
+        fazendaId: this.fazendaId(),
+        tipoAtivoInicial: this.tipoAtivo(),
+        ativoIdInicial: this.ativoSelecionadoId() || null,
+        veiculos: this.veiculos(),
+        equipamentos: this.equipamentos(),
+      },
+      contentClass: 'sm:!max-w-[850px], sm:!min-w-[650px]',
+    });
+    dialogRef.closed$.subscribe((criado) => {
+      if (criado) this.carregar();
+    });
+  }
+
+  excluir(registro: IManutencao | IManutencaoEquipamento): void {
+    const dialogRef = this.dialogService.open(ConfirmDialog, {
+      context: {
+        titulo: 'Excluir manutenção',
+        mensagem: `Tem certeza que deseja excluir esta manutenção${registro.descricao ? ' (' + registro.descricao + ')' : ''}? Essa ação não pode ser desfeita e vai estornar a transação ou o saldo devedor gerado.`,
+        textoConfirmar: 'Excluir',
+      },
+      contentClass: 'sm:!max-w-[500px]',
+    });
+
+    dialogRef.closed$.subscribe((confirmado) => {
+      if (confirmado) {
+        const servico = this.tipoAtivo() === 'VEICULO' ? this.manutencaoService : this.manutencaoEquipamentoService;
+        servico.excluir(registro.id).subscribe({
+          next: () => {
+            this.toastService.showSuccess('Sucesso', 'Manutenção excluída com sucesso');
+            this.carregar();
+          },
+          error: () => this.toastService.showError('Erro', 'Não foi possível excluir a manutenção'),
+        });
+      }
     });
   }
 

@@ -30,6 +30,17 @@
   background: #278a4c !important;
 }
 
+.manutencao-page__badge-parcela {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ede9fe;
+  color: #7c3aed;
+  font-size: 11px;
+  font-weight: 600;
+}
+
 .manutencao-page__filtros {
   display: flex;
   gap: 1.25rem;
@@ -117,4 +128,26 @@
   justify-content: center;
   padding: 1rem;
   border-top: 1px solid #eef4f0;
+}
+
+.manutencao-page__btns-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.manutencao-page__btn-parcelada {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid #d8e6dc !important;
+  color: #2f4d3a !important;
+  background: #ffffff !important;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.manutencao-page__btn-parcelada:hover {
+  background: #f2f9f4 !important;
+  border-color: #2f9e58 !important;
 }

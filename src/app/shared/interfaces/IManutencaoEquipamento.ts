@@ -14,6 +14,9 @@ export interface IManutencaoEquipamento {
   vinculoNome?: string;
   statusPagamento: StatusPagamentoManutencao;
   dataBaixa?: string;
+  origem?: 'SIMPLES' | 'PARCELA';
+  numeroParcela?: number;
+  totalParcelas?: number;
 }
 
 export interface ManutencaoEquipamentoRequest {

@@ -1,0 +1,168 @@
+<hlm-dialog-header>
+  <div class="nova-manutencao-parcelada__header-linha">
+    <div class="nova-manutencao-parcelada__icone">
+      <ng-icon name="lucideCalendarClock" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Manutenção Parcelada</h3>
+      <p class="nova-manutencao-parcelada__subtitulo">Registre uma manutenção no fiado dividida em parcelas</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="nova-manutencao-parcelada__form">
+  <div class="nova-manutencao-parcelada__toggle">
+    <button type="button" [class.ativo]="tipoAtivo() === 'VEICULO'" (click)="onTipoAtivoChange('VEICULO')">
+      <ng-icon name="lucideTruck" size="16" />
+      Veículo
+    </button>
+    <button type="button" [class.ativo]="tipoAtivo() === 'EQUIPAMENTO'" (click)="onTipoAtivoChange('EQUIPAMENTO')">
+      <ng-icon name="lucideWrench" size="16" />
+      Equipamento
+    </button>
+  </div>
+
+  <div class="nova-manutencao-parcelada__campo">
+    <label hlmLabel for="ativo">{{ tipoAtivo() === 'VEICULO' ? 'Veículo' : 'Equipamento' }}</label>
+    <hlm-select [value]="ativoId()" (valueChange)="onAtivoIdChange($event)" [itemToString]="itemToStringAtivo"
+      class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (item of (tipoAtivo() === 'VEICULO' ? context.veiculos : context.equipamentos); track item.id) {
+        <hlm-select-item [value]="item.id">{{ item.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+
+  <div class="nova-manutencao-parcelada__linha">
+    <div class="nova-manutencao-parcelada__campo">
+      <label hlmLabel for="tipo">Tipo de Manutenção</label>
+      <hlm-select [value]="tipoSelecionado()" (valueChange)="onTipoChange($event)" [itemToString]="itemToStringTipo"
+        class="w-full">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (opcao of tipoOptions; track opcao.value) {
+          <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+
+    @if (tipoAtivo() === 'VEICULO') {
+    <div class="nova-manutencao-parcelada__campo">
+      <label hlmLabel for="kmAtual">Km Atual</label>
+      <input hlmInput id="kmAtual" [value]="formatarKmDisplay(kmAtualRaw())"
+        (input)="onKmAtualInput($any($event.target).value)" placeholder="0" />
+    </div>
+    }
+  </div>
+
+  <div class="nova-manutencao-parcelada__campo">
+    <label hlmLabel for="descricao">Descrição</label>
+    <input hlmInput id="descricao" formControlName="descricao" placeholder="Ex: Revisão completa" />
+  </div>
+
+  <div class="nova-manutencao-parcelada__campo">
+    <label hlmLabel for="fornecedor">Fornecedor</label>
+    <hlm-select [value]="fornecedorId()" (valueChange)="onFornecedorIdChange($event)"
+      [itemToString]="itemToStringFornecedor" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (fornecedor of fornecedores(); track fornecedor.id) {
+        <hlm-select-item [value]="fornecedor.id">{{ fornecedor.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+
+  <div class="nova-manutencao-parcelada__linha">
+    <div class="nova-manutencao-parcelada__campo">
+      <label hlmLabel for="valorTotal">Valor Total</label>
+      <input hlmInput id="valorTotal" [value]="formatarMoedaDisplay(valorTotalRaw())"
+        (input)="onValorTotalInput($any($event.target).value)" placeholder="R$ 0,00" />
+    </div>
+
+    <div class="nova-manutencao-parcelada__campo">
+      <label hlmLabel for="numeroParcelas">Número de Parcelas</label>
+      <input hlmInput id="numeroParcelas" type="number" min="2" [value]="numeroParcelas()"
+        (input)="onNumeroParcelasInput($any($event.target).value)" />
+    </div>
+  </div>
+
+  @if (valorTotalRaw()) {
+  <p class="nova-manutencao-parcelada__resumo">
+    {{ numeroParcelas() }}x de {{ formatarMoedaDisplay(valorParcela()) }}
+  </p>
+  }
+
+  <div class="nova-manutencao-parcelada__campo">
+    <label hlmLabel for="primeiraDataVencimento">Vencimento da 1ª Parcela</label>
+    <hlm-date-picker formControlName="primeiraDataVencimento" class="w-full">
+      <hlm-date-picker-trigger buttonId="primeiraDataVencimento" class="w-full">Selecionar data</hlm-date-picker-trigger>
+    </hlm-date-picker>
+  </div>
+
+  <div class="nova-manutencao-parcelada__secao">
+    <label hlmLabel>Vínculo</label>
+    <div class="nova-manutencao-parcelada__toggle">
+      <button type="button" [class.ativo]="vinculo() === 'NEGOCIO'" (click)="onVinculoChange('NEGOCIO')">
+        Negócio
+      </button>
+      <button type="button" [class.ativo]="vinculo() === 'SAFRA'" (click)="onVinculoChange('SAFRA')">
+        Safra
+      </button>
+    </div>
+  </div>
+
+  @if (vinculo() === 'NEGOCIO') {
+  <div class="nova-manutencao-parcelada__campo">
+    <label hlmLabel for="negocio">Negócio</label>
+    <hlm-select [value]="negocioSelecionado()" (valueChange)="onNegocioChange($event)"
+      [itemToString]="itemToStringNegocio" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (negocio of negocios(); track negocio.id) {
+        <hlm-select-item [value]="negocio.id">{{ negocio.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  } @else {
+  <div class="nova-manutencao-parcelada__campo">
+    <label hlmLabel for="safra">Safra</label>
+    <hlm-select [value]="safraSelecionada()" (valueChange)="onSafraChange($event)" [itemToString]="itemToStringSafra"
+      class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (safra of safras(); track safra.id) {
+        <hlm-select-item [value]="safra.id">{{ safra.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  }
+
+  <div class="nova-manutencao-parcelada__campo mb-2">
+    <label hlmLabel for="observacao">Observação</label>
+    <textarea hlmTextarea id="observacao" formControlName="observacao" rows="3"></textarea>
+  </div>
+</form>
+
+<hlm-dialog-footer>
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn class="nova-manutencao-parcelada__btn-salvar cursor-pointer" type="button" [disabled]="salvando()"
+    (click)="salvar()">
+    {{ salvando() ? 'Salvando...' : 'Salvar' }}
+  </button>
+</hlm-dialog-footer>

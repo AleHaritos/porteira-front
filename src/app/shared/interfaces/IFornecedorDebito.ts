@@ -1,6 +1,6 @@
 export interface IFornecedorDebito {
   id: number;
-  origem: 'VEICULO' | 'EQUIPAMENTO' | 'CONTA';
+  origem: 'VEICULO' | 'EQUIPAMENTO' | 'CONTA' | 'MANUTENCAO_PARCELADA';
   nomeAtivo: string;
   tipo: string;
   descricao?: string;

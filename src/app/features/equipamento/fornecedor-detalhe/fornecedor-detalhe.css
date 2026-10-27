@@ -279,3 +279,8 @@
   gap: 10px;
   flex-wrap: wrap;
 }
+
+.fornecedor-detalhe__badge--parcelada {
+  background: #ede9fe;
+  color: #7c3aed;
+}

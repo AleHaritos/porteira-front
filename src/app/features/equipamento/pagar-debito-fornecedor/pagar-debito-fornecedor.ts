@@ -11,8 +11,9 @@ import { ManutencaoService } from '../../../core/services/veiculos/manutencao-se
 import { ManutencaoEquipamentoService } from '../../../core/services/equipamento/manutencao-equipamento-service';
 import { ContaFornecedorService } from '../../../core/services/equipamento/conta-fornecedor-service';
 import { ToastService } from '../../../core/services/toast-service';
+import { ManutencaoParceladaService } from '../../../core/services/veiculos/manutencao-parcelada-service';
 
-type OrigemDebito = 'VEICULO' | 'EQUIPAMENTO' | 'CONTA';
+type OrigemDebito = 'VEICULO' | 'EQUIPAMENTO' | 'CONTA' | 'MANUTENCAO_PARCELADA';
 
 interface PagarDebitoFornecedorContext {
   fazendaId: number;
@@ -44,6 +45,7 @@ export class PagarDebitoFornecedor {
   private manutencaoEquipamentoService = inject(ManutencaoEquipamentoService);
   private contaFornecedorService = inject(ContaFornecedorService);
   private toastService = inject(ToastService);
+  private manutencaoParceladaService = inject(ManutencaoParceladaService);
 
   salvando = signal(false);
   maxDate = new Date();
@@ -90,6 +92,9 @@ export class PagarDebitoFornecedor {
         break;
       case 'EQUIPAMENTO':
         this.manutencaoEquipamentoService.darBaixa(this.context.debitoId, data).subscribe({ next: onSuccess, error: onError });
+        break;
+      case 'MANUTENCAO_PARCELADA':
+        this.manutencaoParceladaService.darBaixa(this.context.debitoId, data).subscribe({ next: onSuccess, error: onError });
         break;
     }
   }

@@ -95,15 +95,19 @@
             <span class="fornecedor-detalhe__badge"
               [class.fornecedor-detalhe__badge--veiculo]="debito.origem === 'VEICULO'"
               [class.fornecedor-detalhe__badge--equipamento]="debito.origem === 'EQUIPAMENTO'"
-              [class.fornecedor-detalhe__badge--conta]="debito.origem === 'CONTA'">
+              [class.fornecedor-detalhe__badge--conta]="debito.origem === 'CONTA'"
+              [class.fornecedor-detalhe__badge--parcelada]="debito.origem === 'MANUTENCAO_PARCELADA'">
               @if (debito.origem === 'VEICULO') {
               <ng-icon name="lucideTruck" size="14" />
               } @else if (debito.origem === 'EQUIPAMENTO') {
               <ng-icon name="lucideWrench" size="14" />
+              } @else if (debito.origem === 'MANUTENCAO_PARCELADA') {
+              <ng-icon name="lucideCalendarClock" size="14" />
               } @else {
               <ng-icon name="lucideReceipt" size="14" />
               }
-              {{ debito.origem === 'VEICULO' ? 'Veículo' : debito.origem === 'EQUIPAMENTO' ? 'Equipamento' : 'Conta' }}
+              {{ debito.origem === 'VEICULO' ? 'Veículo' : debito.origem === 'EQUIPAMENTO' ? 'Equipamento' :
+              debito.origem === 'MANUTENCAO_PARCELADA' ? 'Parcelada' : 'Conta' }}
             </span>
           </td>
           <td hlmTd class="fazenda-table__nome">{{ debito.origem === 'CONTA' ? '-' : debito.nomeAtivo }}</td>
