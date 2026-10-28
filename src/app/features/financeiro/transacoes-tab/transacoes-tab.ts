@@ -18,11 +18,13 @@ import { ToastService } from '../../../core/services/toast-service';
 import { ITransacao, TipoTransacao } from '../../../shared/interfaces/ITransacao';
 import { INegocio } from '../../../shared/interfaces/INegocio';
 import { ISafra } from '../../../shared/interfaces/ISafras';
+import { IProjeto } from '../../../shared/interfaces/IProjeto';
 import { NovaTransacao } from '../nova-transacao/nova-transacao';
 import { ConfirmDialog } from '../../../shared/confirm-dialog/confirm-dialog';
 import { TruncarPipe } from '../../../shared/pipes/TruncarPipe';
+import { ProjetoService } from '../../../core/services/projeto/projeto-service';
 
-type VinculoFiltro = 'TODOS' | 'NEGOCIO' | 'SAFRA';
+type VinculoFiltro = 'TODOS' | 'NEGOCIO' | 'SAFRA' | 'PROJETO';
 
 @Component({
   selector: 'app-transacoes-tab',
@@ -52,6 +54,7 @@ export class TransacoesTab implements OnInit, OnChanges {
   private transacoesService = inject(TransacoesService);
   private negocioService = inject(NegocioService);
   private safraService = inject(SafraService);
+  private projetoService = inject(ProjetoService);
   private dialogService = inject(HlmDialogService);
   private toastService = inject(ToastService);
 
@@ -66,14 +69,19 @@ export class TransacoesTab implements OnInit, OnChanges {
   vinculoFiltro = signal<VinculoFiltro>('TODOS');
   negocios = signal<INegocio[]>([]);
   safras = signal<ISafra[]>([]);
+  projetos = signal<IProjeto[]>([]);
   negocioFiltroId = signal<number | null>(null);
   safraFiltroId = signal<number | null>(null);
+  projetoFiltroId = signal<number | null>(null);
 
   itemToStringNegocio = (value: number | null | undefined) =>
     this.negocios().find((n) => n.id === value)?.nome || '';
 
   itemToStringSafra = (value: number | null | undefined) =>
     this.safras().find((s) => s.id === value)?.nome || '';
+
+  itemToStringProjeto = (value: number | null | undefined) =>
+    this.projetos().find((p) => p.id === value)?.nome || '';
 
   filtroForm = this.fb.group({
     dataInicio: [null as Date | null],
@@ -132,6 +140,10 @@ export class TransacoesTab implements OnInit, OnChanges {
     this.safraService.buscarSafrasPorFazenda(this.fazendaId).subscribe({
       next: (safras) => this.safras.set(safras.content),
     });
+
+    this.projetoService.listarTodosPorFazenda(this.fazendaId).subscribe({
+      next: (projetos) => this.projetos.set(projetos),
+    });
   }
 
   onTipoFiltroChange(tipo: TipoTransacao | 'TODOS' | null | undefined) {
@@ -142,6 +154,7 @@ export class TransacoesTab implements OnInit, OnChanges {
     this.vinculoFiltro.set(vinculo);
     this.negocioFiltroId.set(null);
     this.safraFiltroId.set(null);
+    this.projetoFiltroId.set(null);
   }
 
   onNegocioFiltroChange(id: number | null | undefined) {
@@ -150,6 +163,10 @@ export class TransacoesTab implements OnInit, OnChanges {
 
   onSafraFiltroChange(id: number | null | undefined) {
     this.safraFiltroId.set(id ?? null);
+  }
+
+  onProjetoFiltroChange(id: number | null | undefined) {
+    this.projetoFiltroId.set(id ?? null);
   }
 
   pesquisar() {
@@ -163,6 +180,7 @@ export class TransacoesTab implements OnInit, OnChanges {
     this.vinculoFiltro.set('TODOS');
     this.negocioFiltroId.set(null);
     this.safraFiltroId.set(null);
+    this.projetoFiltroId.set(null);
     this.paginaAtual.set(0);
     this.carregar();
   }
@@ -182,6 +200,7 @@ export class TransacoesTab implements OnInit, OnChanges {
     const vinculo = this.vinculoFiltro();
     const negocioId = vinculo === 'NEGOCIO' ? this.negocioFiltroId() : null;
     const safraId = vinculo === 'SAFRA' ? this.safraFiltroId() : null;
+    const projetoId = vinculo === 'PROJETO' ? this.projetoFiltroId() : null;
 
     this.carregando.set(true);
     this.transacoesService
@@ -194,6 +213,7 @@ export class TransacoesTab implements OnInit, OnChanges {
         tipo === 'TODOS' ? null : tipo,
         negocioId,
         safraId,
+        projetoId,
       )
       .subscribe({
         next: (res) => {
@@ -283,7 +303,7 @@ export class TransacoesTab implements OnInit, OnChanges {
   }
 
   vinculo(transacao: ITransacao): string {
-    return transacao.negocioNome ?? transacao.safraNome ?? '-';
+    return transacao.negocioNome ?? transacao.safraNome ?? transacao.projetoNome ?? '-';
   }
 
   valorClasse(tipo: string): string {

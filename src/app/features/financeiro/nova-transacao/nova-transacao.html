@@ -13,6 +13,10 @@
 <form [formGroup]="form" class="flex flex-col gap-4 py-2">
   <div class="flex flex-col gap-1.5">
     <label hlmLabel for="tipo">Tipo</label>
+    @if (vinculoTipo() === 'PROJETO') {
+    <input hlmInput type="text" value="Gasto" disabled
+      class="w-full nova-transacao__input nova-transacao__input--travado" />
+    } @else {
     <hlm-select [value]="form.value.tipo" (valueChange)="onTipoChange($event)" [itemToString]="itemToStringTipo"
       class="nova-transacao__select">
       <hlm-select-trigger class="w-full">
@@ -24,6 +28,7 @@
         }
       </hlm-select-content>
     </hlm-select>
+    }
   </div>
 
   <div class="flex flex-col gap-1.5">
@@ -58,6 +63,11 @@
         (click)="selecionarVinculo('SAFRA')">
         Safra
       </button>
+      <button hlmBtn variant="outline" type="button"
+        [class.nova-transacao__vinculo-ativo]="vinculoTipo() === 'PROJETO'" class="cursor-pointer"
+        (click)="selecionarVinculo('PROJETO')">
+        Projeto
+      </button>
     </div>
   </div>
 
@@ -76,7 +86,7 @@
       </hlm-select-content>
     </hlm-select>
   </div>
-  } @else {
+  } @else if (vinculoTipo() === 'SAFRA') {
   <div class="flex flex-col gap-1.5">
     <label hlmLabel for="safraId">Safra</label>
     <hlm-select [value]="form.value.safraId" (valueChange)="onSafraChange($event)"
@@ -87,6 +97,21 @@
       <hlm-select-content *hlmSelectPortal>
         @for (safra of safras(); track safra.id) {
         <hlm-select-item [value]="safra.id">{{ safra.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  } @else {
+  <div class="flex flex-col gap-1.5">
+    <label hlmLabel for="projetoId">Projeto</label>
+    <hlm-select [value]="form.value.projetoId" (valueChange)="onProjetoChange($event)"
+      [itemToString]="itemToStringProjeto" class="nova-transacao__select">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Selecione um projeto" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (projeto of projetos(); track projeto.id) {
+        <hlm-select-item [value]="projeto.id">{{ projeto.nome }}</hlm-select-item>
         }
       </hlm-select-content>
     </hlm-select>
