@@ -4,12 +4,12 @@ import { HlmSidebarImports, HlmSidebarService } from '@spartan-ng/helm/sidebar';
 import { FazendaService } from '../../../core/services/fazenda-service';
 import { IFazenda } from '../../../shared/interfaces/IFazenda';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideArrowLeft, lucideBriefcase, lucideCar, lucideCog, lucideFuel, lucideGauge, lucideHandshake, lucidePanelLeft, lucidePawPrint, lucideWallet, lucideWheat, lucideWrench } from '@ng-icons/lucide';
+import { lucideArrowLeft, lucideBriefcase, lucideCar, lucideCog, lucideFuel, lucideGauge, lucideHammer, lucideHandshake, lucidePanelLeft, lucidePawPrint, lucideWallet, lucideWheat, lucideWrench } from '@ng-icons/lucide';
 import { Location } from '@angular/common';
 
 @Component({
   imports: [RouterOutlet, RouterLink, RouterLinkActive, HlmSidebarImports, NgIcon],
-  providers: [provideIcons({ lucideBriefcase, lucideWallet, lucidePanelLeft, lucideWheat, lucideArrowLeft, lucideCar, lucideFuel, lucideGauge, lucideWrench, lucideHandshake, lucideCog, lucidePawPrint  })],
+  providers: [provideIcons({ lucideBriefcase, lucideWallet, lucidePanelLeft, lucideWheat, lucideArrowLeft, lucideCar, lucideFuel, lucideGauge, lucideWrench, lucideHandshake, lucideCog, lucidePawPrint, lucideHammer  })],
   selector: 'app-fazenda-home',
   styleUrl: './fazenda-home.css',
   templateUrl: './fazenda-home.html',

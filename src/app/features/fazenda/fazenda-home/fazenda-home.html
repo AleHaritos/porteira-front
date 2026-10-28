@@ -80,6 +80,13 @@
               </a>
             </li>
             <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="projetos" routerLinkActive #rlaProjetos="routerLinkActive"
+                [isActive]="rlaProjetos.isActive">
+                <ng-icon name="lucideHammer" />
+                <span>Projetos</span>
+              </a>
+            </li>
+            <li hlmSidebarMenuItem>
               <a hlmSidebarMenuButton routerLink="animais" routerLinkActive #rlaAnimais="routerLinkActive"
                 [isActive]="rlaAnimais.isActive">
                 <ng-icon name="lucidePawPrint" />
