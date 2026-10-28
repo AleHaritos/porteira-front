@@ -13,10 +13,11 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import { ResumoEquipamento } from './resumo-equipamento/resumo-equipamento';
+import { TruncarPipe } from '../../shared/pipes/TruncarPipe';
 
 @Component({
   selector: 'app-equipamento',
-  imports: [CommonModule, DatePipe, HlmTableImports, HlmPaginationImports, HlmButtonImports, NgIcon],
+  imports: [CommonModule, DatePipe, HlmTableImports, HlmPaginationImports, HlmButtonImports, NgIcon, TruncarPipe],
   providers: [provideIcons({ lucidePlus, lucideSquarePen, lucideTrash2 })],
   styleUrl: './equipamento.css',
   templateUrl: './equipamento.html',
@@ -36,13 +37,24 @@ export class Equipamento implements OnInit {
   paginasVisiveis = computed(() => {
     const atual = this.paginaAtual();
     const total = this.totalPaginas();
-    const inicio = Math.max(0, atual - 1);
-    const fim = Math.min(total - 1, atual + 1);
+    const maxBotoes = 5;
+
+    if (total <= maxBotoes) {
+      return Array.from({ length: total }, (_, i) => i);
+    }
+
+    let inicio = Math.max(0, atual - Math.floor(maxBotoes / 2));
+    let fim = inicio + maxBotoes - 1;
+
+    if (fim > total - 1) {
+      fim = total - 1;
+      inicio = fim - maxBotoes + 1;
+    }
+
     const paginas: number[] = [];
     for (let i = inicio; i <= fim; i++) paginas.push(i);
     return paginas;
   });
-
   ngOnInit(): void {
     this.route.parent?.paramMap.subscribe((params) => {
       const id = params.get('id');
@@ -92,9 +104,13 @@ export class Equipamento implements OnInit {
     const fazendaId = this.fazendaId();
     if (fazendaId == null) return;
 
-    this.dialogService.open(ResumoEquipamento, {
+    const dialogRef = this.dialogService.open(ResumoEquipamento, {
       context: { equipamento, fazendaId },
       contentClass: 'sm:!max-w-[850px], sm:!min-w-[650px]',
+    });
+
+    dialogRef.closed$.subscribe(() => {
+      this.carregar();
     });
   }
 

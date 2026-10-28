@@ -8,7 +8,9 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDatePickerImports } from '@spartan-ng/helm/date-picker';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
+import { EquipamentoService } from '../../../core/services/equipamento/equipamento-service';
 import { ManutencaoEquipamentoService } from '../../../core/services/equipamento/manutencao-equipamento-service';
+import { ToastService } from '../../../core/services/toast-service';
 import { IEquipamento } from '../../../shared/interfaces/IEquipamento';
 import { IManutencaoEquipamento } from '../../../shared/interfaces/IManutencaoEquipamento';
 
@@ -31,12 +33,16 @@ export class ResumoEquipamento implements OnInit {
 
   private dialogRef = inject(BrnDialogRef);
   private manutencaoEquipamentoService = inject(ManutencaoEquipamentoService);
+  private equipamentoService = inject(EquipamentoService);
+  private toastService = inject(ToastService);
 
   maxDate = new Date();
   dataInicioControl = new FormControl<Date | null>(this.primeiroDiaDoMes());
   dataFimControl = new FormControl<Date | null>(new Date());
+  observacaoControl = new FormControl<string>('');
 
   carregando = signal(false);
+  salvandoObservacao = signal(false);
   manutencoes = signal<IManutencaoEquipamento[]>([]);
 
   totalValor = computed(() => this.manutencoes().reduce((soma, m) => soma + m.valor, 0));
@@ -49,6 +55,7 @@ export class ResumoEquipamento implements OnInit {
   }
 
   ngOnInit(): void {
+    this.observacaoControl.setValue(this.context.equipamento.observacao ?? '');
     this.carregar();
     this.dataInicioControl.valueChanges.subscribe(() => this.carregar());
     this.dataFimControl.valueChanges.subscribe(() => this.carregar());
@@ -71,6 +78,30 @@ export class ResumoEquipamento implements OnInit {
           this.carregando.set(false);
         },
         error: () => this.carregando.set(false),
+      });
+  }
+
+  salvarObservacao(): void {
+    const equipamento = this.context.equipamento;
+    this.salvandoObservacao.set(true);
+    this.equipamentoService
+      .atualizar(equipamento.id, {
+        nome: equipamento.nome,
+        dataCompra: equipamento.dataCompra,
+        valorCompra: equipamento.valorCompra,
+        observacao: this.observacaoControl.value ?? undefined,
+        fazendaId: this.context.fazendaId,
+      })
+      .subscribe({
+        next: (atualizado) => {
+          equipamento.observacao = atualizado.observacao;
+          this.salvandoObservacao.set(false);
+          this.toastService.showSuccess('Sucesso', 'Observação salva com sucesso!');
+        },
+        error: () => {
+          this.salvandoObservacao.set(false);
+          this.toastService.showError('Erro', 'Não foi possível salvar a observação');
+        },
       });
   }
 

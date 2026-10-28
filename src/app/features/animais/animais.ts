@@ -17,8 +17,9 @@ import { PiquetesTab } from './piquetes-tab/piquetes-tab';
 import { RacaoTab } from './racao-tab/racao-tab';
 import { OperacoesVendaTab } from './operacoes-venda-tab/operacoes-venda-tab';
 import { ResumoAnimaisTab } from './resumo-animais-tab/resumo-animais-tab';
+import { TodosAnimaisTab } from './todos-animais-tab/todos-animais-tab';
 
-type AbaAnimais = 'piquetes' | 'lotes' | 'racao' | 'vendas' | 'resumo';
+type AbaAnimais = 'piquetes' | 'todos' | 'lotes' | 'racao' | 'vendas' | 'resumo';
 
 @Component({
   selector: 'app-animais',
@@ -30,6 +31,7 @@ type AbaAnimais = 'piquetes' | 'lotes' | 'racao' | 'vendas' | 'resumo';
     TruncarPipe,
     NgIcon,
     PiquetesTab,
+    TodosAnimaisTab,
     RacaoTab,
     OperacoesVendaTab,
     ResumoAnimaisTab

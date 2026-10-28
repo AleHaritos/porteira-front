@@ -1,0 +1,74 @@
+.todos-animais-tab__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.todos-animais-tab__filtros {
+  display: flex;
+  gap: 12px;
+}
+
+.todos-animais-tab__btns-cadastro {
+  display: flex;
+  gap: 10px;
+}
+
+.todos-animais-tab__btn-novo {
+  background: #2f9e58 !important;
+  color: white !important;
+}
+
+.todos-animais-tab__btn-novo:hover {
+  background: #278a4c !important;
+}
+
+.fazenda-table {
+  background: #ffffff;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.fazenda-table__head-row th {
+  background: #f2f9f4;
+  color: #2f4d3a;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #d8e6dc;
+}
+
+.fazenda-table__row td {
+  border-bottom: 1px solid #eef4f0;
+}
+
+.fazenda-table__row:last-child td {
+  border-bottom: none;
+}
+
+.fazenda-table__row:hover {
+  background-color: #f7fbf8;
+}
+
+.fazenda-table__nome {
+  font-weight: 600;
+  color: #2f4d3a;
+}
+
+.fazenda-table__empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.fazenda-table__pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  border-top: 1px solid #eef4f0;
+}

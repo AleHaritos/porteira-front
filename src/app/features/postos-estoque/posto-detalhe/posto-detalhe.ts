@@ -59,8 +59,20 @@ export class PostoDetalhe implements OnInit {
   paginasVisiveis = computed(() => {
     const atual = this.paginaAtual();
     const total = this.totalPaginas();
-    const inicio = Math.max(0, atual - 1);
-    const fim = Math.min(total - 1, atual + 1);
+    const maxBotoes = 5;
+
+    if (total <= maxBotoes) {
+      return Array.from({ length: total }, (_, i) => i);
+    }
+
+    let inicio = Math.max(0, atual - Math.floor(maxBotoes / 2));
+    let fim = inicio + maxBotoes - 1;
+
+    if (fim > total - 1) {
+      fim = total - 1;
+      inicio = fim - maxBotoes + 1;
+    }
+
     const paginas: number[] = [];
     for (let i = inicio; i <= fim; i++) paginas.push(i);
     return paginas;

@@ -27,6 +27,18 @@
     </div>
   </div>
 
+  <div class="resumo-equipamento__observacoes">
+    <label hlmLabel for="observacao">Observações</label>
+    <textarea id="observacao" class="resumo-equipamento__observacoes-textarea" rows="3"
+      placeholder="Nenhuma observação registrada" [formControl]="observacaoControl"></textarea>
+    <div class="resumo-equipamento__observacoes-acoes">
+      <button hlmBtn size="sm" type="button" class="resumo-equipamento__btn-salvar-obs cursor-pointer"
+        [disabled]="salvandoObservacao()" (click)="salvarObservacao()">
+        {{ salvandoObservacao() ? 'Salvando...' : 'Salvar observação' }}
+      </button>
+    </div>
+  </div>
+
   <div class="resumo-equipamento__resumo">
     <div class="resumo-equipamento__resumo-item">
       <span>Quantidade</span>
@@ -49,7 +61,8 @@
       <p class="resumo-equipamento__item-desc">{{ item.descricao }}</p>
       }
       <div class="resumo-equipamento__item-custos">
-        <span>{{ formatarPagamento(item.formaPagamento) }}{{ item.fornecedorNome ? ' - ' + item.fornecedorNome : '' }}</span>
+        <span>{{ formatarPagamento(item.formaPagamento) }}{{ item.fornecedorNome ? ' - ' + item.fornecedorNome : ''
+          }}</span>
         @if (item.vinculoNome) {
         <span>{{ item.vinculoNome }}</span>
         }

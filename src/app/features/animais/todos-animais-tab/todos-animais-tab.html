@@ -1,0 +1,117 @@
+<div class="todos-animais-tab__header">
+  <div class="todos-animais-tab__filtros">
+    <hlm-select [value]="filtroPiqueteId()" (valueChange)="onFiltroPiqueteChange($event)"
+      [itemToString]="itemToStringPiquete" class="w-[200px]">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Todos os piquetes" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-item [value]="null">Todos os piquetes</hlm-select-item>
+        @for (piquete of piquetes(); track piquete.id) {
+        <hlm-select-item [value]="piquete.id">{{ piquete.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+
+    <hlm-select [value]="filtroLoteId()" (valueChange)="onFiltroLoteChange($event)" [itemToString]="itemToStringLote"
+      class="w-[200px]">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Todos os lotes" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-item [value]="null">Todos os lotes</hlm-select-item>
+        @for (lote of lotes(); track lote.id) {
+        <hlm-select-item [value]="lote.id">{{ lote.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+
+    <hlm-select [value]="filtroTipo()" (valueChange)="onFiltroTipoChange($event)" [itemToString]="itemToStringTipo"
+      class="w-[180px]">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Todos os tipos" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-item [value]="null">Todos os tipos</hlm-select-item>
+        @for (opcao of tipoOptions; track opcao.value) {
+        <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+
+  <div class="todos-animais-tab__btns-cadastro">
+    <button hlmBtn variant="outline" class="todos-animais-tab__btn-unico cursor-pointer" (click)="abrirCadastroUnico()">
+      <ng-icon name="lucidePlus" size="16" />
+      Cadastro Único
+    </button>
+    <button hlmBtn class="todos-animais-tab__btn-novo cursor-pointer" (click)="abrirCadastroLote()">
+      <ng-icon name="lucideListPlus" size="16" />
+      Cadastro em Lote
+    </button>
+  </div>
+</div>
+
+<div class="fazenda-table">
+  <div hlmTableContainer>
+    <table hlmTable>
+      <thead hlmTHead>
+        <tr hlmTr class="fazenda-table__head-row">
+          <th hlmTh>Tipo</th>
+          <th hlmTh>Brinco</th>
+          <th hlmTh>Sexo</th>
+          <th hlmTh>Raça</th>
+          <th hlmTh>Piquete</th>
+          <th hlmTh>Lote</th>
+          <th hlmTh>Peso (kg)</th>
+          <th hlmTh>Nascimento</th>
+        </tr>
+      </thead>
+
+      <tbody hlmTBody>
+        @for (animal of animais(); track animal.id) {
+        <tr hlmTr class="fazenda-table__row">
+          <td hlmTd>{{ tipoLabel(animal.tipo) }}</td>
+          <td hlmTd class="fazenda-table__nome">{{ animal.brinco || '-' }}</td>
+          <td hlmTd>{{ sexoLabel(animal.sexo) }}</td>
+          <td hlmTd>{{ animal.raca || '-' }}</td>
+          <td hlmTd>{{ animal.piqueteNome }}</td>
+          <td hlmTd>{{ animal.loteNome || '-' }}</td>
+          <td hlmTd>{{ animal.peso != null ? animal.peso + ' kg' : '-' }}</td>
+          <td hlmTd>{{ formatarData(animal.dataNascimento) }}</td>
+        </tr>
+        } @empty {
+        <tr hlmTr>
+          <td hlmTd [attr.colSpan]="8" class="fazenda-table__empty">
+            @if (carregando()) {
+            Carregando animais...
+            } @else {
+            Nenhum animal cadastrado
+            }
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (totalPaginas() > 1) {
+  <nav hlmPagination class="fazenda-table__pagination">
+    <ul hlmPaginationContent>
+      <li hlmPaginationItem>
+        <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+      </li>
+      @for (pagina of paginasVisiveis(); track pagina) {
+      <li hlmPaginationItem>
+        <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+          {{ pagina + 1 }}
+        </button>
+      </li>
+      }
+      <li hlmPaginationItem>
+        <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+      </li>
+    </ul>
+  </nav>
+  }
+</div>
