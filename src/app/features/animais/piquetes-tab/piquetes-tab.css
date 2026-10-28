@@ -93,3 +93,26 @@
 .animais-table__nome-clicavel:hover {
   text-decoration: underline;
 }
+
+.piquetes-tab__status {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.piquetes-tab__status--cria {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.piquetes-tab__status--recria {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.piquetes-tab__status--engorda {
+  background: #dcfce7;
+  color: #15803d;
+}

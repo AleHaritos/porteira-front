@@ -1,0 +1,135 @@
+<div class="todos-animais-tab__header">
+  <div class="todos-animais-tab__filtros">
+    <hlm-select [value]="filtroPiqueteId()" (valueChange)="onFiltroPiqueteChange($event)"
+      [itemToString]="itemToStringPiquete" class="w-[200px]">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Todos os piquetes" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-item [value]="null">Todos os piquetes</hlm-select-item>
+        @for (piquete of piquetes(); track piquete.id) {
+        <hlm-select-item [value]="piquete.id">{{ piquete.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+
+    <hlm-select [value]="filtroLoteId()" (valueChange)="onFiltroLoteChange($event)" [itemToString]="itemToStringLote"
+      class="w-[200px]">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Todos os lotes" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-item [value]="null">Todos os lotes</hlm-select-item>
+        @for (lote of lotes(); track lote.id) {
+        <hlm-select-item [value]="lote.id">{{ lote.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+
+    <hlm-select [value]="filtroTipo()" (valueChange)="onFiltroTipoChange($event)" [itemToString]="itemToStringTipo"
+      class="w-[180px]">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Todos os tipos" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-item [value]="null">Todos os tipos</hlm-select-item>
+        @for (opcao of tipoOptions; track opcao.value) {
+        <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+
+  <div class="todos-animais-tab__btns-cadastro">
+    <button hlmBtn variant="outline" class="todos-animais-tab__btn-unico cursor-pointer" (click)="abrirCadastroUnico()">
+      <ng-icon name="lucidePlus" size="16" />
+      Cadastro Único
+    </button>
+    <button hlmBtn class="todos-animais-tab__btn-novo cursor-pointer" (click)="abrirCadastroLote()">
+      <ng-icon name="lucideListPlus" size="16" />
+      Cadastro em Lote
+    </button>
+  </div>
+</div>
+
+<div class="fazenda-table">
+  <div class="animais-grid__head">
+    <div class="animais-grid__cell animais-grid__cell--icone"></div>
+    <div class="animais-grid__cell">Tipo</div>
+    <div class="animais-grid__cell">Brinco</div>
+    <div class="animais-grid__cell">Sexo</div>
+    <div class="animais-grid__cell">Raça</div>
+    <div class="animais-grid__cell">Piquete</div>
+    <div class="animais-grid__cell">Lote</div>
+    <div class="animais-grid__cell">Peso (kg)</div>
+    <div class="animais-grid__cell">Nascimento</div>
+  </div>
+
+  @for (animal of animais(); track animal.id) {
+  <div hlmCollapsible [expanded]="estaExpandido(animal.id)" (expandedChange)="onExpandedChange(animal.id, $event)"
+    class="animais-grid__item">
+    <button hlmCollapsibleTrigger type="button" class="animais-grid__row">
+      <span class="animais-grid__cell animais-grid__cell--icone">
+        <ng-icon name="lucideChevronRight" size="16" class="animais-grid__chevron"
+          [class.animais-grid__chevron--aberto]="estaExpandido(animal.id)" />
+      </span>
+      <span class="animais-grid__cell">{{ tipoLabel(animal.tipo) }}</span>
+      <span class="animais-grid__cell animais-grid__cell--destaque">{{ animal.brinco || '-' }}</span>
+      <span class="animais-grid__cell">{{ sexoLabel(animal.sexo) }}</span>
+      <span class="animais-grid__cell">{{ animal.raca || '-' }}</span>
+      <span class="animais-grid__cell">{{ animal.piqueteNome }}</span>
+      <span class="animais-grid__cell">{{ animal.loteNome || '-' }}</span>
+      <span class="animais-grid__cell">{{ animal.peso != null ? animal.peso + ' kg' : '-' }}</span>
+      <span class="animais-grid__cell">{{ formatarData(animal.dataNascimento) }}</span>
+    </button>
+
+    <div hlmCollapsibleContent class="animais-grid__detalhes"
+      [class.animais-grid__detalhes--aberto]="estaExpandido(animal.id)">
+      <div class="animais-grid__detalhe-item">
+        <span>Descrição</span>
+        <strong>{{ animal.descricao || '-' }}</strong>
+      </div>
+      <div class="animais-grid__detalhe-item">
+        <span>Idade</span>
+        <strong>{{ animal.idadeMeses != null ? animal.idadeMeses + ' meses' : '-' }}</strong>
+      </div>
+      <div class="animais-grid__detalhe-item">
+        <span>Data de Compra</span>
+        <strong>{{ formatarData(animal.dataCompra) }}</strong>
+      </div>
+      <div class="animais-grid__detalhe-item">
+        <span>Valor de Compra</span>
+        <strong>{{ animal.valorCompra != null ? formatarValor(animal.valorCompra) : '-' }}</strong>
+      </div>
+      <div class="animais-grid__detalhe-item">
+        <span>Status</span>
+        <strong>{{ animal.ativo ? 'Ativo' : 'Inativo' }}</strong>
+      </div>
+    </div>
+  </div>
+  } @empty {
+  <div class="animais-grid__vazio">
+    @if (carregando()) { Carregando animais... } @else { Nenhum animal cadastrado }
+  </div>
+  }
+
+  @if (totalPaginas() > 1) {
+  <nav hlmPagination class="fazenda-table__pagination">
+    <ul hlmPaginationContent>
+      <li hlmPaginationItem>
+        <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+      </li>
+      @for (pagina of paginasVisiveis(); track pagina) {
+      <li hlmPaginationItem>
+        <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+          {{ pagina + 1 }}
+        </button>
+      </li>
+      }
+      <li hlmPaginationItem>
+        <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+      </li>
+    </ul>
+  </nav>
+  }
+</div>

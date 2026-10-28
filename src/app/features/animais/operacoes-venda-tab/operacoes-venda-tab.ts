@@ -46,14 +46,27 @@ export class OperacoesVendaTab implements OnInit {
 
   paginaAtual = signal(0);
   totalPaginas = signal(0);
+  
   paginasVisiveis = computed(() => {
-    const total = this.totalPaginas();
     const atual = this.paginaAtual();
-    if (total <= 3) return Array.from({ length: total }, (_, i) => i);
-    let inicio = Math.max(0, atual - 1);
-    const fim = Math.min(total - 1, inicio + 2);
-    inicio = Math.max(0, fim - 2);
-    return Array.from({ length: fim - inicio + 1 }, (_, i) => inicio + i);
+    const total = this.totalPaginas();
+    const maxBotoes = 5;
+
+    if (total <= maxBotoes) {
+      return Array.from({ length: total }, (_, i) => i);
+    }
+
+    let inicio = Math.max(0, atual - Math.floor(maxBotoes / 2));
+    let fim = inicio + maxBotoes - 1;
+
+    if (fim > total - 1) {
+      fim = total - 1;
+      inicio = fim - maxBotoes + 1;
+    }
+
+    const paginas: number[] = [];
+    for (let i = inicio; i <= fim; i++) paginas.push(i);
+    return paginas;
   });
 
   private primeiroDiaDoMes(): Date {

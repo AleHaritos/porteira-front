@@ -125,3 +125,46 @@
   padding: 1rem 0;
   margin: 0;
 }
+
+.resumo-equipamento__observacoes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.resumo-equipamento__observacoes-textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 64px;
+  padding: 8px 10px;
+  border: 1px solid #d8e6dc;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: #1f2937;
+}
+
+.resumo-equipamento__observacoes-textarea:focus {
+  outline: none;
+  border-color: #2f9e58;
+  box-shadow: 0 0 0 2px rgba(47, 158, 88, 0.15);
+}
+
+.resumo-equipamento__observacoes-acoes {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.resumo-equipamento__btn-salvar-obs {
+  background: #2f9e58 !important;
+  color: white !important;
+}
+
+.resumo-equipamento__btn-salvar-obs:hover {
+  background: #278a4c !important;
+}
+
+.resumo-equipamento__btn-salvar-obs:disabled {
+  opacity: 0.6;
+}

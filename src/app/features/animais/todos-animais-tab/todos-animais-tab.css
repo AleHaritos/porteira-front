@@ -1,0 +1,139 @@
+.todos-animais-tab__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.todos-animais-tab__filtros {
+  display: flex;
+  gap: 12px;
+}
+
+.todos-animais-tab__btns-cadastro {
+  display: flex;
+  gap: 10px;
+}
+
+.todos-animais-tab__btn-novo {
+  background: #2f9e58 !important;
+  color: white !important;
+}
+
+.todos-animais-tab__btn-novo:hover {
+  background: #278a4c !important;
+}
+
+.fazenda-table {
+  background: #ffffff;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.fazenda-table__pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  border-top: 1px solid #eef4f0;
+}
+
+.animais-grid__head {
+  display: grid;
+  grid-template-columns: 32px 1fr 1fr 1fr 1fr 1.4fr 1fr 1fr 1fr;
+  padding: 10px 20px;
+  background: #f2f9f4;
+  color: #2f4d3a;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #d8e6dc;
+}
+
+.animais-grid__item {
+  border-bottom: 1px solid #eef4f0;
+}
+
+.animais-grid__item:last-child {
+  border-bottom: none;
+}
+
+.animais-grid__row {
+  display: grid;
+  grid-template-columns: 32px 1fr 1fr 1fr 1fr 1.4fr 1fr 1fr 1fr;
+  align-items: center;
+  width: 100%;
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.animais-grid__row:hover {
+  background-color: #f7fbf8;
+}
+
+.animais-grid__cell {
+  font-size: 0.9rem;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.animais-grid__cell--destaque {
+  font-weight: 600;
+  color: #2f4d3a;
+}
+
+.animais-grid__cell--icone {
+  display: flex;
+  align-items: center;
+}
+
+.animais-grid__chevron {
+  color: #9ca3af;
+  transition: transform 0.15s ease;
+}
+
+.animais-grid__chevron--aberto {
+  transform: rotate(90deg);
+}
+
+.animais-grid__detalhes {
+  gap: 12px;
+  padding: 4px 20px 16px 60px;
+  background: #fafdfb;
+}
+
+.animais-grid__detalhes--aberto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+.animais-grid__detalhe-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.animais-grid__detalhe-item span {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.animais-grid__detalhe-item strong {
+  font-size: 0.9rem;
+  color: #1f2937;
+}
+
+.animais-grid__vazio {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}

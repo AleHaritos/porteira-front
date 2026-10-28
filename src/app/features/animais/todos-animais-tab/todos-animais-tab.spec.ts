@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PagarFornecedor } from './pagar-fornecedor';
+import { TodosAnimaisTab } from './todos-animais-tab';
 
-describe('PagarFornecedor', () => {
-  let component: PagarFornecedor;
-  let fixture: ComponentFixture<PagarFornecedor>;
+describe('TodosAnimaisTab', () => {
+  let component: TodosAnimaisTab;
+  let fixture: ComponentFixture<TodosAnimaisTab>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PagarFornecedor],
+      imports: [TodosAnimaisTab],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PagarFornecedor);
+    fixture = TestBed.createComponent(TodosAnimaisTab);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

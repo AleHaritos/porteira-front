@@ -23,6 +23,9 @@
       <button hlmTabsTrigger="piquetes" (click)="selecionarAba('piquetes')" class="cursor-pointer">
         Piquetes
       </button>
+      <button hlmTabsTrigger="todos" (click)="selecionarAba('todos')" class="cursor-pointer">
+        Animais
+      </button>
       <button hlmTabsTrigger="lotes" (click)="selecionarAba('lotes')" class="cursor-pointer">
         Lotes
       </button>
@@ -40,6 +43,12 @@
     <div hlmTabsContent="piquetes" class="animais-page__content">
       @if (abaAtiva() === 'piquetes' && fazendaId(); as fId) {
       <app-piquetes-tab [fazendaId]="fId" />
+      }
+    </div>
+
+    <div hlmTabsContent="todos" class="animais-page__content">
+      @if (abaAtiva() === 'todos' && fazendaId(); as fId) {
+      <app-todos-animais-tab [fazendaId]="fId" />
       }
     </div>
 

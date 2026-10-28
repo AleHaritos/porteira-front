@@ -9,7 +9,8 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { PiqueteService } from '../../../core/services/animais/piquete-service';
 import { ToastService } from '../../../core/services/toast-service';
-import { IPiquete } from '../../../shared/interfaces/IPiquete';
+import { IPiquete, StatusPiquete } from '../../../shared/interfaces/IPiquete';
+import { HlmSelectImports } from '@spartan-ng/helm/select';
 
 interface NovoPiqueteContext {
   fazendaId: number;
@@ -18,11 +19,12 @@ interface NovoPiqueteContext {
 
 @Component({
   selector: 'app-novo-piquete',
-  imports: [ReactiveFormsModule, HlmDialogImports, HlmButtonImports, HlmInputImports, HlmLabelImports, NgIcon],
+  imports: [ReactiveFormsModule, HlmDialogImports, HlmButtonImports, HlmInputImports, HlmLabelImports, HlmSelectImports, NgIcon],
   providers: [provideIcons({ lucideMapPin })],
   styleUrl: './novo-piquete.css',
   templateUrl: './novo-piquete.html',
 })
+
 export class NovoPiquete implements OnInit {
   private dialogRef = inject(BrnDialogRef);
   context = injectBrnDialogContext<NovoPiqueteContext>();
@@ -34,13 +36,23 @@ export class NovoPiquete implements OnInit {
   editando = !!this.context.piquete;
   areaRaw = signal<number | null>(null);
 
+  statusOptions: { valor: StatusPiquete; label: string }[] = [
+    { valor: 'CRIA', label: 'Cria' },
+    { valor: 'RECRIA', label: 'Recria' },
+    { valor: 'ENGORDA', label: 'Engorda' },
+  ];
+
+  statusItemToString = (value: StatusPiquete) =>
+    this.statusOptions.find((o) => o.valor === value)?.label ?? '';
+
   form = this.fb.group({
     nome: ['', Validators.required],
+    status: this.fb.control<StatusPiquete>('CRIA', { nonNullable: true, validators: Validators.required }),
   });
 
   ngOnInit(): void {
     if (this.context.piquete) {
-      this.form.patchValue({ nome: this.context.piquete.nome });
+      this.form.patchValue({ nome: this.context.piquete.nome, status: this.context.piquete.status });
       this.areaRaw.set(this.context.piquete.areaHectares);
     }
   }
@@ -65,6 +77,7 @@ export class NovoPiquete implements OnInit {
     const request = {
       nome: this.form.value.nome!,
       areaHectares: this.areaRaw()!,
+      status: this.form.value.status!,
       fazendaId: this.context.fazendaId,
     };
 
