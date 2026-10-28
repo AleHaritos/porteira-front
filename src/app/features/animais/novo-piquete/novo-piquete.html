@@ -18,13 +18,29 @@
 
   <div class="novo-piquete__campo">
     <label hlmLabel for="area">Área (ha)</label>
-    <input hlmInput id="area" [value]="areaRaw() ?? ''" (input)="onAreaInput($any($event.target).value)" placeholder="0" />
+    <input hlmInput id="area" [value]="areaRaw() ?? ''" (input)="onAreaInput($any($event.target).value)"
+      placeholder="0" />
+  </div>
+
+  <div class="novo-piquete__campo">
+    <label hlmLabel for="status">Status</label>
+    <hlm-select formControlName="status" [itemToString]="statusItemToString">
+      <hlm-select-trigger buttonId="status" class="w-full">
+        <hlm-select-value placeholder="Selecione o status" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (opcao of statusOptions; track opcao.valor) {
+        <hlm-select-item [value]="opcao.valor">{{ opcao.label }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
   </div>
 </form>
 
 <hlm-dialog-footer class="mt-2">
   <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
-  <button hlmBtn class="novo-piquete__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
+  <button hlmBtn class="novo-piquete__btn-salvar cursor-pointer" type="button" [disabled]="salvando()"
+    (click)="salvar()">
     {{ salvando() ? 'Salvando...' : 'Salvar' }}
   </button>
 </hlm-dialog-footer>

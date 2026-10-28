@@ -9,7 +9,7 @@ import { HlmTableImports } from '@spartan-ng/helm/table';
 import { PiqueteService } from '../../../core/services/animais/piquete-service';
 import { ToastService } from '../../../core/services/toast-service';
 import { ConfirmDialog } from '../../../shared/confirm-dialog/confirm-dialog';
-import { IPiquete } from '../../../shared/interfaces/IPiquete';
+import { IPiquete, StatusPiquete } from '../../../shared/interfaces/IPiquete';
 import { NovoPiquete } from '../novo-piquete/novo-piquete';
 
 @Component({
@@ -64,6 +64,22 @@ export class PiquetesTab implements OnInit {
     dialogRef.closed$.subscribe((salvo) => {
       if (salvo) this.carregar();
     });
+  }
+
+  statusLabel(status: StatusPiquete): string {
+    switch (status) {
+      case 'CRIA': return 'Cria';
+      case 'RECRIA': return 'Recria';
+      case 'ENGORDA': return 'Engorda';
+    }
+  }
+
+  statusClasse(status: StatusPiquete): string {
+    switch (status) {
+      case 'CRIA': return 'piquetes-tab__status--cria';
+      case 'RECRIA': return 'piquetes-tab__status--recria';
+      case 'ENGORDA': return 'piquetes-tab__status--engorda';
+    }
   }
 
   inativar(piquete: IPiquete, event: Event): void {

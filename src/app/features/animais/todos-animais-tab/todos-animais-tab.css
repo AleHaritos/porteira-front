@@ -34,7 +34,17 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
-.fazenda-table__head-row th {
+.fazenda-table__pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  border-top: 1px solid #eef4f0;
+}
+
+.animais-grid__head {
+  display: grid;
+  grid-template-columns: 32px 1fr 1fr 1fr 1fr 1.4fr 1fr 1fr 1fr;
+  padding: 10px 20px;
   background: #f2f9f4;
   color: #2f4d3a;
   font-weight: 600;
@@ -42,33 +52,88 @@
   border-bottom: 1px solid #d8e6dc;
 }
 
-.fazenda-table__row td {
+.animais-grid__item {
   border-bottom: 1px solid #eef4f0;
 }
 
-.fazenda-table__row:last-child td {
+.animais-grid__item:last-child {
   border-bottom: none;
 }
 
-.fazenda-table__row:hover {
+.animais-grid__row {
+  display: grid;
+  grid-template-columns: 32px 1fr 1fr 1fr 1fr 1.4fr 1fr 1fr 1fr;
+  align-items: center;
+  width: 100%;
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.animais-grid__row:hover {
   background-color: #f7fbf8;
 }
 
-.fazenda-table__nome {
+.animais-grid__cell {
+  font-size: 0.9rem;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.animais-grid__cell--destaque {
   font-weight: 600;
   color: #2f4d3a;
 }
 
-.fazenda-table__empty {
+.animais-grid__cell--icone {
+  display: flex;
+  align-items: center;
+}
+
+.animais-grid__chevron {
+  color: #9ca3af;
+  transition: transform 0.15s ease;
+}
+
+.animais-grid__chevron--aberto {
+  transform: rotate(90deg);
+}
+
+.animais-grid__detalhes {
+  gap: 12px;
+  padding: 4px 20px 16px 60px;
+  background: #fafdfb;
+}
+
+.animais-grid__detalhes--aberto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+.animais-grid__detalhe-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.animais-grid__detalhe-item span {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.animais-grid__detalhe-item strong {
+  font-size: 0.9rem;
+  color: #1f2937;
+}
+
+.animais-grid__vazio {
   text-align: center;
   padding: 2rem 1rem;
   color: #9ca3af;
   font-size: 0.9rem;
-}
-
-.fazenda-table__pagination {
-  display: flex;
-  justify-content: center;
-  padding: 1rem;
-  border-top: 1px solid #eef4f0;
 }

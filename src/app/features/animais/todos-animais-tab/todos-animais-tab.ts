@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideListPlus, lucidePlus } from '@ng-icons/lucide';
+import { lucideChevronRight, lucideListPlus, lucidePlus } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmCollapsibleImports } from '@spartan-ng/helm/collapsible';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
-import { HlmTableImports } from '@spartan-ng/helm/table';
 import { AnimalService } from '../../../core/services/animais/animal-service';
 import { LoteService } from '../../../core/services/animais/lote-service';
 import { PiqueteService } from '../../../core/services/animais/piquete-service';
@@ -19,8 +19,8 @@ import { CadastroUnicoAnimal } from '../cadastro-unico-animal/cadastro-unico-ani
 
 @Component({
   selector: 'app-todos-animais-tab',
-  imports: [CommonModule, HlmTableImports, HlmPaginationImports, HlmSelectImports, HlmButtonImports, NgIcon],
-  providers: [provideIcons({ lucidePlus, lucideListPlus })],
+  imports: [CommonModule, HlmPaginationImports, HlmSelectImports, HlmButtonImports, HlmCollapsibleImports, NgIcon],
+  providers: [provideIcons({ lucidePlus, lucideListPlus, lucideChevronRight })],
   styleUrl: './todos-animais-tab.css',
   templateUrl: './todos-animais-tab.html',
 })
@@ -39,6 +39,7 @@ export class TodosAnimaisTab implements OnInit {
   paginaAtual = signal(0);
   totalPaginas = signal(0);
   carregando = signal(false);
+  expandidos = signal<Set<number>>(new Set());
 
   filtroPiqueteId = signal<number | null>(null);
   filtroLoteId = signal<number | null>(null);
@@ -93,6 +94,7 @@ export class TodosAnimaisTab implements OnInit {
 
   carregar(): void {
     this.carregando.set(true);
+    this.expandidos.set(new Set());
     this.animalService
       .listarPorFazenda(this.fazendaId(), this.filtroPiqueteId(), this.filtroLoteId(), this.filtroTipo(), this.paginaAtual(), 10)
       .subscribe({
@@ -132,6 +134,17 @@ export class TodosAnimaisTab implements OnInit {
     this.carregar();
   }
 
+  estaExpandido(id: number): boolean {
+    return this.expandidos().has(id);
+  }
+
+  onExpandedChange(id: number, expandido: boolean): void {
+    const novo = new Set(this.expandidos());
+    if (expandido) novo.add(id);
+    else novo.delete(id);
+    this.expandidos.set(novo);
+  }
+
   tipoLabel(tipo: TipoAnimal): string {
     return this.tipoOptions.find((o) => o.value === tipo)?.label ?? tipo;
   }
@@ -146,6 +159,10 @@ export class TodosAnimaisTab implements OnInit {
     if (!data) return '-';
     const [ano, mes, dia] = data.split('-');
     return `${dia}/${mes}/${ano}`;
+  }
+
+  formatarValor(valor: number): string {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 
   abrirCadastroUnico(): void {

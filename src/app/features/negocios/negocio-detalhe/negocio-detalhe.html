@@ -18,6 +18,12 @@
       <ng-icon name="lucideSearch" size="16" />
       Pesquisar
     </button>
+
+    <button hlmBtn variant="outline" type="button" class="negocio-detalhe-page__btn-exportar cursor-pointer"
+      [disabled]="exportandoPdf()" (click)="exportarPdf()">
+      <ng-icon name="lucideFileDown" size="16" />
+      {{ exportandoPdf() ? 'Gerando...' : 'Exportar PDF' }}
+    </button>
   </div>
 
   <div class="negocio-detalhe-resumo">
@@ -84,8 +90,8 @@
             {{ barra.valorFormatado }}
           </text>
 
-          <rect [attr.x]="barra.x" [attr.y]="barra.y" [attr.width]="barra.width" [attr.height]="barra.height"
-            rx="10" [attr.fill]="barra.cor" class="negocio-detalhe-grafico__barra" />
+          <rect [attr.x]="barra.x" [attr.y]="barra.y" [attr.width]="barra.width" [attr.height]="barra.height" rx="10"
+            [attr.fill]="barra.cor" class="negocio-detalhe-grafico__barra" />
 
           <text [attr.x]="barra.x + barra.width / 2" [attr.y]="baselineGrafico + 22" text-anchor="middle"
             class="negocio-detalhe-grafico__rotulo">
@@ -96,5 +102,78 @@
       </svg>
       }
     </div>
+  </div>
+
+  <div class="fazenda-table">
+    <div class="negocio-detalhe-transacoes__header">
+      <h3 class="negocio-detalhe-transacoes__titulo">Transações</h3>
+    </div>
+
+    <div hlmTableContainer>
+      <table hlmTable>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh>Data</th>
+            <th hlmTh class="pl-9">Tipo</th>
+            <th hlmTh>Descrição</th>
+            <th hlmTh class="pl-7">Valor</th>
+          </tr>
+        </thead>
+
+        <tbody hlmTBody>
+          @for (transacao of transacoes(); track transacao.id) {
+          <tr hlmTr class="fazenda-table__row">
+            <td hlmTd>{{ transacao.data | date: 'dd/MM/yyyy' }}</td>
+            <td hlmTd>
+              <span class="fazenda-table__badge" [ngClass]="tipoClasse(transacao.tipo)">
+                <ng-icon [name]="transacao.tipo === 'RECEITA' ? 'lucideTrendingUp' : 'lucideTrendingDown'" size="12" />
+                {{ tipoLabel(transacao.tipo) }}
+              </span>
+            </td>
+            <td hlmTd [title]="transacao.descricao || ''">
+              {{ (transacao.descricao | truncar: 40) || '-' }}
+            </td>
+            <td hlmTd>
+              <span class="financeiro-table__valor" [ngClass]="valorClasse(transacao.tipo)">
+                {{ formatarValor(transacao.valor) }}
+              </span>
+            </td>
+          </tr>
+          } @empty {
+          <tr hlmTr>
+            <td hlmTd [attr.colSpan]="4" class="fazenda-table__empty">
+              @if (carregandoTransacoes()) {
+              Carregando transações...
+              } @else {
+              Nenhuma transação encontrada no período
+              }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPaginas() > 1) {
+    <nav hlmPagination class="fazenda-table__pagination">
+      <ul hlmPaginationContent>
+        <li hlmPaginationItem>
+          <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+        </li>
+
+        @for (pagina of paginasVisiveis(); track pagina) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+            {{ pagina + 1 }}
+          </button>
+        </li>
+        }
+
+        <li hlmPaginationItem>
+          <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+        </li>
+      </ul>
+    </nav>
+    }
   </div>
 </div>
