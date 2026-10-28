@@ -102,6 +102,11 @@ export const routes: Routes = [
               import('./features/projeto/projeto').then((m) => m.Projeto),
           },
           {
+            path: 'projetos/:projetoId',
+            loadComponent: () =>
+              import('./features/projeto/projeto-detalhe/projeto-detalhe').then((m) => m.ProjetoDetalhe),
+          },
+          {
             path: 'safra',
             loadComponent: () =>
               import('./features/safra/safra').then((m) => m.Safra),

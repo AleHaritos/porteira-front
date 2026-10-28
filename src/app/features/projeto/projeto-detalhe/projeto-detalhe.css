@@ -1,0 +1,169 @@
+.projeto-detalhe-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.projeto-detalhe-page__filtros {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background-color: #f3faf6;
+  border: 1px solid #d9f0e1;
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.projeto-detalhe-page__filtro-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 180px;
+}
+
+.projeto-detalhe-page__filtro-campo label {
+  color: #278a4c;
+  font-weight: 600;
+}
+
+.projeto-detalhe-page__date {
+  width: 100%;
+}
+
+.projeto-detalhe-page__btn-pesquisar {
+  background-color: #2f9e58;
+  color: #fff;
+}
+
+.projeto-detalhe-page__btn-pesquisar:hover {
+  background-color: #278a4c;
+}
+
+.projeto-detalhe-page__btn-exportar {
+  white-space: nowrap;
+  color: #278a4c;
+  border-color: #2f9e58;
+}
+
+.projeto-detalhe-page__btn-exportar:hover {
+  background-color: #e3f5e8;
+}
+
+.projeto-detalhe-resumo {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.1rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.projeto-detalhe-resumo__icone {
+  width: 42px;
+  height: 42px;
+  border-radius: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background-color: #fde8e8;
+  color: #c0392b;
+}
+
+.projeto-detalhe-resumo__label {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 0.15rem;
+}
+
+.projeto-detalhe-resumo__valor {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #c0392b;
+}
+
+.projeto-detalhe-transacoes__header {
+  display: flex;
+  align-items: center;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid #d9f0e1;
+}
+
+.projeto-detalhe-transacoes__titulo {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.fazenda-table {
+  background-color: #f3faf6;
+  border: 1px solid #d9f0e1;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.fazenda-table thead th {
+  background-color: #e8f5ec;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  color: #278a4c;
+  padding: 0.8rem 1rem;
+  border-bottom: 2px solid #2f9e58;
+  text-align: left;
+}
+
+.fazenda-table__row td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #e3f0e7;
+  color: #1f2937;
+  font-size: 0.9rem;
+  vertical-align: middle;
+  background-color: #fbfefc;
+}
+
+.fazenda-table__row:hover td {
+  background-color: #e8f5ec;
+}
+
+.fazenda-table__row:last-child td {
+  border-bottom: none;
+}
+
+.fazenda-table__empty {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  background-color: #fbfefc;
+}
+
+.financeiro-table__valor {
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.financeiro-table__valor--gasto {
+  color: #c0392b;
+}
+
+.fazenda-table__pagination {
+  padding: 0.85rem 1rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: center;
+}
+
+.fazenda-table__pagination ul {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+}
