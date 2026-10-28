@@ -48,7 +48,6 @@ export class FornecedorDetalhe implements OnInit {
   carregando = signal(false);
   filtroStatus = signal<StatusDebito>('PENDENTE');
 
-  maxDate = new Date();
   dataInicioControl = new FormControl<Date | null>(this.primeiroDiaDoMes());
   dataFimControl = new FormControl<Date | null>(new Date());
 

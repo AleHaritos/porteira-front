@@ -13,10 +13,3 @@ export interface FornecedorRequest {
   observacao?: string;
   fazendaId: number;
 }
-
-export interface FornecedorPagamentoRequest {
-  valor: number;
-  data: string;
-  negocioId?: number;
-  safraId?: number;
-}
