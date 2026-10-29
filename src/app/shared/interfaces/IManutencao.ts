@@ -38,6 +38,7 @@ export interface ManutencaoRequest {
   fazendaId: number;
   negocioId?: number;
   safraId?: number;
+  projetoId?: number;
   formaPagamento: FormaPagamentoManutencao;
   fornecedorId?: number;
 }

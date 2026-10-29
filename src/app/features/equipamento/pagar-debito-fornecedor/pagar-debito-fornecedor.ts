@@ -62,13 +62,20 @@ export class PagarDebitoFornecedor {
     this.dialogRef.close(false);
   }
 
+  private formatarDataIso(data: Date): string {
+    const ano = data.getFullYear();
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const dia = String(data.getDate()).padStart(2, '0');
+    return `${ano}-${mes}-${dia}`;
+  }
+
   salvar(): void {
     if (this.form.invalid) {
       this.toastService.showError('Erro', 'Informe a data do pagamento');
       return;
     }
 
-    const data = (this.form.value.data as Date).toISOString().split('T')[0];
+    const data = this.formatarDataIso(this.form.value.data as Date);
 
     this.salvando.set(true);
 

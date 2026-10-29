@@ -19,11 +19,13 @@ import { VeiculoService } from '../../core/services/veiculos/veiculo-service';
 import { IAbastecimento, IAbastecimentoResumo, LocalAbastecimento, TipoCombustivel } from '../../shared/interfaces/IAbastecimento';
 import { INegocio } from '../../shared/interfaces/INegocio';
 import { ISafra } from '../../shared/interfaces/ISafras';
+import { IProjeto } from '../../shared/interfaces/IProjeto';
 import { IVeiculo } from '../../shared/interfaces/IVeiculos';
 import { NovoAbastecimento } from './novo-abastecimento/novo-abastecimento';
+import { ProjetoService } from '../../core/services/projeto/projeto-service';
 
 const TODOS_VEICULOS = -1;
-type VinculoFiltro = 'TODOS' | 'NEGOCIO' | 'SAFRA';
+type VinculoFiltro = 'TODOS' | 'NEGOCIO' | 'SAFRA' | 'PROJETO';
 
 @Component({
   selector: 'app-abastecimento',
@@ -49,6 +51,7 @@ export class Abastecimento implements OnInit {
   private abastecimentoService = inject(AbastecimentoService);
   private negocioService = inject(NegocioService);
   private safraService = inject(SafraService);
+  private projetoService = inject(ProjetoService);
   private dialogService = inject(HlmDialogService);
   private toastService = inject(ToastService);
   private fb = inject(FormBuilder);
@@ -63,8 +66,10 @@ export class Abastecimento implements OnInit {
   vinculoFiltro = signal<VinculoFiltro>('TODOS');
   negocios = signal<INegocio[]>([]);
   safras = signal<ISafra[]>([]);
+  projetos = signal<IProjeto[]>([]);
   negocioSelecionadoId = signal<number | null>(null);
   safraSelecionadaId = signal<number | null>(null);
+  projetoSelecionadoId = signal<number | null>(null);
 
   abastecimentos = signal<IAbastecimento[]>([]);
   resumo = signal<IAbastecimentoResumo | null>(null);
@@ -110,6 +115,9 @@ export class Abastecimento implements OnInit {
   itemToStringSafra = (value: number | null | undefined) =>
     this.safras().find((s) => s.id === value)?.nome || '';
 
+  itemToStringProjeto = (value: number | null | undefined) =>
+    this.projetos().find((p) => p.id === value)?.nome || '';
+
   localLabels: Record<LocalAbastecimento, string> = {
     ESTOQUE_FAZENDA: 'Estoque da Fazenda',
     POSTO_CREDENCIADO: 'Posto Credenciado',
@@ -153,6 +161,10 @@ export class Abastecimento implements OnInit {
     this.safraService.buscarSafrasPorFazenda(fazendaId).subscribe({
       next: (safras) => this.safras.set(safras.content),
     });
+
+    this.projetoService.listarTodosPorFazenda(fazendaId).subscribe({
+      next: (projetos) => this.projetos.set(projetos),
+    });
   }
 
   onVeiculoChange(id: number | null | undefined) {
@@ -165,6 +177,7 @@ export class Abastecimento implements OnInit {
     this.vinculoFiltro.set(vinculo);
     this.negocioSelecionadoId.set(null);
     this.safraSelecionadaId.set(null);
+    this.projetoSelecionadoId.set(null);
     this.paginaAtual.set(0);
     this.carregar();
   }
@@ -181,6 +194,12 @@ export class Abastecimento implements OnInit {
     this.carregar();
   }
 
+  onProjetoChange(id: number | null | undefined) {
+    this.projetoSelecionadoId.set(id ?? null);
+    this.paginaAtual.set(0);
+    this.carregar();
+  }
+
   filtrar() {
     this.paginaAtual.set(0);
     this.carregar();
@@ -192,6 +211,7 @@ export class Abastecimento implements OnInit {
     this.vinculoFiltro.set('TODOS');
     this.negocioSelecionadoId.set(null);
     this.safraSelecionadaId.set(null);
+    this.projetoSelecionadoId.set(null);
     this.paginaAtual.set(0);
     this.carregar();
   }
@@ -216,10 +236,11 @@ export class Abastecimento implements OnInit {
     const vinculo = this.vinculoFiltro();
     const negocioId = vinculo === 'NEGOCIO' ? this.negocioSelecionadoId() : null;
     const safraId = vinculo === 'SAFRA' ? this.safraSelecionadaId() : null;
+    const projetoId = vinculo === 'PROJETO' ? this.projetoSelecionadoId() : null;
 
     this.carregando.set(true);
     this.abastecimentoService
-      .buscarPorFazenda(fazendaId, this.paginaAtual(), 6, veiculoId, dataInicioIso, dataFimIso, negocioId, safraId)
+      .buscarPorFazenda(fazendaId, this.paginaAtual(), 6, veiculoId, dataInicioIso, dataFimIso, negocioId, safraId, projetoId)
       .subscribe({
         next: (res) => {
           this.abastecimentos.set(res.content);
@@ -232,7 +253,7 @@ export class Abastecimento implements OnInit {
         },
       });
 
-    this.abastecimentoService.buscarResumo(fazendaId, veiculoId, dataInicioIso, dataFimIso, negocioId, safraId).subscribe({
+    this.abastecimentoService.buscarResumo(fazendaId, veiculoId, dataInicioIso, dataFimIso, negocioId, safraId, projetoId).subscribe({
       next: (resumo) => this.resumo.set(resumo),
       error: () => this.resumo.set(null),
     });

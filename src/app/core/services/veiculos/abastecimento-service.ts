@@ -30,7 +30,8 @@ export class AbastecimentoService {
     dataInicio?: string | null,
     dataFim?: string | null,
     negocioId?: number | null,
-    safraId?: number | null
+    safraId?: number | null,
+    projetoId?: number | null
   ): Observable<PageResponse<IAbastecimento>> {
     let url = `${this.utilService.getUrlBase()}/abastecimento/fazenda/${fazendaId}?page=${pagina}&size=${tamanho}`;
     if (veiculoId) url += `&veiculoId=${veiculoId}`;
@@ -38,6 +39,7 @@ export class AbastecimentoService {
     if (dataFim) url += `&dataFim=${dataFim}`;
     if (negocioId) url += `&negocioId=${negocioId}`;
     if (safraId) url += `&safraId=${safraId}`;
+    if (projetoId) url += `&projetoId=${projetoId}`;
     return this.http.get<PageResponse<IAbastecimento>>(url).pipe(catchError(this.utilService.errorHandler));
   }
 
@@ -47,7 +49,8 @@ export class AbastecimentoService {
     dataInicio?: string | null,
     dataFim?: string | null,
     negocioId?: number | null,
-    safraId?: number | null
+    safraId?: number | null,
+    projetoId?: number | null
   ): Observable<IAbastecimentoResumo> {
     const params: string[] = [];
     if (veiculoId) params.push(`veiculoId=${veiculoId}`);
@@ -55,6 +58,7 @@ export class AbastecimentoService {
     if (dataFim) params.push(`dataFim=${dataFim}`);
     if (negocioId) params.push(`negocioId=${negocioId}`);
     if (safraId) params.push(`safraId=${safraId}`);
+    if (projetoId) params.push(`projetoId=${projetoId}`);
     let url = `${this.utilService.getUrlBase()}/abastecimento/fazenda/${fazendaId}/resumo`;
     if (params.length) url += `?${params.join('&')}`;
     return this.http.get<IAbastecimentoResumo>(url).pipe(catchError(this.utilService.errorHandler));

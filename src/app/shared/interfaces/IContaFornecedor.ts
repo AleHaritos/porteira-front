@@ -20,4 +20,5 @@ export interface ContaFornecedorRequest {
   valor: number;
   negocioId: number | null;
   safraId: number | null;
+  projetoId: number | null;
 }

@@ -15,6 +15,7 @@ export interface ManutencaoParceladaRequest {
   fornecedorId: number;
   negocioId?: number;
   safraId?: number;
+  projetoId?: number;
   primeiraDataVencimento: string;
   valoresParcelas: number[];
 }

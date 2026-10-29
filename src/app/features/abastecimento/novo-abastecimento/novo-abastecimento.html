@@ -116,6 +116,11 @@
       (click)="onVinculoChange('SAFRA')">
       Safra
     </button>
+    <button type="button" hlmBtn variant="outline" class="novo-abastecimento__toggle-btn cursor-pointer"
+      [class.novo-abastecimento__toggle-btn--ativo]="vinculo() === 'PROJETO'"
+      (click)="onVinculoChange('PROJETO')">
+      Projeto
+    </button>
   </div>
 
   @if (vinculo() === 'NEGOCIO') {
@@ -133,7 +138,7 @@
         </hlm-select-content>
       </hlm-select>
     </div>
-  } @else {
+  } @else if (vinculo() === 'SAFRA') {
     <div class="novo-abastecimento__campo">
       <label hlmLabel>Safra</label>
       <hlm-select [value]="safraSelecionada()" (valueChange)="onSafraChange($event)"
@@ -144,6 +149,21 @@
         <hlm-select-content *hlmSelectPortal>
           @for (safra of safras(); track safra.id) {
             <hlm-select-item [value]="safra.id">{{ safra.nome }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+  } @else {
+    <div class="novo-abastecimento__campo">
+      <label hlmLabel>Projeto</label>
+      <hlm-select [value]="projetoSelecionado()" (valueChange)="onProjetoChange($event)"
+        [itemToString]="itemToStringProjeto" class="w-full">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (projeto of projetos(); track projeto.id) {
+            <hlm-select-item [value]="projeto.id">{{ projeto.nome }}</hlm-select-item>
           }
         </hlm-select-content>
       </hlm-select>

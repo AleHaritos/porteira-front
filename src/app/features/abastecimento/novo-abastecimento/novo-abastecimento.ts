@@ -20,9 +20,11 @@ import { TipoCombustivel, LocalAbastecimento } from '../../../shared/interfaces/
 import { INegocio } from '../../../shared/interfaces/INegocio';
 import { IPosto } from '../../../shared/interfaces/IPosto';
 import { ISafra } from '../../../shared/interfaces/ISafras';
+import { IProjeto } from '../../../shared/interfaces/IProjeto';
 import { IVeiculo } from '../../../shared/interfaces/IVeiculos';
+import { ProjetoService } from '../../../core/services/projeto/projeto-service';
 
-type Vinculo = 'NEGOCIO' | 'SAFRA';
+type Vinculo = 'NEGOCIO' | 'SAFRA' | 'PROJETO';
 
 interface AbastecimentoDialogContext {
   fazendaId: number;
@@ -56,6 +58,7 @@ export class NovoAbastecimento implements OnInit {
   private postoService = inject(PostoService);
   private negocioService = inject(NegocioService);
   private safraService = inject(SafraService);
+  private projetoService = inject(ProjetoService);
   private toastService = inject(ToastService);
 
   salvando = signal(false);
@@ -96,14 +99,19 @@ export class NovoAbastecimento implements OnInit {
   vinculo = signal<Vinculo>('NEGOCIO');
   negocios = signal<INegocio[]>([]);
   safras = signal<ISafra[]>([]);
+  projetos = signal<IProjeto[]>([]);
   negocioSelecionado = signal<number | null>(null);
   safraSelecionada = signal<number | null>(null);
+  projetoSelecionado = signal<number | null>(null);
 
   itemToStringNegocio = (value: number | null | undefined) =>
     this.negocios().find((n) => n.id === value)?.nome || '';
 
   itemToStringSafra = (value: number | null | undefined) =>
     this.safras().find((s) => s.id === value)?.nome || '';
+
+  itemToStringProjeto = (value: number | null | undefined) =>
+    this.projetos().find((p) => p.id === value)?.nome || '';
 
   form = this.fb.group({
     data: [new Date() as Date | null, Validators.required],
@@ -124,6 +132,10 @@ export class NovoAbastecimento implements OnInit {
 
     this.safraService.buscarSafrasPorFazenda(fazendaId).subscribe({
       next: (safras) => this.safras.set(safras.content),
+    });
+
+    this.projetoService.listarTodosPorFazenda(fazendaId).subscribe({
+      next: (projetos) => this.projetos.set(projetos),
     });
 
     this.postoService.listarPorFazenda(fazendaId).subscribe({
@@ -153,6 +165,7 @@ export class NovoAbastecimento implements OnInit {
     this.vinculo.set(vinculo);
     this.negocioSelecionado.set(null);
     this.safraSelecionada.set(null);
+    this.projetoSelecionado.set(null);
   }
 
   onNegocioChange(id: number | null | undefined) {
@@ -161,6 +174,10 @@ export class NovoAbastecimento implements OnInit {
 
   onSafraChange(id: number | null | undefined) {
     this.safraSelecionada.set(id ?? null);
+  }
+
+  onProjetoChange(id: number | null | undefined) {
+    this.projetoSelecionado.set(id ?? null);
   }
 
   onLitrosInput(valor: string) {
@@ -225,9 +242,10 @@ export class NovoAbastecimento implements OnInit {
     const vinculo = this.vinculo();
     const negocioId = vinculo === 'NEGOCIO' ? this.negocioSelecionado() : null;
     const safraId = vinculo === 'SAFRA' ? this.safraSelecionada() : null;
+    const projetoId = vinculo === 'PROJETO' ? this.projetoSelecionado() : null;
 
-    if (!negocioId && !safraId) {
-      this.toastService.showError('Erro', 'Selecione um negócio ou uma safra');
+    if (!negocioId && !safraId && !projetoId) {
+      this.toastService.showError('Erro', 'Selecione um negócio, uma safra ou um projeto');
       return;
     }
 
@@ -247,6 +265,7 @@ export class NovoAbastecimento implements OnInit {
         fazendaId: this.context.fazendaId,
         negocioId: negocioId ?? undefined,
         safraId: safraId ?? undefined,
+        projetoId: projetoId ?? undefined,
       })
       .subscribe({
         next: () => {
