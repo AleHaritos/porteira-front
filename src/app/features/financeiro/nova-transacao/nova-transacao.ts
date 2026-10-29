@@ -17,6 +17,8 @@ import { SafraService } from '../../../core/services/safra/safra-service';
 import { ToastService } from '../../../core/services/toast-service';
 import { ITransacao, TipoTransacao } from '../../../shared/interfaces/ITransacao';
 import { INegocio } from '../../../shared/interfaces/INegocio';
+import { IProjeto } from '../../../shared/interfaces/IProjeto';
+import { ProjetoService } from '../../../core/services/projeto/projeto-service';
 
 interface NovaTransacaoContext {
   fazendaId: number;
@@ -47,6 +49,7 @@ export class NovaTransacao implements OnInit {
   private readonly transacoesService = inject(TransacoesService);
   private readonly negocioService = inject(NegocioService);
   private readonly safraService = inject(SafraService);
+  private readonly projetoService = inject(ProjetoService);
   private toastService = inject(ToastService);
 
   modoEdicao = !!this._dialogContext.transacao;
@@ -55,10 +58,17 @@ export class NovaTransacao implements OnInit {
 
   negocios = signal<INegocio[]>([]);
   safras = signal<any[]>([]);
+  projetos = signal<IProjeto[]>([]);
 
   maxDate = new Date();
 
-  vinculoTipo = signal<'NEGOCIO' | 'SAFRA'>(this._dialogContext.transacao?.safraId ? 'SAFRA' : 'NEGOCIO');
+  vinculoTipo = signal<'NEGOCIO' | 'SAFRA' | 'PROJETO'>(
+    this._dialogContext.transacao?.safraId
+      ? 'SAFRA'
+      : this._dialogContext.transacao?.projetoId
+        ? 'PROJETO'
+        : 'NEGOCIO',
+  );
 
   tipoOptions: { value: TipoTransacao; label: string }[] = [
     { value: 'RECEITA', label: 'Receita' },
@@ -73,6 +83,9 @@ export class NovaTransacao implements OnInit {
 
   itemToStringSafra = (value: number | null | undefined) =>
     this.safras().find((s) => s.id === value)?.nome || '';
+
+  itemToStringProjeto = (value: number | null | undefined) =>
+    this.projetos().find((p) => p.id === value)?.nome || '';
 
   private parseData(data: string): Date {
     return new Date(`${data}T00:00:00`);
@@ -89,6 +102,7 @@ export class NovaTransacao implements OnInit {
     observacao: [this._dialogContext.transacao?.observacao ?? ''],
     negocioId: [this._dialogContext.transacao?.negocioId ?? (null as number | null)],
     safraId: [this._dialogContext.transacao?.safraId ?? (null as number | null)],
+    projetoId: [this._dialogContext.transacao?.projetoId ?? (null as number | null)],
   });
 
   ngOnInit() {
@@ -98,6 +112,10 @@ export class NovaTransacao implements OnInit {
 
     this.safraService.buscarSafrasPorFazenda(this._dialogContext.fazendaId).subscribe((res) => {
       this.safras.set(res.content);
+    });
+
+    this.projetoService.listarTodosPorFazenda(this._dialogContext.fazendaId).subscribe((res) => {
+      this.projetos.set(res);
     });
   }
 
@@ -113,12 +131,18 @@ export class NovaTransacao implements OnInit {
     this.form.patchValue({ safraId: safraId ?? null });
   }
 
-  selecionarVinculo(tipo: 'NEGOCIO' | 'SAFRA') {
+  onProjetoChange(projetoId: number | null | undefined) {
+    this.form.patchValue({ projetoId: projetoId ?? null });
+  }
+
+  selecionarVinculo(tipo: 'NEGOCIO' | 'SAFRA' | 'PROJETO') {
     this.vinculoTipo.set(tipo);
     if (tipo === 'NEGOCIO') {
-      this.form.patchValue({ safraId: null });
+      this.form.patchValue({ safraId: null, projetoId: null });
+    } else if (tipo === 'SAFRA') {
+      this.form.patchValue({ negocioId: null, projetoId: null });
     } else {
-      this.form.patchValue({ negocioId: null });
+      this.form.patchValue({ negocioId: null, safraId: null, tipo: 'GASTO' });
     }
   }
 
@@ -139,8 +163,8 @@ export class NovaTransacao implements OnInit {
 
     const valores = this.form.value;
 
-    if (!valores.negocioId && !valores.safraId) {
-      this.erro.set('Selecione um Negócio ou uma Safra para vincular a transação');
+    if (!valores.negocioId && !valores.safraId && !valores.projetoId) {
+      this.erro.set('Selecione um Negócio, uma Safra ou um Projeto para vincular a transação');
       return;
     }
 
@@ -155,6 +179,7 @@ export class NovaTransacao implements OnInit {
       observacao: valores.observacao || undefined,
       negocioId: valores.negocioId ?? undefined,
       safraId: valores.safraId ?? undefined,
+      projetoId: valores.projetoId ?? undefined,
     };
 
     const request$ = this.modoEdicao

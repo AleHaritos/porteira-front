@@ -19,12 +19,14 @@ import { IFornecedor } from '../../../shared/interfaces/IFornecedor';
 import { FormaPagamentoManutencao, TipoManutencao } from '../../../shared/interfaces/IManutencao';
 import { INegocio } from '../../../shared/interfaces/INegocio';
 import { ISafra } from '../../../shared/interfaces/ISafras';
+import { IProjeto } from '../../../shared/interfaces/IProjeto';
 import { IVeiculo } from '../../../shared/interfaces/IVeiculos';
 import { FornecedorService } from '../../../core/services/equipamento/fornecedor-service';
 import { ManutencaoEquipamentoService } from '../../../core/services/equipamento/manutencao-equipamento-service';
+import { ProjetoService } from '../../../core/services/projeto/projeto-service';
 
 type TipoAtivo = 'VEICULO' | 'EQUIPAMENTO';
-type Vinculo = 'NEGOCIO' | 'SAFRA';
+type Vinculo = 'NEGOCIO' | 'SAFRA' | 'PROJETO';
 
 interface NovaManutencaoContext {
   fazendaId: number;
@@ -60,6 +62,7 @@ export class NovaManutencao implements OnInit {
   private fornecedorService = inject(FornecedorService);
   private negocioService = inject(NegocioService);
   private safraService = inject(SafraService);
+  private projetoService = inject(ProjetoService);
   private toastService = inject(ToastService);
 
   salvando = signal(false);
@@ -75,8 +78,10 @@ export class NovaManutencao implements OnInit {
   vinculo = signal<Vinculo>('NEGOCIO');
   negocios = signal<INegocio[]>([]);
   safras = signal<ISafra[]>([]);
+  projetos = signal<IProjeto[]>([]);
   negocioSelecionado = signal<number | null>(null);
   safraSelecionada = signal<number | null>(null);
+  projetoSelecionado = signal<number | null>(null);
 
   valorRaw = signal<number | null>(null);
   kmAtualRaw = signal<number | null>(null);
@@ -108,6 +113,9 @@ export class NovaManutencao implements OnInit {
   itemToStringSafra = (value: number | null | undefined) =>
     this.safras().find((s) => s.id === value)?.nome ?? '';
 
+  itemToStringProjeto = (value: number | null | undefined) =>
+    this.projetos().find((p) => p.id === value)?.nome ?? '';
+
   form = this.fb.group({
     descricao: [''],
     data: [new Date(), Validators.required],
@@ -128,6 +136,10 @@ export class NovaManutencao implements OnInit {
 
     this.safraService.buscarSafrasPorFazenda(fazendaId).subscribe({
       next: (safras) => this.safras.set(safras.content),
+    });
+
+    this.projetoService.listarTodosPorFazenda(fazendaId).subscribe({
+      next: (projetos) => this.projetos.set(projetos),
     });
   }
 
@@ -157,6 +169,7 @@ export class NovaManutencao implements OnInit {
     this.vinculo.set(vinculo);
     this.negocioSelecionado.set(null);
     this.safraSelecionada.set(null);
+    this.projetoSelecionado.set(null);
   }
 
   onNegocioChange(id: number | null | undefined): void {
@@ -165,6 +178,10 @@ export class NovaManutencao implements OnInit {
 
   onSafraChange(id: number | null | undefined): void {
     this.safraSelecionada.set(id ?? null);
+  }
+
+  onProjetoChange(id: number | null | undefined): void {
+    this.projetoSelecionado.set(id ?? null);
   }
 
   onValorInput(valor: string): void {
@@ -212,9 +229,10 @@ export class NovaManutencao implements OnInit {
     const vinculo = this.vinculo();
     const negocioId = vinculo === 'NEGOCIO' ? this.negocioSelecionado() : null;
     const safraId = vinculo === 'SAFRA' ? this.safraSelecionada() : null;
+    const projetoId = vinculo === 'PROJETO' ? this.projetoSelecionado() : null;
 
-    if (!negocioId && !safraId) {
-      this.toastService.showError('Erro', 'Selecione um negócio ou uma safra');
+    if (!negocioId && !safraId && !projetoId) {
+      this.toastService.showError('Erro', 'Selecione um negócio, uma safra ou um projeto');
       return;
     }
 
@@ -229,6 +247,7 @@ export class NovaManutencao implements OnInit {
       fazendaId: this.context.fazendaId,
       negocioId: negocioId ?? undefined,
       safraId: safraId ?? undefined,
+      projetoId: projetoId ?? undefined,
       formaPagamento,
       fornecedorId: formaPagamento === 'FORNECEDOR_CREDENCIADO' ? this.fornecedorId()! : undefined,
     };

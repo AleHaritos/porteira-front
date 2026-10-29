@@ -18,8 +18,7 @@
       <label hlmLabel>Tipo</label>
       <div class="financeiro-page__vinculo-toggle">
         <button type="button" hlmBtn variant="outline" class="financeiro-page__vinculo-btn cursor-pointer"
-          [class.financeiro-page__vinculo-btn--ativo]="tipoFiltro() === 'TODOS'"
-          (click)="onTipoFiltroChange('TODOS')">
+          [class.financeiro-page__vinculo-btn--ativo]="tipoFiltro() === 'TODOS'" (click)="onTipoFiltroChange('TODOS')">
           Todos
         </button>
         <button type="button" hlmBtn variant="outline" class="financeiro-page__vinculo-btn cursor-pointer"
@@ -28,13 +27,11 @@
           Receitas
         </button>
         <button type="button" hlmBtn variant="outline" class="financeiro-page__vinculo-btn cursor-pointer"
-          [class.financeiro-page__vinculo-btn--ativo]="tipoFiltro() === 'GASTO'"
-          (click)="onTipoFiltroChange('GASTO')">
+          [class.financeiro-page__vinculo-btn--ativo]="tipoFiltro() === 'GASTO'" (click)="onTipoFiltroChange('GASTO')">
           Gastos
         </button>
       </div>
     </div>
-
     <div class="financeiro-page__filtro-campo">
       <label hlmLabel>Vínculo</label>
       <div class="financeiro-page__vinculo-toggle">
@@ -52,6 +49,11 @@
           [class.financeiro-page__vinculo-btn--ativo]="vinculoFiltro() === 'SAFRA'"
           (click)="onVinculoFiltroChange('SAFRA')">
           Safra
+        </button>
+        <button type="button" hlmBtn variant="outline" class="financeiro-page__vinculo-btn cursor-pointer"
+          [class.financeiro-page__vinculo-btn--ativo]="vinculoFiltro() === 'PROJETO'"
+          (click)="onVinculoFiltroChange('PROJETO')">
+          Projeto
         </button>
       </div>
     </div>
@@ -90,6 +92,23 @@
     </div>
     }
 
+    @if (vinculoFiltro() === 'PROJETO') {
+    <div class="financeiro-page__filtro-campo">
+      <label hlmLabel>Projeto</label>
+      <hlm-select [value]="projetoFiltroId()" (valueChange)="onProjetoFiltroChange($event)"
+        [itemToString]="itemToStringProjeto" class="financeiro-page__select">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (projeto of projetos(); track projeto.id) {
+          <hlm-select-item [value]="projeto.id">{{ projeto.nome }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+    }
+    
     <button hlmBtn class="financeiro-page__btn-pesquisar cursor-pointer" (click)="pesquisar()">
       <ng-icon name="lucideSearch" size="16" />
       Pesquisar
@@ -158,11 +177,11 @@
         </span>
         <h3 class="financeiro-grafico__titulo">
           @if (tipoFiltro() === 'RECEITA') {
-            Receitas no Período
+          Receitas no Período
           } @else if (tipoFiltro() === 'GASTO') {
-            Gastos no Período
+          Gastos no Período
           } @else {
-            Receitas x Gastos no Período
+          Receitas x Gastos no Período
           }
         </h3>
       </div>

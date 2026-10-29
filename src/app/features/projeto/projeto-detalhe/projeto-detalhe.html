@@ -1,0 +1,106 @@
+<div class="projeto-detalhe-page">
+  <div class="projeto-detalhe-page__filtros" [formGroup]="filtroForm">
+    <div class="projeto-detalhe-page__filtro-campo">
+      <label hlmLabel for="dataInicio">De</label>
+      <hlm-date-picker formControlName="dataInicio" [maxDate]="maxDate" class="projeto-detalhe-page__date">
+        <hlm-date-picker-trigger buttonId="dataInicio" class="w-full">Data inicial</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <div class="projeto-detalhe-page__filtro-campo">
+      <label hlmLabel for="dataFim">Até</label>
+      <hlm-date-picker formControlName="dataFim" [maxDate]="maxDate" class="projeto-detalhe-page__date">
+        <hlm-date-picker-trigger buttonId="dataFim" class="w-full">Data final</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+
+    <button hlmBtn class="projeto-detalhe-page__btn-pesquisar cursor-pointer" (click)="pesquisar()">
+      <ng-icon name="lucideSearch" size="16" />
+      Pesquisar
+    </button>
+
+    <button hlmBtn variant="outline" type="button" class="projeto-detalhe-page__btn-exportar cursor-pointer"
+      [disabled]="exportandoPdf()" (click)="exportarPdf()">
+      <ng-icon name="lucideFileDown" size="16" />
+      {{ exportandoPdf() ? 'Gerando...' : 'Exportar PDF' }}
+    </button>
+  </div>
+
+  <div class="projeto-detalhe-resumo">
+    <span class="projeto-detalhe-resumo__icone">
+      <ng-icon name="lucideTrendingDown" size="20" />
+    </span>
+    <div>
+      <p class="projeto-detalhe-resumo__label">Total de Gastos no Período</p>
+      <p class="projeto-detalhe-resumo__valor">
+        {{ formatarValor(resumo().totalGastos) }}
+      </p>
+    </div>
+  </div>
+
+  <div class="fazenda-table">
+    <div class="projeto-detalhe-transacoes__header">
+      <h3 class="projeto-detalhe-transacoes__titulo">Transações</h3>
+    </div>
+
+    <div hlmTableContainer>
+      <table hlmTable>
+        <thead hlmTHead>
+          <tr hlmTr>
+            <th hlmTh>Data</th>
+            <th hlmTh>Descrição</th>
+            <th hlmTh class="pl-7">Valor</th>
+          </tr>
+        </thead>
+
+        <tbody hlmTBody>
+          @for (transacao of transacoes(); track transacao.id) {
+          <tr hlmTr class="fazenda-table__row">
+            <td hlmTd>{{ transacao.data | date: 'dd/MM/yyyy' }}</td>
+            <td hlmTd [title]="transacao.descricao || ''">
+              {{ (transacao.descricao | truncar: 40) || '-' }}
+            </td>
+            <td hlmTd>
+              <span class="financeiro-table__valor financeiro-table__valor--gasto">
+                {{ formatarValor(transacao.valor) }}
+              </span>
+            </td>
+          </tr>
+          } @empty {
+          <tr hlmTr>
+            <td hlmTd [attr.colSpan]="3" class="fazenda-table__empty">
+              @if (carregandoTransacoes()) {
+              Carregando transações...
+              } @else {
+              Nenhuma transação encontrada no período
+              }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPaginas() > 1) {
+    <nav hlmPagination class="fazenda-table__pagination">
+      <ul hlmPaginationContent>
+        <li hlmPaginationItem>
+          <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+        </li>
+
+        @for (pagina of paginasVisiveis(); track pagina) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+            {{ pagina + 1 }}
+          </button>
+        </li>
+        }
+
+        <li hlmPaginationItem>
+          <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+        </li>
+      </ul>
+    </nav>
+    }
+  </div>
+</div>

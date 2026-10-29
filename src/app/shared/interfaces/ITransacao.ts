@@ -14,6 +14,8 @@ export interface ITransacao {
   negocioNome: string | null;
   safraId: number | null;
   safraNome: string | null;
+  projetoId: number | null;
+  projetoNome: string | null;
 }
 
 export interface ResumoFinanceiro {
@@ -31,6 +33,7 @@ export interface TransacaoRequest {
   fazendaId: number;
   negocioId?: number;
   safraId?: number;
+  projetoId?: number;
 }
 
 export type TransacaoUpdateRequest = Omit<TransacaoRequest, 'fazendaId'>;

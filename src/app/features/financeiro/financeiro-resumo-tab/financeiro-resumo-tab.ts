@@ -19,7 +19,9 @@ import { ResumoFinanceiro } from '../../../shared/interfaces/ITransacao';
 import { IParcelaContaPendente } from '../../../shared/interfaces/IContaPendente';
 import { INegocio } from '../../../shared/interfaces/INegocio';
 import { ISafra } from '../../../shared/interfaces/ISafras';
+import { IProjeto } from '../../../shared/interfaces/IProjeto';
 import { TruncarPipe } from '../../../shared/pipes/TruncarPipe';
+import { ProjetoService } from '../../../core/services/projeto/projeto-service';
 
 interface ResumoBarraDatum {
   chave: 'receitas' | 'gastos';
@@ -36,7 +38,7 @@ interface ResumoBarraGeometria extends ResumoBarraDatum {
   y: number;
 }
 
-type VinculoFiltro = 'TODOS' | 'NEGOCIO' | 'SAFRA';
+type VinculoFiltro = 'TODOS' | 'NEGOCIO' | 'SAFRA' | 'PROJETO';
 type TipoFiltro = 'TODOS' | 'RECEITA' | 'GASTO';
 
 const GRAFICO_ALTURA_MAXIMA = 150;
@@ -72,6 +74,7 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
   private contasPendentesService = inject(ContasPendentesService);
   private negocioService = inject(NegocioService);
   private safraService = inject(SafraService);
+  private projetoService = inject(ProjetoService);
   private toastService = inject(ToastService);
 
   maxDate = new Date();
@@ -88,8 +91,10 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
   vinculoFiltro = signal<VinculoFiltro>('TODOS');
   negocios = signal<INegocio[]>([]);
   safras = signal<ISafra[]>([]);
+  projetos = signal<IProjeto[]>([]);
   negocioFiltroId = signal<number | null>(null);
   safraFiltroId = signal<number | null>(null);
+  projetoFiltroId = signal<number | null>(null);
 
   tipoFiltro = signal<TipoFiltro>('TODOS');
 
@@ -98,6 +103,9 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
 
   itemToStringSafra = (value: number | null | undefined) =>
     this.safras().find((s) => s.id === value)?.nome || '';
+
+  itemToStringProjeto = (value: number | null | undefined) =>
+    this.projetos().find((p) => p.id === value)?.nome || '';
 
   filtroForm = this.fb.group({
     dataInicio: [null as Date | null],
@@ -161,6 +169,10 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
     this.safraService.buscarSafrasPorFazenda(this.fazendaId).subscribe({
       next: (safras) => this.safras.set(safras.content),
     });
+
+    this.projetoService.listarTodosPorFazenda(this.fazendaId).subscribe({
+      next: (projetos) => this.projetos.set(projetos),
+    });
   }
 
   private carregarContasPendentes(): void {
@@ -191,6 +203,7 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
     this.vinculoFiltro.set(vinculo);
     this.negocioFiltroId.set(null);
     this.safraFiltroId.set(null);
+    this.projetoFiltroId.set(null);
   }
 
   onNegocioFiltroChange(id: number | null | undefined) {
@@ -199,6 +212,10 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
 
   onSafraFiltroChange(id: number | null | undefined) {
     this.safraFiltroId.set(id ?? null);
+  }
+
+  onProjetoFiltroChange(id: number | null | undefined) {
+    this.projetoFiltroId.set(id ?? null);
   }
 
   onTipoFiltroChange(tipo: TipoFiltro) {
@@ -231,6 +248,7 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
     this.vinculoFiltro.set('TODOS');
     this.negocioFiltroId.set(null);
     this.safraFiltroId.set(null);
+    this.projetoFiltroId.set(null);
     this.tipoFiltro.set('TODOS');
     this.carregarResumo();
   }
@@ -245,8 +263,9 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
     const vinculo = this.vinculoFiltro();
     const negocioId = vinculo === 'NEGOCIO' ? this.negocioFiltroId() : null;
     const safraId = vinculo === 'SAFRA' ? this.safraFiltroId() : null;
+    const projetoId = vinculo === 'PROJETO' ? this.projetoFiltroId() : null;
 
-    this.transacoesService.buscarResumo(this.fazendaId, inicio, fim, negocioId, safraId).subscribe({
+    this.transacoesService.buscarResumo(this.fazendaId, inicio, fim, negocioId, safraId, projetoId).subscribe({
       next: (res) => this.resumo.set(res),
       error: () => this.toastService.showError('Erro', 'Não foi possível carregar o resumo financeiro'),
     });
@@ -270,13 +289,14 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
     const vinculo = this.vinculoFiltro();
     const negocioId = vinculo === 'NEGOCIO' ? this.negocioFiltroId() : null;
     const safraId = vinculo === 'SAFRA' ? this.safraFiltroId() : null;
+    const projetoId = vinculo === 'PROJETO' ? this.projetoFiltroId() : null;
 
     const tipo = this.tipoFiltro();
     const tipoParam = tipo === 'TODOS' ? null : tipo;
 
     this.exportandoPdf.set(true);
 
-    this.transacoesService.listarComFiltros(this.fazendaId, inicio, fim, tipoParam, negocioId, safraId).subscribe({
+    this.transacoesService.listarComFiltros(this.fazendaId, inicio, fim, tipoParam, negocioId, safraId, projetoId).subscribe({
       next: (transacoes) => {
         this.gerarPdf(transacoes, inicio, fim);
         this.exportandoPdf.set(false);
@@ -326,6 +346,8 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
       vinculoTexto = `Vínculo: Negócio - ${this.itemToStringNegocio(this.negocioFiltroId()) || '-'}`;
     } else if (vinculo === 'SAFRA') {
       vinculoTexto = `Vínculo: Safra - ${this.itemToStringSafra(this.safraFiltroId()) || '-'}`;
+    } else if (vinculo === 'PROJETO') {
+      vinculoTexto = `Vínculo: Projeto - ${this.itemToStringProjeto(this.projetoFiltroId()) || '-'}`;
     }
 
     const tipo = this.tipoFiltro();
@@ -420,7 +442,7 @@ export class FinanceiroResumoTab implements OnInit, OnChanges {
       this.formatarDataBr(this.parseDataIso(t.data)),
       t.tipo === 'RECEITA' ? 'Receita' : 'Gasto',
       t.descricao || '-',
-      t.negocioNome ?? t.safraNome ?? '-',
+      t.negocioNome ?? t.safraNome ?? t.projetoNome ?? '-',
       this.formatarValor(t.valor),
     ]);
 

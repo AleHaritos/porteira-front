@@ -71,7 +71,7 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/animais/animais').then((m) => m.Animais),
           },
-           {
+          {
             path: 'animais/piquete/:piqueteId',
             loadComponent: () =>
               import('./features/animais/piquete-detalhes/piquete-detalhes').then((m) => m.PiqueteDetalhes),
@@ -95,6 +95,16 @@ export const routes: Routes = [
             path: 'contas-pendentes',
             loadComponent: () =>
               import('./features/financeiro/contas-pendentes/contas-pendentes').then((m) => m.ContasPendentes),
+          },
+          {
+            path: 'projetos',
+            loadComponent: () =>
+              import('./features/projeto/projeto').then((m) => m.Projeto),
+          },
+          {
+            path: 'projetos/:projetoId',
+            loadComponent: () =>
+              import('./features/projeto/projeto-detalhe/projeto-detalhe').then((m) => m.ProjetoDetalhe),
           },
           {
             path: 'safra',

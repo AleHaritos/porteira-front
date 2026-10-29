@@ -44,3 +44,9 @@
 .nova-transacao__btn-salvar:hover {
   background-color: #278a4c;
 }
+
+.nova-transacao__input--travado {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}

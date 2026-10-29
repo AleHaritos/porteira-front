@@ -15,8 +15,10 @@ import { SafraService } from '../../../core/services/safra/safra-service';
 import { ToastService } from '../../../core/services/toast-service';
 import { INegocio } from '../../../shared/interfaces/INegocio';
 import { ISafra } from '../../../shared/interfaces/ISafras';
+import { IProjeto } from '../../../shared/interfaces/IProjeto';
+import { ProjetoService } from '../../../core/services/projeto/projeto-service';
 
-type Vinculo = 'NEGOCIO' | 'SAFRA';
+type Vinculo = 'NEGOCIO' | 'SAFRA' | 'PROJETO';
 
 interface NovaContaFornecedorContext {
   fazendaId: number;
@@ -46,6 +48,7 @@ export class NovaContaFornecedor implements OnInit {
   private contaFornecedorService = inject(ContaFornecedorService);
   private negocioService = inject(NegocioService);
   private safraService = inject(SafraService);
+  private projetoService = inject(ProjetoService);
   private toastService = inject(ToastService);
 
   salvando = signal(false);
@@ -55,8 +58,10 @@ export class NovaContaFornecedor implements OnInit {
   vinculo = signal<Vinculo>('NEGOCIO');
   negocios = signal<INegocio[]>([]);
   safras = signal<ISafra[]>([]);
+  projetos = signal<IProjeto[]>([]);
   negocioSelecionado = signal<number | null>(null);
   safraSelecionada = signal<number | null>(null);
+  projetoSelecionado = signal<number | null>(null);
 
   form = this.fb.group({
     descricao: ['', Validators.required],
@@ -69,6 +74,9 @@ export class NovaContaFornecedor implements OnInit {
   itemToStringSafra = (value: number | null | undefined) =>
     this.safras().find((s) => s.id === value)?.nome ?? '';
 
+  itemToStringProjeto = (value: number | null | undefined) =>
+    this.projetos().find((p) => p.id === value)?.nome ?? '';
+
   ngOnInit(): void {
     const fazendaId = this.context.fazendaId;
 
@@ -79,12 +87,17 @@ export class NovaContaFornecedor implements OnInit {
     this.safraService.buscarSafrasPorFazenda(fazendaId).subscribe({
       next: (safras) => this.safras.set(safras.content),
     });
+
+    this.projetoService.listarTodosPorFazenda(fazendaId).subscribe({
+      next: (projetos) => this.projetos.set(projetos),
+    });
   }
 
   onVinculoChange(vinculo: Vinculo): void {
     this.vinculo.set(vinculo);
     this.negocioSelecionado.set(null);
     this.safraSelecionada.set(null);
+    this.projetoSelecionado.set(null);
   }
 
   onNegocioChange(id: number | null | undefined): void {
@@ -93,6 +106,10 @@ export class NovaContaFornecedor implements OnInit {
 
   onSafraChange(id: number | null | undefined): void {
     this.safraSelecionada.set(id ?? null);
+  }
+
+  onProjetoChange(id: number | null | undefined): void {
+    this.projetoSelecionado.set(id ?? null);
   }
 
   onValorInput(valor: string): void {
@@ -109,6 +126,13 @@ export class NovaContaFornecedor implements OnInit {
     this.dialogRef.close(false);
   }
 
+   private formatarDataIso(data: Date): string {
+    const ano = data.getFullYear();
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const dia = String(data.getDate()).padStart(2, '0');
+    return `${ano}-${mes}-${dia}`;
+  }
+
   salvar(): void {
     if (this.form.invalid || !this.valorRaw() || this.valorRaw()! <= 0) {
       this.toastService.showError('Erro', 'Preencha a descrição e um valor válido');
@@ -118,9 +142,10 @@ export class NovaContaFornecedor implements OnInit {
     const vinculo = this.vinculo();
     const negocioId = vinculo === 'NEGOCIO' ? this.negocioSelecionado() : null;
     const safraId = vinculo === 'SAFRA' ? this.safraSelecionada() : null;
+    const projetoId = vinculo === 'PROJETO' ? this.projetoSelecionado() : null;
 
-    if (!negocioId && !safraId) {
-      this.toastService.showError('Erro', 'Selecione um negócio ou uma safra');
+    if (!negocioId && !safraId && !projetoId) {
+      this.toastService.showError('Erro', 'Selecione um negócio, uma safra ou um projeto');
       return;
     }
 
@@ -131,10 +156,11 @@ export class NovaContaFornecedor implements OnInit {
         fornecedorId: this.context.fornecedorId,
         fazendaId: this.context.fazendaId,
         descricao: this.form.value.descricao!,
-        data: (this.form.value.data as Date).toISOString().split('T')[0],
+        data: this.formatarDataIso(this.form.value.data as Date),
         valor: this.valorRaw()!,
         negocioId,
         safraId,
+        projetoId,
       })
       .subscribe({
         next: () => {

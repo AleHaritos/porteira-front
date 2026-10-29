@@ -32,6 +32,7 @@ export interface AbastecimentoRequest {
   fazendaId: number;
   negocioId?: number;
   safraId?: number;
+  projetoId?: number;
 }
 
 export interface IAbastecimentoResumo {
