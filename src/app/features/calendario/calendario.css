@@ -1,0 +1,159 @@
+.calendario-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.calendario-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.calendario-page__titulo-bloco {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calendario-page__titulo {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.calendario-page__acoes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.calendario-page__acoes button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.calendario-page__btn-novo {
+  background: #2f9e58 !important;
+  color: white !important;
+}
+
+.calendario-page__btn-novo:hover {
+  background: #278a4c !important;
+}
+
+.calendario-grade {
+  background: #ffffff;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.calendario-grade__semana--cabecalho {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #f2f9f4;
+  border-bottom: 1px solid #d8e6dc;
+}
+
+.calendario-grade__cabecalho-dia {
+  padding: 10px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #2f4d3a;
+}
+
+.calendario-grade__dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendario-grade__dia {
+  min-height: 110px;
+  padding: 8px;
+  border-right: 1px solid #eef4f0;
+  border-bottom: 1px solid #eef4f0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.calendario-grade__dia:hover {
+  background-color: #f7fbf8;
+}
+
+.calendario-grade__dia--fora-do-mes {
+  background-color: #fafafa;
+  color: #c0c0c0;
+}
+
+.calendario-grade__dia--fora-do-mes .calendario-grade__numero {
+  color: #c0c0c0;
+}
+
+.calendario-grade__dia--hoje {
+  background-color: #eafaf1;
+}
+
+.calendario-grade__numero {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #2f4d3a;
+}
+
+.calendario-grade__eventos {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.calendario-grade__evento {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #dcfce7;
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 0.75rem;
+  color: #166534;
+  cursor: pointer;
+  position: relative;
+}
+
+.calendario-grade__evento:hover .calendario-grade__evento-excluir {
+  opacity: 1;
+}
+
+.calendario-grade__evento-hora {
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.calendario-grade__evento-titulo {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.calendario-grade__evento-excluir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #166534;
+  opacity: 0;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+}

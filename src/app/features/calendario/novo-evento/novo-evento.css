@@ -1,0 +1,78 @@
+.novo-evento__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.novo-evento__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #eafaf1;
+  color: #2f9e58;
+  flex-shrink: 0;
+}
+
+.novo-evento__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.novo-evento__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 0;
+}
+
+.novo-evento__linha {
+  display: flex;
+  gap: 16px;
+}
+
+.novo-evento__linha > * {
+  flex: 1;
+}
+
+.novo-evento__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.novo-evento__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.novo-evento__btn-salvar {
+  background: #2f9e58;
+  color: white;
+}
+
+.novo-evento__btn-salvar:hover {
+  background: #278a4c;
+}
+
+.novo-evento__hora-grupo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.novo-evento__hora-select {
+  flex: 1;
+  min-width: 0;
+}
+
+.novo-evento__hora-separador {
+  font-weight: 600;
+  color: #6b7280;
+  flex-shrink: 0;
+}

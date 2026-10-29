@@ -1,0 +1,79 @@
+<div class="tarefa-page">
+  <div class="tarefa-page__header">
+    <div class="tarefa-page__titulo-bloco">
+      <ng-icon name="lucideListTodo" size="20" />
+      <h1 class="tarefa-page__titulo">Tarefas</h1>
+    </div>
+    <button hlmBtn class="tarefa-page__btn-novo cursor-pointer" (click)="abrirNovaTarefa()">
+      <ng-icon name="lucidePlus" size="16" />
+      Nova Tarefa
+    </button>
+  </div>
+
+  <div class="tarefa-kanban" cdkDropListGroup>
+    @for (coluna of colunas(); track coluna.status) {
+    <div class="tarefa-kanban__coluna">
+      <div class="tarefa-kanban__coluna-header">
+        <span class="tarefa-kanban__coluna-titulo">{{ coluna.titulo }}</span>
+        <span class="tarefa-kanban__coluna-contador">{{ coluna.tarefas.length }}</span>
+      </div>
+
+      <div
+        class="tarefa-kanban__lista"
+        cdkDropList
+        [id]="coluna.status"
+        [cdkDropListData]="coluna.tarefas"
+        [cdkDropListConnectedTo]="idsColunas()"
+        (cdkDropListDropped)="onDrop($event, coluna.status)">
+        @for (tarefa of coluna.tarefas; track tarefa.id) {
+        <div class="tarefa-card" cdkDrag [class.tarefa-card--atrasada]="estaAtrasada(tarefa)">
+          <div class="tarefa-card__topo">
+            <span class="tarefa-card__prioridade" [class]="'tarefa-card__prioridade--' + tarefa.prioridade.toLowerCase()">
+              <ng-icon name="lucideFlag" size="11" />
+              {{ prioridadeLabel[tarefa.prioridade] }}
+            </span>
+            <div class="tarefa-card__acoes">
+              <button type="button" class="tarefa-card__btn-acao" (click)="editarTarefa(tarefa)">
+                <ng-icon name="lucidePencil" size="13" />
+              </button>
+              <button type="button" class="tarefa-card__btn-acao" (click)="excluirTarefa(tarefa)">
+                <ng-icon name="lucideTrash2" size="13" />
+              </button>
+            </div>
+          </div>
+
+          <p class="tarefa-card__titulo">{{ tarefa.titulo }}</p>
+
+          @if (tarefa.descricao) {
+          <p class="tarefa-card__descricao">{{ tarefa.descricao }}</p>
+          }
+
+          @if (tarefa.subtarefas.length > 0) {
+          <div class="tarefa-card__subtarefas">
+            @for (sub of tarefa.subtarefas; track sub.id) {
+            <label class="tarefa-card__subtarefa">
+              <input type="checkbox" [checked]="sub.concluida" (change)="toggleSubtarefa(sub.id)" />
+              <span [class.tarefa-card__subtarefa-texto--concluida]="sub.concluida">{{ sub.titulo }}</span>
+            </label>
+            }
+            <span class="tarefa-card__subtarefas-contador">
+              {{ subtarefasConcluidas(tarefa) }}/{{ tarefa.subtarefas.length }}
+            </span>
+          </div>
+          }
+
+          @if (tarefa.prazo) {
+          <div class="tarefa-card__prazo">
+            <ng-icon name="lucideCalendarClock" size="12" />
+            {{ tarefa.prazo | date: 'dd/MM/yyyy' }}
+          </div>
+          }
+        </div>
+        } @empty {
+        <div class="tarefa-kanban__vazio">Nenhuma tarefa</div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+</div>

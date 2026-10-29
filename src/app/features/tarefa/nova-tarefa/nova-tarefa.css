@@ -1,0 +1,122 @@
+.nova-tarefa__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nova-tarefa__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #eafaf1;
+  color: #2f9e58;
+  flex-shrink: 0;
+}
+
+.nova-tarefa__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nova-tarefa__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 0;
+}
+
+.nova-tarefa__linha {
+  display: flex;
+  gap: 16px;
+}
+
+.nova-tarefa__linha > * {
+  flex: 1;
+}
+
+.nova-tarefa__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nova-tarefa__subtarefas {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+}
+
+.nova-tarefa__subtarefa {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.nova-tarefa__subtarefa input[type='checkbox'] {
+  accent-color: #2f9e58;
+  cursor: pointer;
+}
+
+.nova-tarefa__subtarefa span {
+  flex: 1;
+}
+
+.nova-tarefa__subtarefa-texto--concluida {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
+.nova-tarefa__subtarefa-excluir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.nova-tarefa__subtarefa-excluir:hover {
+  color: #b91c1c;
+}
+
+.nova-tarefa__subtarefa-nova {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.nova-tarefa__subtarefa-nova input {
+  flex: 1;
+}
+
+.nova-tarefa__aviso {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+  font-style: italic;
+}
+
+.nova-tarefa__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.nova-tarefa__btn-salvar {
+  background: #2f9e58;
+  color: white;
+}
+
+.nova-tarefa__btn-salvar:hover {
+  background: #278a4c;
+}

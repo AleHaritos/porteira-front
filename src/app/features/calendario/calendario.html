@@ -1,0 +1,57 @@
+<div class="calendario-page">
+  <div class="calendario-page__header">
+    <div class="calendario-page__titulo-bloco">
+      <ng-icon name="lucideCalendarDays" size="20" />
+      <h1 class="calendario-page__titulo">{{ tituloMes() }}</h1>
+    </div>
+
+    <div class="calendario-page__acoes">
+      <button hlmBtn variant="outline" class="cursor-pointer" (click)="mesAnterior()">
+        <ng-icon name="lucideChevronLeft" size="16" />
+        Anterior
+      </button>
+      <button hlmBtn variant="outline" class="cursor-pointer" (click)="irParaHoje()">Hoje</button>
+      <button hlmBtn variant="outline" class="cursor-pointer" (click)="mesProximo()">
+        Próximo
+        <ng-icon name="lucideChevronRight" size="16" />
+      </button>
+      <button hlmBtn class="calendario-page__btn-novo cursor-pointer" (click)="abrirNovoEvento()">
+        <ng-icon name="lucidePlus" size="16" />
+        Criar Evento
+      </button>
+    </div>
+  </div>
+
+  <div class="calendario-grade">
+    <div class="calendario-grade__semana--cabecalho">
+      @for (dia of diasSemana; track dia) {
+        <div class="calendario-grade__cabecalho-dia">{{ dia }}</div>
+      }
+    </div>
+
+    <div class="calendario-grade__dias">
+      @for (dia of dias(); track dia.data.getTime()) {
+        <div class="calendario-grade__dia"
+          [class.calendario-grade__dia--fora-do-mes]="!dia.noMesAtual"
+          [class.calendario-grade__dia--hoje]="dia.hoje"
+          (click)="abrirNovoEvento(dia.data)">
+          <span class="calendario-grade__numero">{{ dia.numero }}</span>
+
+          <div class="calendario-grade__eventos">
+            @for (evento of dia.eventos; track evento.id) {
+              <div class="calendario-grade__evento" (click)="editarEvento(evento, $event)">
+                @if (evento.horaInicio) {
+                  <span class="calendario-grade__evento-hora">{{ formatarHorario(evento) }}</span>
+                }
+                <span class="calendario-grade__evento-titulo">{{ evento.titulo }}</span>
+                <button type="button" class="calendario-grade__evento-excluir" (click)="excluirEvento(evento, $event)">
+                  <ng-icon name="lucideTrash2" size="12" />
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

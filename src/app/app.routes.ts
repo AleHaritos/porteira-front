@@ -121,6 +121,16 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/safra/talhao-detalhes/talhao-detalhes').then((m) => m.TalhaoDetalhes),
           },
+          {
+            path: 'calendario',
+            loadComponent: () =>
+              import('./features/calendario/calendario').then((m) => m.Calendario),
+          },
+          {
+            path: 'tarefas',
+            loadComponent: () =>
+              import('./features/tarefa/tarefa').then((m) => m.Tarefa),
+          },
         ],
       },
     ]
