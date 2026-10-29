@@ -93,6 +93,20 @@
                 <span>Animais</span>
               </a>
             </li>
+            <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="calendario" routerLinkActive #rlaCalendario="routerLinkActive"
+                [isActive]="rlaCalendario.isActive">
+                <ng-icon name="lucideCalendarDays" />
+                <span>Calendário</span>
+              </a>
+            </li>
+            <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="tarefas" routerLinkActive #rlaTarefas="routerLinkActive"
+                [isActive]="rlaTarefas.isActive">
+                <ng-icon name="lucideListTodo" />
+                <span>Tarefas</span>
+              </a>
+            </li>
           </ul>
         </div>
       </div>

@@ -1,0 +1,97 @@
+<hlm-dialog-header>
+  <div class="novo-evento__header-linha">
+    <div class="novo-evento__icone">
+      <ng-icon name="lucideCalendarDays" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>{{ editando() ? 'Editar Evento' : 'Novo Evento' }}</h3>
+      <p hlmDialogDescription>Lembrete ou compromisso no calendário</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="novo-evento__form mt-2" (ngSubmit)="salvar()">
+  <div class="novo-evento__campo">
+    <label hlmLabel for="titulo">Título</label>
+    <input hlmInput id="titulo" formControlName="titulo" placeholder="Ex: Reunião com fornecedor" />
+  </div>
+
+  <div class="novo-evento__campo">
+    <label hlmLabel for="data">Data</label>
+    <hlm-date-picker formControlName="data" class="w-full">
+      <hlm-date-picker-trigger buttonId="data" class="w-full">Selecionar data</hlm-date-picker-trigger>
+    </hlm-date-picker>
+  </div>
+
+  <div class="novo-evento__linha">
+    <div class="novo-evento__campo">
+      <label hlmLabel>Hora Início</label>
+      <div class="novo-evento__hora-grupo">
+        <hlm-select [value]="horaInicioHora()" (valueChange)="onHoraInicioHoraChange($event)"
+          [itemToString]="itemToStringHora" class="novo-evento__hora-select">
+          <hlm-select-trigger class="w-full">
+            <hlm-select-value placeholder="--" />
+          </hlm-select-trigger>
+          <hlm-select-content *hlmSelectPortal>
+            @for (h of horasOptions; track h) {
+            <hlm-select-item [value]="h">{{ h }}</hlm-select-item>
+            }
+          </hlm-select-content>
+        </hlm-select>
+        <span class="novo-evento__hora-separador">:</span>
+        <hlm-select [value]="horaInicioMinuto()" (valueChange)="onHoraInicioMinutoChange($event)"
+          [itemToString]="itemToStringMinuto" class="novo-evento__hora-select">
+          <hlm-select-trigger class="w-full">
+            <hlm-select-value placeholder="--" />
+          </hlm-select-trigger>
+          <hlm-select-content *hlmSelectPortal>
+            @for (m of minutosOptions; track m) {
+            <hlm-select-item [value]="m">{{ m }}</hlm-select-item>
+            }
+          </hlm-select-content>
+        </hlm-select>
+      </div>
+    </div>
+
+    <div class="novo-evento__campo">
+      <label hlmLabel>Hora Fim</label>
+      <div class="novo-evento__hora-grupo">
+        <hlm-select [value]="horaFimHora()" (valueChange)="onHoraFimHoraChange($event)"
+          [itemToString]="itemToStringHora" class="novo-evento__hora-select">
+          <hlm-select-trigger class="w-full">
+            <hlm-select-value placeholder="--" />
+          </hlm-select-trigger>
+          <hlm-select-content *hlmSelectPortal>
+            @for (h of horasOptions; track h) {
+            <hlm-select-item [value]="h">{{ h }}</hlm-select-item>
+            }
+          </hlm-select-content>
+        </hlm-select>
+        <span class="novo-evento__hora-separador">:</span>
+        <hlm-select [value]="horaFimMinuto()" (valueChange)="onHoraFimMinutoChange($event)"
+          [itemToString]="itemToStringMinuto" class="novo-evento__hora-select">
+          <hlm-select-trigger class="w-full">
+            <hlm-select-value placeholder="--" />
+          </hlm-select-trigger>
+          <hlm-select-content *hlmSelectPortal>
+            @for (m of minutosOptions; track m) {
+            <hlm-select-item [value]="m">{{ m }}</hlm-select-item>
+            }
+          </hlm-select-content>
+        </hlm-select>
+      </div>
+    </div>
+  </div>
+
+  <div class="novo-evento__campo mb-2">
+    <label hlmLabel for="descricao">Descrição</label>
+    <textarea hlmTextarea id="descricao" formControlName="descricao" rows="3" placeholder="Detalhes do evento (opcional)"></textarea>
+  </div>
+
+  <div class="novo-evento__acoes">
+    <button type="button" hlmBtn variant="outline" (click)="cancelar()">Cancelar</button>
+    <button type="submit" hlmBtn class="novo-evento__btn-salvar cursor-pointer" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : (editando() ? 'Salvar' : 'Criar Evento') }}
+    </button>
+  </div>
+</form>

@@ -1,0 +1,89 @@
+<hlm-dialog-header>
+  <div class="nova-tarefa__header-linha">
+    <div class="nova-tarefa__icone">
+      <ng-icon name="lucideListTodo" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>{{ editando() ? 'Editar Tarefa' : 'Nova Tarefa' }}</h3>
+      <p hlmDialogDescription>Organize o que precisa ser feito</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="nova-tarefa__form mt-2" (ngSubmit)="salvar()">
+  <div class="nova-tarefa__campo">
+    <label hlmLabel for="titulo">Título</label>
+    <input hlmInput id="titulo" formControlName="titulo" placeholder="Ex: Trocar cerca do pasto 3" />
+  </div>
+
+  <div class="nova-tarefa__linha">
+    <div class="nova-tarefa__campo">
+      <label hlmLabel>Prioridade</label>
+      <hlm-select [value]="prioridadeSelecionada()" (valueChange)="onPrioridadeChange($event)"
+        [itemToString]="itemToStringPrioridade" class="w-full">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          @for (opcao of prioridadeOptions; track opcao.value) {
+          <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+    </div>
+
+    <div class="nova-tarefa__campo">
+      <label hlmLabel for="prazo">Prazo (opcional)</label>
+      <hlm-date-picker formControlName="prazo" class="w-full">
+        <hlm-date-picker-trigger buttonId="prazo" class="w-full">Selecionar data</hlm-date-picker-trigger>
+      </hlm-date-picker>
+    </div>
+  </div>
+
+  <div class="nova-tarefa__campo">
+    <label hlmLabel for="descricao">Descrição</label>
+    <textarea hlmTextarea id="descricao" formControlName="descricao" rows="3" placeholder="Detalhes da tarefa (opcional)"></textarea>
+  </div>
+
+  <div class="nova-tarefa__subtarefas">
+    <label hlmLabel>Subtarefas</label>
+
+    @if (editando()) {
+      @for (sub of subtarefas(); track sub.id) {
+      <div class="nova-tarefa__subtarefa">
+        <input type="checkbox" [checked]="sub.concluida" (change)="toggleSubtarefa(sub)" />
+        <span [class.nova-tarefa__subtarefa-texto--concluida]="sub.concluida">{{ sub.titulo }}</span>
+        <button type="button" class="nova-tarefa__subtarefa-excluir" (click)="excluirSubtarefa(sub)">
+          <ng-icon name="lucideX" size="14" />
+        </button>
+      </div>
+      }
+    } @else {
+      @for (titulo of novasSubtarefasPendentes(); track $index) {
+      <div class="nova-tarefa__subtarefa">
+        <span>{{ titulo }}</span>
+        <button type="button" class="nova-tarefa__subtarefa-excluir" (click)="removerSubtarefaPendente($index)">
+          <ng-icon name="lucideX" size="14" />
+        </button>
+      </div>
+      }
+    }
+
+    <div class="nova-tarefa__subtarefa-nova">
+      <input hlmInput type="text" placeholder="Adicionar subtarefa..." [value]="novaSubtarefaTitulo()"
+        (input)="novaSubtarefaTitulo.set($any($event.target).value)"
+        (keydown.enter)="$event.preventDefault(); adicionarSubtarefa()" />
+      <button type="button" hlmBtn variant="outline" size="sm" class="cursor-pointer"
+        [disabled]="salvandoSubtarefa()" (click)="adicionarSubtarefa()">
+        <ng-icon name="lucidePlus" size="14" />
+      </button>
+    </div>
+  </div>
+
+  <div class="nova-tarefa__acoes">
+    <button type="button" hlmBtn variant="outline" (click)="cancelar()">Cancelar</button>
+    <button type="submit" hlmBtn class="nova-tarefa__btn-salvar cursor-pointer" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : (editando() ? 'Salvar' : 'Criar Tarefa') }}
+    </button>
+  </div>
+</form>
