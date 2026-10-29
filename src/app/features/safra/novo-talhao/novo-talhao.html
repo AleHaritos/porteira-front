@@ -24,6 +24,21 @@
   </div>
 
   <div class="flex flex-col gap-1.5">
+    <label hlmLabel>Status do Talhão</label>
+    <hlm-select [value]="statusTalhaoSelecionado()" (valueChange)="onStatusTalhaoChange($event)"
+      [itemToString]="itemToStringStatusTalhao" class="w-full">
+      <hlm-select-trigger class="w-full nova-talhao__input">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (opcao of statusTalhaoOptions; track opcao.value) {
+        <hlm-select-item [value]="opcao.value">{{ opcao.label }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+
+  <div class="flex flex-col gap-1.5">
     <label hlmLabel for="localizacao">Localização</label>
     <input hlmInput id="localizacao" type="text" formControlName="localizacao" placeholder="Opcional"
       class="w-full nova-talhao__input" />

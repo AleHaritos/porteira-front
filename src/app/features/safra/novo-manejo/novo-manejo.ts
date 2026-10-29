@@ -79,6 +79,7 @@ export class NovoManejo implements OnInit {
 
   form = this.fb.group({
     tipo: [(this._dialogContext.manejo?.tipo ?? 'PLANTIO') as TipoManejo, [Validators.required]],
+    titulo: [this._dialogContext.manejo?.titulo ?? ''],
     data: [
       this._dialogContext.manejo ? this.parseData(this._dialogContext.manejo.data) : (null as Date | null),
       [Validators.required],
@@ -164,6 +165,7 @@ export class NovoManejo implements OnInit {
 
     const payload = {
       tipo: this.form.value.tipo!,
+      titulo: this.form.value.titulo || undefined,
       data: this.formatarData(this.form.value.data!),
       descricao: this.form.value.descricao || undefined,
       observacoes: this.form.value.observacoes || undefined,

@@ -7,10 +7,39 @@ import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
 import { HlmTableImports } from '@spartan-ng/helm/table';
-import { ITalhao } from '../../../shared/interfaces/ITalhao';
+import { ITalhao, StatusTalhao } from '../../../shared/interfaces/ITalhao';
+import { ISafra } from '../../../shared/interfaces/ISafras';
 import { NovoTalhao } from '../novo-talhao/novo-talhao';
 import { TalhaoService } from '../../../core/services/safra/talhao-service';
+import { SafraService } from '../../../core/services/safra/safra-service';
+import { TransacoesService } from '../../../core/services/transacoes-service';
+import { CustoFixoTalhaoService } from '../../../core/services/safra/custo-fixo-talhao-service';
+import { ManejoService } from '../../../core/services/safra/manejo-service';
 import { CommonModule } from '@angular/common';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+
+const moeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+const STATUS_TALHAO_LABEL: Record<StatusTalhao, string> = {
+  PREPARO_DO_SOLO: 'Preparo do Solo',
+  PLANTIO: 'Plantio',
+  ADUBACAO: 'Adubação',
+  PULVERIZACAO: 'Pulverização',
+  IRRIGACAO: 'Irrigação',
+  COLHEITA: 'Colheita',
+  OUTRO: 'Outro',
+};
+
+const STATUS_TALHAO_CLASSE: Record<StatusTalhao, string> = {
+  PREPARO_DO_SOLO: 'talhoes-table__badge-etapa--preparo-do-solo',
+  PLANTIO: 'talhoes-table__badge-etapa--plantio',
+  ADUBACAO: 'talhoes-table__badge-etapa--adubacao',
+  PULVERIZACAO: 'talhoes-table__badge-etapa--pulverizacao',
+  IRRIGACAO: 'talhoes-table__badge-etapa--irrigacao',
+  COLHEITA: 'talhoes-table__badge-etapa--colheita',
+  OUTRO: 'talhoes-table__badge-etapa--outro',
+};
 
 @Component({
   selector: 'app-talhoes-tab',
@@ -21,6 +50,10 @@ import { CommonModule } from '@angular/common';
 })
 export class TalhoesTab implements OnInit {
   private talhaoService = inject(TalhaoService);
+  private safraService = inject(SafraService);
+  private transacoesService = inject(TransacoesService);
+  private custoFixoTalhaoService = inject(CustoFixoTalhaoService);
+  private manejoService = inject(ManejoService);
   private dialogService = inject(HlmDialogService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -31,6 +64,16 @@ export class TalhoesTab implements OnInit {
   paginaAtual = signal(0);
   totalPaginas = signal(0);
   carregando = signal(false);
+
+  safra = signal<ISafra | null>(null);
+  custoTotalSafra = signal(0);
+  custosPorHectare = signal<Map<number, number>>(new Map());
+  carregandoCustos = signal(false);
+
+  readonly formatarMoeda = (valor: number) => moeda.format(valor);
+  readonly statusTalhaoLabel = STATUS_TALHAO_LABEL;
+  readonly statusTalhaoClasse = STATUS_TALHAO_CLASSE;
+
 
   paginasVisiveis = computed(() => {
     const atual = this.paginaAtual();
@@ -55,7 +98,17 @@ export class TalhoesTab implements OnInit {
   });
 
   ngOnInit(): void {
-    this.carregar();
+    forkJoin({
+      safra: this.safraService.buscarPorId(this.safraId()),
+      resumo: this.transacoesService.buscarResumoPorSafra(this.safraId(), null, null),
+    }).subscribe({
+      next: ({ safra, resumo }) => {
+        this.safra.set(safra);
+        this.custoTotalSafra.set(resumo.totalGastos);
+        this.carregar();
+      },
+      error: () => this.carregar(),
+    });
   }
 
   carregar() {
@@ -65,9 +118,53 @@ export class TalhoesTab implements OnInit {
         this.talhoes.set(res.content);
         this.totalPaginas.set(res.totalPages);
         this.carregando.set(false);
+        this.carregarCustosPorHectare(res.content);
       },
       error: () => this.carregando.set(false),
     });
+  }
+
+  private carregarCustosPorHectare(talhoes: ITalhao[]): void {
+    if (talhoes.length === 0) {
+      this.custosPorHectare.set(new Map());
+      return;
+    }
+
+    this.carregandoCustos.set(true);
+
+    const chamadas = talhoes.map((talhao) =>
+      forkJoin({
+        custosFixos: this.custoFixoTalhaoService.listarPorTalhao(talhao.id).pipe(catchError(() => of([]))),
+        manejos: this.manejoService.listarTodosPorTalhao(talhao.id).pipe(catchError(() => of([]))),
+      }).pipe(
+        map(({ custosFixos, manejos }) => {
+          const totalCustosFixos = custosFixos.reduce((soma, c) => soma + c.valor, 0);
+          const totalManejos = manejos.reduce((soma, m) => soma + m.custoTotal, 0);
+
+          const areaTotalSafra = this.safra()?.areaTotal ?? 0;
+          const proporcaoArea = areaTotalSafra ? talhao.areaHectares / areaTotalSafra : 0;
+          const custoEstimado = this.custoTotalSafra() * proporcaoArea;
+          const gastosTotalTalhao = custoEstimado + totalCustosFixos + totalManejos;
+          const custoPorHectare = talhao.areaHectares ? gastosTotalTalhao / talhao.areaHectares : 0;
+
+          return { talhaoId: talhao.id, custoPorHectare };
+        }),
+      ),
+    );
+
+    forkJoin(chamadas).subscribe({
+      next: (resultados) => {
+        const mapa = new Map<number, number>();
+        resultados.forEach((r) => mapa.set(r.talhaoId, r.custoPorHectare));
+        this.custosPorHectare.set(mapa);
+        this.carregandoCustos.set(false);
+      },
+      error: () => this.carregandoCustos.set(false),
+    });
+  }
+
+  custoPorHectareDoTalhao(talhao: ITalhao): number {
+    return this.custosPorHectare().get(talhao.id) ?? 0;
   }
 
   irPara(pagina: number) {

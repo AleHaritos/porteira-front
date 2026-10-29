@@ -1,21 +1,23 @@
 import { Component, OnInit, computed, inject, input, output, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideClipboardList, lucideTrash2, lucidePencil } from '@ng-icons/lucide';
+import { lucideClipboardList, lucideTrash2, lucidePencil, lucideChevronRight } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmCollapsibleImports } from '@spartan-ng/helm/collapsible';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmPaginationImports } from '@spartan-ng/helm/pagination';
-import { HlmTableImports } from '@spartan-ng/helm/table';
 import { IManejo, TipoManejo } from '../../../shared/interfaces/IManejo';
 import { NovoManejo } from '../novo-manejo/novo-manejo';
 import { ToastService } from '../../../core/services/toast-service';
 import { ConfirmDialog } from '../../../shared/confirm-dialog/confirm-dialog';
 import { ManejoService } from '../../../core/services/safra/manejo-service';
 
+const moeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
 @Component({
   selector: 'app-manejos-talhao-tab',
-  imports: [CommonModule, HlmTableImports, HlmPaginationImports, HlmButtonImports, NgIcon, DatePipe],
-  providers: [provideIcons({ lucideClipboardList, lucidePencil, lucideTrash2 })],
+  imports: [CommonModule, HlmPaginationImports, HlmButtonImports, HlmCollapsibleImports, NgIcon, DatePipe],
+  providers: [provideIcons({ lucideClipboardList, lucidePencil, lucideTrash2, lucideChevronRight })],
   styleUrl: './manejos-talhao-tab.css',
   templateUrl: './manejos-talhao-tab.html',
 })
@@ -33,6 +35,9 @@ export class ManejosTalhaoTab implements OnInit {
   paginaAtual = signal(0);
   totalPaginas = signal(0);
   carregando = signal(false);
+  expandidos = signal<Set<number>>(new Set());
+
+  readonly formatarValor = (valor: number) => moeda.format(valor);
 
   paginasVisiveis = computed(() => {
     const atual = this.paginaAtual();
@@ -55,12 +60,14 @@ export class ManejosTalhaoTab implements OnInit {
     for (let i = inicio; i <= fim; i++) paginas.push(i);
     return paginas;
   });
+
   ngOnInit(): void {
     this.carregar();
   }
 
   carregar(): void {
     this.carregando.set(true);
+    this.expandidos.set(new Set());
     this.manejoService.buscarPorTalhao(this.talhaoId(), this.paginaAtual(), 10).subscribe({
       next: (res) => {
         this.manejos.set(res.content);
@@ -75,6 +82,17 @@ export class ManejosTalhaoTab implements OnInit {
     if (pagina < 0 || pagina > this.totalPaginas() - 1) return;
     this.paginaAtual.set(pagina);
     this.carregar();
+  }
+
+  estaExpandido(id: number): boolean {
+    return this.expandidos().has(id);
+  }
+
+  onExpandedChange(id: number, expandido: boolean): void {
+    const novo = new Set(this.expandidos());
+    if (expandido) novo.add(id);
+    else novo.delete(id);
+    this.expandidos.set(novo);
   }
 
   abrirNovoManejo(): void {
@@ -159,6 +177,6 @@ export class ManejosTalhaoTab implements OnInit {
   }
 
   produtosResumo(manejo: IManejo): string {
-    return manejo.itens.map((i) => `${i.produtoSafraNome} (${i.quantidade})`).join(', ');
+    return manejo.itens.map((i) => `${i.produtoNome} (${i.quantidade})`).join(', ');
   }
 }
