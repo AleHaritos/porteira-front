@@ -4,43 +4,16 @@
   gap: 1.5rem;
 }
 
-.colheita-tab__form-card {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  padding: 1.25rem 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+.colheita-tab__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.colheita-tab__form-titulo {
+.colheita-tab__titulo {
   font-size: 1.1rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #1f2937;
-  background-color: #e3f5e8;
-  padding: 0.85rem 1.5rem;
-  margin: -1.25rem -1.5rem 1.25rem -1.5rem;
-  border-radius: 0.75rem 0.75rem 0 0;
-  border-bottom: 1px solid #d8e6dc;
-}
-
-.colheita-tab__form {
-  display: flex;
-  align-items: flex-end;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.colheita-tab__campo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  flex: 1;
-  min-width: 200px;
-}
-
-.colheita-tab__campo--menor {
-  flex: 0 0 150px;
-  min-width: 130px;
 }
 
 .colheita-tab__btn-add {
@@ -57,6 +30,14 @@
 
 .colheita-tab__btn-add:hover {
   background: #278a4c;
+}
+
+.colheita-tab__btn-editar {
+  color: #278a4c;
+}
+
+.colheita-tab__btn-editar:hover {
+  background-color: #e3f5e8;
 }
 
 .colheita-tab__btn-excluir {
@@ -151,4 +132,11 @@
 .colheita-tab__stat-valor--destaque {
   color: #278a4c;
   font-size: 1.2rem;
+}
+
+.fazenda-table__pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  border-top: 1px solid #eef4f0;
 }

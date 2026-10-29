@@ -1,9 +1,9 @@
 <div class="custos-fixos-tab">
   <div class="custos-fixos-tab__form-card">
-    <h3 class="custos-fixos-tab__form-titulo">Adicionar custo fixo</h3>
+    <h3 class="custos-fixos-tab__form-titulo">Adicionar custo extra</h3>
     <form [formGroup]="form" class="custos-fixos-tab__form" (ngSubmit)="adicionar()">
       <div class="custos-fixos-tab__campo">
-        <label hlmLabel for="descricao">Descrição</label>
+        <label hlmLabel for="descricao">Arrendo</label>
         <input hlmInput id="descricao" formControlName="descricao" placeholder="Ex: Aluguel do talhão, droneagem..." />
       </div>
 
@@ -24,7 +24,7 @@
     <table hlmTable>
       <thead>
         <tr hlmTr class="fazenda-table__head-row">
-          <th hlmTh>Descrição</th>
+          <th hlmTh>Arrendo</th>
           <th hlmTh>Valor</th>
           <th hlmTh class="fazenda-table__acoes-head">Ações</th>
         </tr>
@@ -56,7 +56,7 @@
 
     @if (custos().length > 0) {
     <div class="custos-fixos-tab__total">
-      <span>Total de custos fixos</span>
+      <span>Total de custos extra</span>
       <strong>{{ formatarValor(totalCustos()) }}</strong>
     </div>
     }
