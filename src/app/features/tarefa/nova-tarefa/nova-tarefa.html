@@ -41,39 +41,109 @@
   </div>
 
   <div class="nova-tarefa__campo">
+    <label hlmLabel>Vínculo</label>
+    <div class="nova-tarefa__vinculo-toggle">
+      <button type="button" hlmBtn variant="outline" class="nova-tarefa__toggle-btn cursor-pointer"
+        [class.nova-tarefa__toggle-btn--ativo]="vinculo() === 'NENHUM'" (click)="onVinculoChange('NENHUM')">
+        Nenhum
+      </button>
+      <button type="button" hlmBtn variant="outline" class="nova-tarefa__toggle-btn cursor-pointer"
+        [class.nova-tarefa__toggle-btn--ativo]="vinculo() === 'NEGOCIO'" (click)="onVinculoChange('NEGOCIO')">
+        Negócio
+      </button>
+      <button type="button" hlmBtn variant="outline" class="nova-tarefa__toggle-btn cursor-pointer"
+        [class.nova-tarefa__toggle-btn--ativo]="vinculo() === 'SAFRA'" (click)="onVinculoChange('SAFRA')">
+        Safra
+      </button>
+      <button type="button" hlmBtn variant="outline" class="nova-tarefa__toggle-btn cursor-pointer"
+        [class.nova-tarefa__toggle-btn--ativo]="vinculo() === 'PROJETO'" (click)="onVinculoChange('PROJETO')">
+        Projeto
+      </button>
+    </div>
+  </div>
+
+  @if (vinculo() === 'NEGOCIO') {
+  <div class="nova-tarefa__campo">
+    <label hlmLabel>Negócio</label>
+    <hlm-select [value]="negocioSelecionado()" (valueChange)="onNegocioChange($event)"
+      [itemToString]="itemToStringNegocio" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (negocio of negocios(); track negocio.id) {
+        <hlm-select-item [value]="negocio.id">{{ negocio.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  } @else if (vinculo() === 'SAFRA') {
+  <div class="nova-tarefa__campo">
+    <label hlmLabel>Safra</label>
+    <hlm-select [value]="safraSelecionada()" (valueChange)="onSafraChange($event)" [itemToString]="itemToStringSafra"
+      class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (safra of safras(); track safra.id) {
+        <hlm-select-item [value]="safra.id">{{ safra.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  } @else if (vinculo() === 'PROJETO') {
+  <div class="nova-tarefa__campo">
+    <label hlmLabel>Projeto</label>
+    <hlm-select [value]="projetoSelecionado()" (valueChange)="onProjetoChange($event)"
+      [itemToString]="itemToStringProjeto" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (projeto of projetos(); track projeto.id) {
+        <hlm-select-item [value]="projeto.id">{{ projeto.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  }
+
+  <div class="nova-tarefa__campo">
     <label hlmLabel for="descricao">Descrição</label>
-    <textarea hlmTextarea id="descricao" formControlName="descricao" rows="3" placeholder="Detalhes da tarefa (opcional)"></textarea>
+    <textarea hlmTextarea id="descricao" formControlName="descricao" rows="3"
+      placeholder="Detalhes da tarefa (opcional)"></textarea>
   </div>
 
   <div class="nova-tarefa__subtarefas">
     <label hlmLabel>Subtarefas</label>
 
     @if (editando()) {
-      @for (sub of subtarefas(); track sub.id) {
-      <div class="nova-tarefa__subtarefa">
-        <input type="checkbox" [checked]="sub.concluida" (change)="toggleSubtarefa(sub)" />
-        <span [class.nova-tarefa__subtarefa-texto--concluida]="sub.concluida">{{ sub.titulo }}</span>
-        <button type="button" class="nova-tarefa__subtarefa-excluir" (click)="excluirSubtarefa(sub)">
-          <ng-icon name="lucideX" size="14" />
-        </button>
-      </div>
-      }
+    @for (sub of subtarefas(); track sub.id) {
+    <div class="nova-tarefa__subtarefa">
+      <input type="checkbox" [checked]="sub.concluida" (change)="toggleSubtarefa(sub)" />
+      <span [class.nova-tarefa__subtarefa-texto--concluida]="sub.concluida">{{ sub.titulo }}</span>
+      <button type="button" class="nova-tarefa__subtarefa-excluir" (click)="excluirSubtarefa(sub)">
+        <ng-icon name="lucideX" size="14" />
+      </button>
+    </div>
+    }
     } @else {
-      @for (titulo of novasSubtarefasPendentes(); track $index) {
-      <div class="nova-tarefa__subtarefa">
-        <span>{{ titulo }}</span>
-        <button type="button" class="nova-tarefa__subtarefa-excluir" (click)="removerSubtarefaPendente($index)">
-          <ng-icon name="lucideX" size="14" />
-        </button>
-      </div>
-      }
+    @for (titulo of novasSubtarefasPendentes(); track $index) {
+    <div class="nova-tarefa__subtarefa">
+      <span>{{ titulo }}</span>
+      <button type="button" class="nova-tarefa__subtarefa-excluir" (click)="removerSubtarefaPendente($index)">
+        <ng-icon name="lucideX" size="14" />
+      </button>
+    </div>
+    }
     }
 
     <div class="nova-tarefa__subtarefa-nova">
       <input hlmInput type="text" placeholder="Adicionar subtarefa..." [value]="novaSubtarefaTitulo()"
         (input)="novaSubtarefaTitulo.set($any($event.target).value)"
         (keydown.enter)="$event.preventDefault(); adicionarSubtarefa()" />
-      <button type="button" hlmBtn variant="outline" size="sm" class="cursor-pointer"
+      <button type="button" hlmBtn variant="outline" size="sm" class="nova-tarefa__btn-add-subtarefa cursor-pointer"
         [disabled]="salvandoSubtarefa()" (click)="adicionarSubtarefa()">
         <ng-icon name="lucidePlus" size="14" />
       </button>

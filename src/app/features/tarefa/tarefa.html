@@ -10,12 +10,52 @@
     </button>
   </div>
 
+  <div class="tarefa-page__filtros">
+    <div class="tarefa-page__filtro-toggle">
+      <button type="button" class="tarefa-page__filtro-btn"
+        [class.tarefa-page__filtro-btn--ativo]="filtroVinculo() === 'TODOS'"
+        (click)="onFiltroVinculoChange('TODOS')">
+        Todos
+      </button>
+      <button type="button" class="tarefa-page__filtro-btn"
+        [class.tarefa-page__filtro-btn--ativo]="filtroVinculo() === 'NEGOCIO'"
+        (click)="onFiltroVinculoChange('NEGOCIO')">
+        Negócio
+      </button>
+      <button type="button" class="tarefa-page__filtro-btn"
+        [class.tarefa-page__filtro-btn--ativo]="filtroVinculo() === 'SAFRA'"
+        (click)="onFiltroVinculoChange('SAFRA')">
+        Safra
+      </button>
+      <button type="button" class="tarefa-page__filtro-btn"
+        [class.tarefa-page__filtro-btn--ativo]="filtroVinculo() === 'PROJETO'"
+        (click)="onFiltroVinculoChange('PROJETO')">
+        Projeto
+      </button>
+    </div>
+
+    @if (filtroVinculo() !== 'TODOS') {
+    <hlm-select [value]="filtroEntidadeId()" (valueChange)="onFiltroEntidadeChange($event)"
+      [itemToString]="itemToStringFiltroEntidade" class="tarefa-page__filtro-select">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value placeholder="Todos" />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        <hlm-select-item [value]="null">Todos</hlm-select-item>
+        @for (opcao of opcoesFiltroEntidade(); track opcao.id) {
+        <hlm-select-item [value]="opcao.id">{{ opcao.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+    }
+  </div>
+
   <div class="tarefa-kanban" cdkDropListGroup>
     @for (coluna of colunas(); track coluna.status) {
     <div class="tarefa-kanban__coluna">
       <div class="tarefa-kanban__coluna-header">
         <span class="tarefa-kanban__coluna-titulo">{{ coluna.titulo }}</span>
-        <span class="tarefa-kanban__coluna-contador">{{ coluna.tarefas.length }}</span>
+        <span class="tarefa-kanban__coluna-contador">{{ tarefasFiltradas(coluna.tarefas).length }}</span>
       </div>
 
       <div
@@ -24,9 +64,10 @@
         [id]="coluna.status"
         [cdkDropListData]="coluna.tarefas"
         [cdkDropListConnectedTo]="idsColunas()"
+        [cdkDropListDisabled]="filtroAtivo()"
         (cdkDropListDropped)="onDrop($event, coluna.status)">
-        @for (tarefa of coluna.tarefas; track tarefa.id) {
-        <div class="tarefa-card" cdkDrag [class.tarefa-card--atrasada]="estaAtrasada(tarefa)">
+        @for (tarefa of tarefasFiltradas(coluna.tarefas); track tarefa.id) {
+        <div class="tarefa-card" cdkDrag [cdkDragDisabled]="filtroAtivo()" [class.tarefa-card--atrasada]="estaAtrasada(tarefa)">
           <div class="tarefa-card__topo">
             <span class="tarefa-card__prioridade" [class]="'tarefa-card__prioridade--' + tarefa.prioridade.toLowerCase()">
               <ng-icon name="lucideFlag" size="11" />
@@ -46,6 +87,12 @@
 
           @if (tarefa.descricao) {
           <p class="tarefa-card__descricao">{{ tarefa.descricao }}</p>
+          }
+
+          @if (tarefa.negocioNome || tarefa.safraNome || tarefa.projetoNome) {
+          <span class="tarefa-card__vinculo">
+            {{ tarefa.negocioNome || tarefa.safraNome || tarefa.projetoNome }}
+          </span>
           }
 
           @if (tarefa.subtarefas.length > 0) {

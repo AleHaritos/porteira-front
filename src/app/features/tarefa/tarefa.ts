@@ -6,6 +6,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideListTodo, lucidePlus, lucideCalendarClock, lucideTrash2, lucidePencil, lucideFlag } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
+import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { TarefaService } from '../../core/services/tarefa/tarefa-service';
 import { ToastService } from '../../core/services/toast-service';
 import { ITarefa, PrioridadeTarefa, StatusTarefa } from '../../shared/interfaces/ITarefa';
@@ -17,6 +18,13 @@ interface ColunaKanban {
   titulo: string;
   tarefas: ITarefa[];
 }
+
+interface OpcaoFiltro {
+  id: number;
+  nome: string;
+}
+
+type FiltroVinculo = 'TODOS' | 'NEGOCIO' | 'SAFRA' | 'PROJETO';
 
 const COLUNAS_BASE: { status: StatusTarefa; titulo: string }[] = [
   { status: 'A_FAZER', titulo: 'A Fazer' },
@@ -32,7 +40,7 @@ const PRIORIDADE_LABEL: Record<PrioridadeTarefa, string> = {
 
 @Component({
   selector: 'app-tarefa',
-  imports: [CommonModule, DatePipe, CdkDropListGroup, CdkDropList, CdkDrag, HlmButtonImports, NgIcon],
+  imports: [CommonModule, DatePipe, CdkDropListGroup, CdkDropList, CdkDrag, HlmButtonImports, HlmSelectImports, NgIcon],
   providers: [provideIcons({ lucideListTodo, lucidePlus, lucideCalendarClock, lucideTrash2, lucidePencil, lucideFlag })],
   styleUrl: './tarefa.css',
   templateUrl: './tarefa.html',
@@ -50,6 +58,37 @@ export class Tarefa implements OnInit {
   colunas = signal<ColunaKanban[]>(COLUNAS_BASE.map((c) => ({ ...c, tarefas: [] })));
 
   idsColunas = computed(() => this.colunas().map((c) => c.status));
+
+  filtroVinculo = signal<FiltroVinculo>('TODOS');
+  filtroEntidadeId = signal<number | null>(null);
+  filtroAtivo = computed(() => this.filtroVinculo() !== 'TODOS');
+
+  private todasTarefas = computed(() => this.colunas().flatMap((c) => c.tarefas));
+
+  negociosDisponiveis = computed(() => this.opcoesUnicas('negocioId', 'negocioNome'));
+  safrasDisponiveis = computed(() => this.opcoesUnicas('safraId', 'safraNome'));
+  projetosDisponiveis = computed(() => this.opcoesUnicas('projetoId', 'projetoNome'));
+
+  opcoesFiltroEntidade = computed<OpcaoFiltro[]>(() => {
+    const filtro = this.filtroVinculo();
+    if (filtro === 'NEGOCIO') return this.negociosDisponiveis();
+    if (filtro === 'SAFRA') return this.safrasDisponiveis();
+    if (filtro === 'PROJETO') return this.projetosDisponiveis();
+    return [];
+  });
+
+  itemToStringFiltroEntidade = (value: number | null | undefined) =>
+    this.opcoesFiltroEntidade().find((o) => o.id === value)?.nome || 'Todos';
+
+  private opcoesUnicas(campoId: 'negocioId' | 'safraId' | 'projetoId', campoNome: 'negocioNome' | 'safraNome' | 'projetoNome'): OpcaoFiltro[] {
+    const mapa = new Map<number, string>();
+    this.todasTarefas().forEach((t) => {
+      const id = t[campoId];
+      const nome = t[campoNome];
+      if (id != null && nome) mapa.set(id, nome);
+    });
+    return Array.from(mapa, ([id, nome]) => ({ id, nome }));
+  }
 
   ngOnInit(): void {
     this.route.parent?.paramMap.subscribe((params) => {
@@ -81,7 +120,31 @@ export class Tarefa implements OnInit {
     });
   }
 
+  onFiltroVinculoChange(filtro: FiltroVinculo): void {
+    this.filtroVinculo.set(filtro);
+    this.filtroEntidadeId.set(null);
+  }
+
+  onFiltroEntidadeChange(id: number | null | undefined): void {
+    this.filtroEntidadeId.set(id ?? null);
+  }
+
+  tarefasFiltradas(tarefas: ITarefa[]): ITarefa[] {
+    const filtro = this.filtroVinculo();
+    if (filtro === 'TODOS') return tarefas;
+
+    const entidadeId = this.filtroEntidadeId();
+
+    return tarefas.filter((t) => {
+      if (filtro === 'NEGOCIO') return entidadeId == null ? t.negocioId != null : t.negocioId === entidadeId;
+      if (filtro === 'SAFRA') return entidadeId == null ? t.safraId != null : t.safraId === entidadeId;
+      return entidadeId == null ? t.projetoId != null : t.projetoId === entidadeId;
+    });
+  }
+
   onDrop(event: CdkDragDrop<ITarefa[]>, statusDestino: StatusTarefa): void {
+    if (this.filtroAtivo()) return;
+
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.persistirOrdem(event.container.data, statusDestino);

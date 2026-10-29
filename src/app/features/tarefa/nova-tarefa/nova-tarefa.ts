@@ -14,6 +14,12 @@ import { TarefaService } from '../../../core/services/tarefa/tarefa-service';
 import { ToastService } from '../../../core/services/toast-service';
 import { ISubTarefa, ITarefa, PrioridadeTarefa } from '../../../shared/interfaces/ITarefa';
 import { ConfirmDialog } from '../../../shared/confirm-dialog/confirm-dialog';
+import { NegocioService } from '../../../core/services/negocio-service';
+import { SafraService } from '../../../core/services/safra/safra-service';
+import { ProjetoService } from '../../../core/services/projeto/projeto-service';
+import { INegocio } from '../../../shared/interfaces/INegocio';
+import { ISafra } from '../../../shared/interfaces/ISafras';
+import { IProjeto } from '../../../shared/interfaces/IProjeto';
 
 interface NovaTarefaContext {
   fazendaId: number;
@@ -25,6 +31,8 @@ const PRIORIDADE_OPTIONS: { value: PrioridadeTarefa; label: string }[] = [
   { value: 'MEDIA', label: 'Média' },
   { value: 'ALTA', label: 'Alta' },
 ];
+
+type Vinculo = 'NENHUM' | 'NEGOCIO' | 'SAFRA' | 'PROJETO';
 
 @Component({
   selector: 'app-nova-tarefa',
@@ -50,6 +58,9 @@ export class NovaTarefa implements OnInit {
   private tarefaService = inject(TarefaService);
   private toastService = inject(ToastService);
   private dialogService = inject(HlmDialogService);
+  private negocioService = inject(NegocioService);
+  private safraService = inject(SafraService);
+  private projetoService = inject(ProjetoService);
 
   salvando = signal(false);
   editando = signal(!!this.context.tarefa);
@@ -61,8 +72,25 @@ export class NovaTarefa implements OnInit {
   novaSubtarefaTitulo = signal('');
   salvandoSubtarefa = signal(false);
 
+  vinculo = signal<Vinculo>('NENHUM');
+  negocios = signal<INegocio[]>([]);
+  safras = signal<ISafra[]>([]);
+  projetos = signal<IProjeto[]>([]);
+  negocioSelecionado = signal<number | null>(null);
+  safraSelecionada = signal<number | null>(null);
+  projetoSelecionado = signal<number | null>(null);
+
   itemToStringPrioridade = (value: PrioridadeTarefa | null | undefined) =>
     this.prioridadeOptions.find((o) => o.value === value)?.label ?? '';
+
+  itemToStringNegocio = (value: number | null | undefined) =>
+    this.negocios().find((n) => n.id === value)?.nome || '';
+
+  itemToStringSafra = (value: number | null | undefined) =>
+    this.safras().find((s) => s.id === value)?.nome || '';
+
+  itemToStringProjeto = (value: number | null | undefined) =>
+    this.projetos().find((p) => p.id === value)?.nome || '';
 
   form = this.fb.group({
     titulo: ['', Validators.required],
@@ -71,6 +99,20 @@ export class NovaTarefa implements OnInit {
   });
 
   ngOnInit(): void {
+    const fazendaId = this.context.fazendaId;
+
+    this.negocioService.listarTodosPorFazenda(fazendaId).subscribe({
+      next: (negocios) => this.negocios.set(negocios),
+    });
+
+    this.safraService.buscarSafrasPorFazenda(fazendaId).subscribe({
+      next: (safras) => this.safras.set(safras.content),
+    });
+
+    this.projetoService.listarTodosPorFazenda(fazendaId).subscribe({
+      next: (projetos) => this.projetos.set(projetos),
+    });
+
     const tarefa = this.context.tarefa;
     if (tarefa) {
       this.form.patchValue({
@@ -79,11 +121,41 @@ export class NovaTarefa implements OnInit {
         prazo: tarefa.prazo ? this.parseData(tarefa.prazo) : null,
       });
       this.prioridadeSelecionada.set(tarefa.prioridade);
+
+      if (tarefa.negocioId) {
+        this.vinculo.set('NEGOCIO');
+        this.negocioSelecionado.set(tarefa.negocioId);
+      } else if (tarefa.safraId) {
+        this.vinculo.set('SAFRA');
+        this.safraSelecionada.set(tarefa.safraId);
+      } else if (tarefa.projetoId) {
+        this.vinculo.set('PROJETO');
+        this.projetoSelecionado.set(tarefa.projetoId);
+      }
     }
   }
 
   onPrioridadeChange(valor: PrioridadeTarefa | null | undefined): void {
     if (valor) this.prioridadeSelecionada.set(valor);
+  }
+
+  onVinculoChange(vinculo: Vinculo): void {
+    this.vinculo.set(vinculo);
+    this.negocioSelecionado.set(null);
+    this.safraSelecionada.set(null);
+    this.projetoSelecionado.set(null);
+  }
+
+  onNegocioChange(id: number | null | undefined): void {
+    this.negocioSelecionado.set(id ?? null);
+  }
+
+  onSafraChange(id: number | null | undefined): void {
+    this.safraSelecionada.set(id ?? null);
+  }
+
+  onProjetoChange(id: number | null | undefined): void {
+    this.projetoSelecionado.set(id ?? null);
   }
 
   private parseData(iso: string): Date {
@@ -163,7 +235,7 @@ export class NovaTarefa implements OnInit {
     });
   }
 
-    salvar(): void {
+  salvar(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.toastService.showError('Erro', 'Informe o título da tarefa');
@@ -172,6 +244,7 @@ export class NovaTarefa implements OnInit {
 
     const { titulo, descricao, prazo } = this.form.value;
     const tarefa = this.context.tarefa;
+    const vinculo = this.vinculo();
 
     const request = {
       fazendaId: this.context.fazendaId,
@@ -179,6 +252,9 @@ export class NovaTarefa implements OnInit {
       descricao: descricao || undefined,
       prioridade: this.prioridadeSelecionada(),
       prazo: prazo ? this.formatarDataIso(prazo as Date) : null,
+      negocioId: vinculo === 'NEGOCIO' ? this.negocioSelecionado() : null,
+      safraId: vinculo === 'SAFRA' ? this.safraSelecionada() : null,
+      projetoId: vinculo === 'PROJETO' ? this.projetoSelecionado() : null,
       ...(!tarefa ? { subtarefas: this.novasSubtarefasPendentes() } : {}),
     };
 

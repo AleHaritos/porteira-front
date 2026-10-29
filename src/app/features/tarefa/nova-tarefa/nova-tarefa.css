@@ -120,3 +120,35 @@
 .nova-tarefa__btn-salvar:hover {
   background: #278a4c;
 }
+
+.nova-tarefa__vinculo-toggle {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nova-tarefa__toggle-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 100px;
+}
+
+.nova-tarefa__toggle-btn--ativo {
+  background: #2f9e58 !important;
+  color: white !important;
+  border-color: #2f9e58 !important;
+}
+
+.nova-tarefa__btn-add-subtarefa {
+  background: #2f9e58;
+  color: white;
+  border-color: #2f9e58;
+}
+
+.nova-tarefa__btn-add-subtarefa:hover:not(:disabled) {
+  background: #278a4c;
+  border-color: #278a4c;
+}
