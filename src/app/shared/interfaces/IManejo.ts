@@ -3,11 +3,12 @@ export type TipoManejo = 'PREPARO_DO_SOLO' | 'PLANTIO' | 'ADUBACAO' | 'PULVERIZA
 export interface IItemManejo {
   id: number;
   produtoSafraId: number;
-  produtoSafraNome: string;
+  produtoNome: string;
   quantidade: number;
   custoUnitario: number;
   custoTotal: number;
 }
+
 
 export interface IItemManejoRequest {
   produtoSafraId: number;
@@ -17,6 +18,7 @@ export interface IItemManejoRequest {
 export interface IManejo {
   id: number;
   tipo: TipoManejo;
+  titulo: string | null;
   data: string;
   descricao: string | null;
   observacoes: string | null;
@@ -28,6 +30,7 @@ export interface IManejo {
 
 export interface ManejoRequest {
   tipo: TipoManejo;
+  titulo?: string;
   data: string;
   descricao?: string;
   observacoes?: string;

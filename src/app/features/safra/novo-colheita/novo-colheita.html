@@ -1,0 +1,48 @@
+<hlm-dialog-header class="mb-2">
+  <div class="novo-colheita__header-linha">
+    <div class="novo-colheita__header-icone">
+      <ng-icon name="lucideSprout" size="20" />
+    </div>
+    <div class="novo-colheita__header-textos">
+      <h3 hlmDialogTitle>{{ tituloDialog() }}</h3>
+      <p hlmDialogDescription class="novo-colheita__header-subtitulo">Registre a produção colhida neste talhão</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="novo-colheita__form">
+  <div class="novo-colheita__campo">
+    <label hlmLabel for="descricao">Descrição (opcional)</label>
+    <input hlmInput id="descricao" formControlName="descricao" placeholder="Ex: Colheita 1, Safrinha..." />
+  </div>
+
+  <div class="novo-colheita__campo">
+    <label hlmLabel>Data (opcional)</label>
+    <hlm-date-picker formControlName="data" [maxDate]="maxDate" class="w-full">
+      <hlm-date-picker-trigger buttonId="colheitaData" class="w-full">Selecionar data</hlm-date-picker-trigger>
+    </hlm-date-picker>
+  </div>
+
+  <div class="novo-colheita__linha">
+    <div class="novo-colheita__campo">
+      <label hlmLabel for="quantidade">Quantidade (sc)</label>
+      <input hlmInput id="quantidade" type="text" inputmode="numeric"
+        [value]="formatarInputDisplay(quantidadeRaw())"
+        (input)="onQuantidadeInput($any($event.target).value)" placeholder="0,00" />
+    </div>
+
+    <div class="novo-colheita__campo">
+      <label hlmLabel for="valorUnitario">Valor Un</label>
+      <input hlmInput id="valorUnitario" type="text" inputmode="numeric"
+        [value]="formatarInputDisplay(valorUnitarioRaw())"
+        (input)="onValorUnitarioInput($any($event.target).value)" placeholder="0,00" />
+    </div>
+  </div>
+</form>
+
+<hlm-dialog-footer class="mt-2">
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
+  <button hlmBtn class="novo-colheita__btn-salvar cursor-pointer" type="button" [disabled]="salvando()" (click)="salvar()">
+    {{ salvando() ? 'Salvando...' : 'Salvar' }}
+  </button>
+</hlm-dialog-footer>

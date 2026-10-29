@@ -1,0 +1,46 @@
+.registrar-uso__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.registrar-uso__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #fef3c7;
+  color: #b45309;
+  flex-shrink: 0;
+}
+
+.registrar-uso__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 0;
+}
+
+.registrar-uso__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.registrar-uso__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.registrar-uso__btn-salvar {
+  border-color: #b45309;
+  color: #b45309;
+}
+
+.registrar-uso__btn-salvar:hover:not(:disabled) {
+  background: #fef3c7;
+}

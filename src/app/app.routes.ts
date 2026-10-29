@@ -131,6 +131,11 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/tarefa/tarefa').then((m) => m.Tarefa),
           },
+           {
+            path: 'estoque',
+            loadComponent: () =>
+              import('./features/estoque/estoque').then((m) => m.Estoque),
+          },
         ],
       },
     ]

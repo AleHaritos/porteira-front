@@ -166,6 +166,18 @@ export class TalhaoDetalhes implements OnInit {
     () => this.custoEstimadoTalhao() + this.totalCustosFixos() + this.custoManejoTotal(),
   );
 
+  custoCombustivelManutencaoEstimado = computed(
+    () => this.custoCombustivelEstimado() + this.custoManutencaoEstimado(),
+  );
+
+  custoPorUnidadeProduzida = computed(() => {
+    const producao = this.producaoTotalColheita();
+    if (!producao) return 0;
+    return this.gastosTotalTalhao() / producao;
+  });
+
+  temProducaoColheita = computed(() => this.producaoTotalColheita() > 0);
+
   readonly formatarValor = (valor: number) => moeda.format(valor);
   readonly formatarSacas = (valor: number) => `${numeroFormatter.format(valor)} sc`;
 

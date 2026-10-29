@@ -7,14 +7,25 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
+import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { HlmTextareaImports } from '@spartan-ng/helm/textarea';
-import { ITalhao } from '../../../shared/interfaces/ITalhao';
+import { ITalhao, StatusTalhao } from '../../../shared/interfaces/ITalhao';
 import { TalhaoService } from '../../../core/services/safra/talhao-service';
 
 interface NovoTalhaoContext {
   safraId: number;
   talhao?: ITalhao;
 }
+
+const STATUS_TALHAO_OPTIONS: { value: StatusTalhao; label: string }[] = [
+  { value: 'PREPARO_DO_SOLO', label: 'Preparo do Solo' },
+  { value: 'PLANTIO', label: 'Plantio' },
+  { value: 'ADUBACAO', label: 'Adubação' },
+  { value: 'PULVERIZACAO', label: 'Pulverização' },
+  { value: 'IRRIGACAO', label: 'Irrigação' },
+  { value: 'COLHEITA', label: 'Colheita' },
+  { value: 'OUTRO', label: 'Outro' },
+];
 
 @Component({
  imports: [
@@ -24,6 +35,7 @@ interface NovoTalhaoContext {
     HlmLabelImports,
     HlmButtonImports,
     HlmTextareaImports,
+    HlmSelectImports,
     NgIcon,
   ],
   providers: [provideIcons({ lucideMapPin })],
@@ -41,12 +53,22 @@ export class NovoTalhao {
   loading = signal(false);
   erro = signal<string | null>(null);
 
+  statusTalhaoOptions = STATUS_TALHAO_OPTIONS;
+  statusTalhaoSelecionado = signal<StatusTalhao>(this._dialogContext.talhao?.statusTalhao ?? 'PREPARO_DO_SOLO');
+
+  itemToStringStatusTalhao = (value: StatusTalhao | null | undefined) =>
+    this.statusTalhaoOptions.find((o) => o.value === value)?.label ?? '';
+
   form = this.fb.group({
     nome: [this._dialogContext.talhao?.nome ?? '', [Validators.required]],
     areaHectares: [this._dialogContext.talhao?.areaHectares ?? (null as number | null), [Validators.required, Validators.min(0.01)]],
     localizacao: [this._dialogContext.talhao?.localizacao ?? ''],
     observacao: [this._dialogContext.talhao?.observacao ?? ''],
   });
+
+  onStatusTalhaoChange(valor: StatusTalhao | null | undefined): void {
+    if (valor) this.statusTalhaoSelecionado.set(valor);
+  }
 
   cancelar() {
     this._dialogRef.close();
@@ -64,6 +86,7 @@ export class NovoTalhao {
       areaHectares: this.form.value.areaHectares!,
       localizacao: this.form.value.localizacao || undefined,
       observacao: this.form.value.observacao || undefined,
+      statusTalhao: this.statusTalhaoSelecionado(),
     };
 
     const request$ = this.modoEdicao

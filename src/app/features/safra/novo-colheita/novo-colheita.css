@@ -1,0 +1,50 @@
+.novo-colheita__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.novo-colheita__header-icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #e3f5e8;
+  color: #278a4c;
+  flex-shrink: 0;
+}
+
+.novo-colheita__header-subtitulo {
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.novo-colheita__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.novo-colheita__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+}
+
+.novo-colheita__linha {
+  display: flex;
+  gap: 1rem;
+}
+
+.novo-colheita__btn-salvar {
+  background: #2f9e58;
+  color: white;
+}
+
+.novo-colheita__btn-salvar:hover:not(:disabled) {
+  background: #278a4c;
+}

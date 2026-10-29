@@ -35,7 +35,7 @@
         Manejos
       </button>
       <button hlmTabsTrigger="custosFixos" (click)="selecionarAba('custosFixos')" class="cursor-pointer">
-        Custos Fixos
+        Custos Extras
       </button>
       <button hlmTabsTrigger="colheita" (click)="selecionarAba('colheita')" class="cursor-pointer">
         Colheita
@@ -59,18 +59,19 @@
 
         <div class="talhao-detalhes__rateio-grid">
           <div class="talhao-detalhes__rateio-item">
-            <span class="talhao-detalhes__rateio-item-label">Área do talhão</span>
-            <span class="talhao-detalhes__rateio-item-valor">{{ talhao()?.areaHectares ?? 0 }} ha</span>
+            <span class="talhao-detalhes__rateio-item-label">Custos com Manejo</span>
+            <span class="talhao-detalhes__rateio-item-valor">{{ formatarValor(custoManejoTotal()) }}</span>
           </div>
 
           <div class="talhao-detalhes__rateio-item">
-            <span class="talhao-detalhes__rateio-item-label">Área total da safra</span>
-            <span class="talhao-detalhes__rateio-item-valor">{{ safra()?.areaTotal ?? 0 }} ha</span>
+            <span class="talhao-detalhes__rateio-item-label">Custos com Manutenção e Combustível</span>
+            <span class="talhao-detalhes__rateio-item-valor">{{ formatarValor(custoCombustivelManutencaoEstimado())
+              }}</span>
           </div>
 
           <div class="talhao-detalhes__rateio-item">
-            <span class="talhao-detalhes__rateio-item-label">Gastos totais da safra</span>
-            <span class="talhao-detalhes__rateio-item-valor">{{ formatarValor(custoTotalSafra()) }}</span>
+            <span class="talhao-detalhes__rateio-item-label">Custos Extras</span>
+            <span class="talhao-detalhes__rateio-item-valor">{{ formatarValor(totalCustosFixos()) }}</span>
           </div>
 
           <div class="talhao-detalhes__rateio-item talhao-detalhes__rateio-item--destaque">
@@ -86,6 +87,15 @@
               {{ formatarValor(custoTotalPorHectare()) }}
             </span>
           </div>
+
+          @if (temProducaoColheita()) {
+          <div class="talhao-detalhes__rateio-item talhao-detalhes__rateio-item--destaque">
+            <span class="talhao-detalhes__rateio-item-label">Custo estimado por unidade produzida</span>
+            <span class="talhao-detalhes__rateio-item-valor talhao-detalhes__rateio-item-valor--destaque">
+              {{ formatarValor(custoPorUnidadeProduzida()) }} / sc
+            </span>
+          </div>
+          }
         </div>
       </div>
 

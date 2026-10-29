@@ -1,0 +1,38 @@
+<hlm-dialog-header>
+  <div class="registrar-uso__header-linha">
+    <div class="registrar-uso__icone">
+      <ng-icon name="lucidePackageMinus" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Registrar Uso</h3>
+      <p hlmDialogDescription>{{ context.produto.nome }}</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="registrar-uso__form mt-2" (ngSubmit)="salvar()">
+  <div class="registrar-uso__campo">
+    <label hlmLabel>Quantidade</label>
+    <input hlmInput type="text" inputmode="numeric" [value]="formatarInputDisplay(quantidadeRaw())"
+      (input)="onQuantidadeInput($any($event.target).value)" placeholder="0,00" />
+  </div>
+
+  <div class="registrar-uso__campo">
+    <label hlmLabel>Data</label>
+    <hlm-date-picker formControlName="data" [maxDate]="maxDate" class="w-full">
+      <hlm-date-picker-trigger buttonId="dataUso" class="w-full">Selecionar data</hlm-date-picker-trigger>
+    </hlm-date-picker>
+  </div>
+
+  <div class="registrar-uso__campo">
+    <label hlmLabel>Observação (opcional)</label>
+    <input hlmInput formControlName="observacao" placeholder="Ex: Usado no talhão Norte" />
+  </div>
+
+  <div class="registrar-uso__acoes">
+    <button type="button" hlmBtn variant="outline" (click)="cancelar()">Cancelar</button>
+    <button type="submit" hlmBtn variant="outline" class="registrar-uso__btn-salvar cursor-pointer" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : 'Registrar' }}
+    </button>
+  </div>
+</form>

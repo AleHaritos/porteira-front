@@ -13,7 +13,8 @@
           <tr hlmTr class="fazenda-table__head-row">
             <th hlmTh>Talhão</th>
             <th hlmTh>Área (ha)</th>
-            <th hlmTh>Localização</th>
+            <th hlmTh>Etapa</th>
+            <th hlmTh>Custo/Ha</th>
             <th hlmTh>Status</th>
             <th hlmTh class="w-[60px] text-right">Ações</th>
           </tr>
@@ -24,7 +25,18 @@
           <tr hlmTr class="fazenda-table__row talhoes-page__row" (click)="abrirDetalhesTalhao(talhao)">
             <td hlmTd class="fazenda-table__nome">{{ talhao.nome }}</td>
             <td hlmTd>{{ talhao.areaHectares }}</td>
-            <td hlmTd>{{ talhao.localizacao || '—' }}</td>
+            <td hlmTd>
+              <span class="talhoes-table__badge-etapa" [ngClass]="statusTalhaoClasse[talhao.statusTalhao]">
+                {{ statusTalhaoLabel[talhao.statusTalhao] }}
+              </span>
+            </td>
+            <td hlmTd>
+              @if (carregandoCustos()) {
+              <span class="talhoes-table__custo-carregando">Calculando...</span>
+              } @else {
+              {{ formatarMoeda(custoPorHectareDoTalhao(talhao)) }}
+              }
+            </td>
             <td hlmTd>
               <span class="talhoes-table__badge"
                 [ngClass]="talhao.ativo ? 'talhoes-table__badge--ativo' : 'talhoes-table__badge--inativo'">
@@ -51,7 +63,7 @@
           </tr>
           } @empty {
           <tr hlmTr>
-            <td hlmTd [attr.colSpan]="4" class="fazenda-table__empty">
+            <td hlmTd [attr.colSpan]="6" class="fazenda-table__empty">
               @if (carregando()) {
               Carregando talhões...
               } @else {

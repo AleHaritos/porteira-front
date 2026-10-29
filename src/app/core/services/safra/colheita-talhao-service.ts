@@ -1,11 +1,11 @@
-import { Service, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UtilService } from '../util-service';
-import { ColheitaTalhaoRequest, IColheitaTalhao } from '../../../shared/interfaces/IColheitaTalhao';
+import { ColheitaTalhaoRequest, ColheitaTalhaoUpdateRequest, IColheitaTalhao } from '../../../shared/interfaces/IColheitaTalhao';
 
-@Service()
+@Injectable({ providedIn: 'root' })
 export class ColheitaTalhaoService {
   private http = inject(HttpClient);
   private utilService = inject(UtilService);
@@ -14,6 +14,10 @@ export class ColheitaTalhaoService {
 
   salvar(request: ColheitaTalhaoRequest): Observable<IColheitaTalhao> {
     return this.http.post<IColheitaTalhao>(this.API_URL, request).pipe(catchError(this.utilService.errorHandler));
+  }
+
+  atualizar(id: number, request: ColheitaTalhaoUpdateRequest): Observable<IColheitaTalhao> {
+    return this.http.put<IColheitaTalhao>(`${this.API_URL}/${id}`, request).pipe(catchError(this.utilService.errorHandler));
   }
 
   listarPorTalhao(talhaoId: number): Observable<IColheitaTalhao[]> {

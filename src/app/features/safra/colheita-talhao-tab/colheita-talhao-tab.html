@@ -1,31 +1,10 @@
 <div class="colheita-tab">
-  <div class="colheita-tab__form-card">
-    <h3 class="colheita-tab__form-titulo">Adicionar colheita</h3>
-    <form [formGroup]="form" class="colheita-tab__form" (ngSubmit)="adicionar()">
-      <div class="colheita-tab__campo">
-        <label hlmLabel for="descricao">Descrição (opcional)</label>
-        <input hlmInput id="descricao" formControlName="descricao" placeholder="Ex: Colheita 1, Safrinha..." />
-      </div>
-
-      <div class="colheita-tab__campo colheita-tab__campo--menor">
-        <label hlmLabel for="quantidade">Quantidade (sc)</label>
-        <input hlmInput id="quantidade" type="text" inputmode="numeric"
-          [value]="formatarInputDisplay(quantidadeRaw())"
-          (input)="onQuantidadeInput($any($event.target).value)" placeholder="0,00" />
-      </div>
-
-      <div class="colheita-tab__campo colheita-tab__campo--menor">
-        <label hlmLabel for="valorUnitario">Valor Un</label>
-        <input hlmInput id="valorUnitario" type="text" inputmode="numeric"
-          [value]="formatarInputDisplay(valorUnitarioRaw())"
-          (input)="onValorUnitarioInput($any($event.target).value)" placeholder="0,00" />
-      </div>
-
-      <button type="submit" hlmBtn class="colheita-tab__btn-add cursor-pointer" [disabled]="salvando()">
-        <ng-icon name="lucidePlus" size="16" />
-        Adicionar
-      </button>
-    </form>
+  <div class="colheita-tab__header">
+    <h3 class="colheita-tab__titulo">Colheita</h3>
+    <button hlmBtn class="colheita-tab__btn-add cursor-pointer" (click)="abrirNovaColheita()">
+      <ng-icon name="lucidePlus" size="16" />
+      Adicionar colheita
+    </button>
   </div>
 
   <div class="fazenda-table">
@@ -33,6 +12,7 @@
       <thead>
         <tr hlmTr class="fazenda-table__head-row">
           <th hlmTh>Descrição</th>
+          <th hlmTh>Data</th>
           <th hlmTh>Quantidade</th>
           <th hlmTh>Valor Un</th>
           <th hlmTh>Receita</th>
@@ -40,13 +20,17 @@
         </tr>
       </thead>
       <tbody>
-        @for (colheita of colheitas(); track colheita.id) {
+        @for (colheita of colheitasPaginadas(); track colheita.id) {
         <tr hlmTr class="fazenda-table__row">
           <td hlmTd class="fazenda-table__nome">{{ colheita.descricao || '-' }}</td>
+          <td hlmTd>{{ colheita.data ? (colheita.data | date: 'dd/MM/yyyy' : 'UTC') : '-' }}</td>
           <td hlmTd>{{ formatarSacas(colheita.quantidadeColhida) }}</td>
           <td hlmTd>{{ formatarValor(colheita.valorUnitario) }}</td>
           <td hlmTd>{{ formatarValor(colheita.quantidadeColhida * colheita.valorUnitario) }}</td>
           <td hlmTd>
+            <button hlmBtn variant="ghost" size="sm" class="colheita-tab__btn-editar cursor-pointer" (click)="editar(colheita)">
+              <ng-icon name="lucidePencil" size="16" />
+            </button>
             <button hlmBtn variant="ghost" size="sm" class="colheita-tab__btn-excluir cursor-pointer" (click)="excluir(colheita)">
               <ng-icon name="lucideTrash2" size="16" />
             </button>
@@ -54,7 +38,7 @@
         </tr>
         } @empty {
         <tr hlmTr>
-          <td hlmTd [attr.colSpan]="5" class="fazenda-table__empty">
+          <td hlmTd [attr.colSpan]="6" class="fazenda-table__empty">
             @if (carregando()) {
             Carregando colheitas...
             } @else {
@@ -65,6 +49,28 @@
         }
       </tbody>
     </table>
+
+    @if (totalPaginas() > 1) {
+    <nav hlmPagination class="fazenda-table__pagination">
+      <ul hlmPaginationContent>
+        <li hlmPaginationItem>
+          <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+        </li>
+
+        @for (pagina of paginasVisiveis(); track pagina) {
+        <li hlmPaginationItem>
+          <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+            {{ pagina + 1 }}
+          </button>
+        </li>
+        }
+
+        <li hlmPaginationItem>
+          <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+        </li>
+      </ul>
+    </nav>
+    }
   </div>
 
   <div class="colheita-tab__grid">

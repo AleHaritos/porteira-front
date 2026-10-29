@@ -1,0 +1,25 @@
+<hlm-dialog-header>
+  <div class="novo-produto-estoque__header-linha">
+    <div class="novo-produto-estoque__icone">
+      <ng-icon name="lucideWarehouse" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>Novo Produto</h3>
+      <p hlmDialogDescription>Cadastre um item no estoque</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="novo-produto-estoque__form mt-2" (ngSubmit)="salvar()">
+  <div class="novo-produto-estoque__campo">
+    <label hlmLabel for="nome">Nome do produto</label>
+    <input hlmInput id="nome" formControlName="nome" placeholder="Ex: Ureia, Óleo diesel, Arame..." />
+  </div>
+
+  <div class="novo-produto-estoque__acoes">
+    <button type="button" hlmBtn variant="outline" (click)="cancelar()">Cancelar</button>
+    <button type="submit" hlmBtn class="novo-produto-estoque__btn-salvar cursor-pointer" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : 'Adicionar' }}
+    </button>
+  </div>
+</form>

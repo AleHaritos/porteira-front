@@ -242,3 +242,49 @@
 .cdk-drag-placeholder {
   opacity: 0.3;
 }
+
+.tarefa-page__filtros {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tarefa-page__filtro-toggle {
+  display: flex;
+  gap: 6px;
+  background: #f2f9f4;
+  border: 1px solid #d8e6dc;
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.tarefa-page__filtro-btn {
+  background: none;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.tarefa-page__filtro-btn--ativo {
+  background: #2f9e58;
+  color: white;
+}
+
+.tarefa-page__filtro-select {
+  min-width: 200px;
+}
+
+.tarefa-card__vinculo {
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #278a4c;
+  background: #e3f5e8;
+  padding: 2px 8px;
+  border-radius: 999px;
+}

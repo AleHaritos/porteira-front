@@ -1,0 +1,121 @@
+<hlm-dialog-header>
+  <div class="produto-detalhes__header-linha">
+    <div class="produto-detalhes__icone">
+      <ng-icon name="lucideWarehouse" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>{{ context.produto.nome }}</h3>
+      <p hlmDialogDescription>Histórico de movimentação do estoque</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<div class="produto-detalhes__historicos">
+  <div class="produto-detalhes__historico">
+    <h4 class="produto-detalhes__historico-titulo">Histórico de Compras</h4>
+    <div class="fazenda-table">
+      <table hlmTable>
+        <thead>
+          <tr hlmTr class="fazenda-table__head-row">
+            <th hlmTh>Data</th>
+            <th hlmTh>Quantidade</th>
+            <th hlmTh>Valor Un</th>
+            <th hlmTh>Total</th>
+            <th hlmTh>Observação</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (compra of comprasPaginadas(); track compra.id) {
+          <tr hlmTr class="fazenda-table__row">
+            <td hlmTd>{{ compra.data | date: 'dd/MM/yyyy' : 'UTC' }}</td>
+            <td hlmTd>{{ formatarQuantidade(compra.quantidade) }}</td>
+            <td hlmTd>{{ formatarValor(compra.valorUnitario) }}</td>
+            <td hlmTd>{{ formatarValor(compra.quantidade * compra.valorUnitario) }}</td>
+            <td hlmTd>{{ compra.observacao || '-' }}</td>
+          </tr>
+          } @empty {
+          <tr hlmTr>
+            <td hlmTd [attr.colSpan]="5" class="fazenda-table__empty">
+              @if (carregandoHistorico()) { Carregando... } @else { Nenhuma compra registrada }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (totalPaginasCompras() > 1) {
+      <nav hlmPagination class="fazenda-table__pagination">
+        <ul hlmPaginationContent>
+          <li hlmPaginationItem>
+            <hlm-pagination-previous iconOnly="true" (click)="irParaCompras(paginaCompras() - 1)" />
+          </li>
+          @for (pagina of paginasVisiveisCompras(); track pagina) {
+          <li hlmPaginationItem>
+            <button hlmPaginationLink [isActive]="pagina === paginaCompras()" (click)="irParaCompras(pagina)">
+              {{ pagina + 1 }}
+            </button>
+          </li>
+          }
+          <li hlmPaginationItem>
+            <hlm-pagination-next iconOnly="true" (click)="irParaCompras(paginaCompras() + 1)" />
+          </li>
+        </ul>
+      </nav>
+      }
+    </div>
+  </div>
+
+  <div class="produto-detalhes__historico">
+    <h4 class="produto-detalhes__historico-titulo">Histórico de Usos</h4>
+    <div class="fazenda-table">
+      <table hlmTable>
+        <thead>
+          <tr hlmTr class="fazenda-table__head-row">
+            <th hlmTh>Data</th>
+            <th hlmTh>Quantidade</th>
+            <th hlmTh>Observação</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (uso of usosPaginados(); track uso.id) {
+          <tr hlmTr class="fazenda-table__row">
+            <td hlmTd>{{ uso.data | date: 'dd/MM/yyyy' : 'UTC' }}</td>
+            <td hlmTd>{{ formatarQuantidade(uso.quantidade) }}</td>
+            <td hlmTd>{{ uso.observacao || '-' }}</td>
+          </tr>
+          } @empty {
+          <tr hlmTr>
+            <td hlmTd [attr.colSpan]="3" class="fazenda-table__empty">
+              @if (carregandoHistorico()) { Carregando... } @else { Nenhum uso registrado }
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (totalPaginasUsos() > 1) {
+      <nav hlmPagination class="fazenda-table__pagination">
+        <ul hlmPaginationContent>
+          <li hlmPaginationItem>
+            <hlm-pagination-previous iconOnly="true" (click)="irParaUsos(paginaUsos() - 1)" />
+          </li>
+          @for (pagina of paginasVisiveisUsos(); track pagina) {
+          <li hlmPaginationItem>
+            <button hlmPaginationLink [isActive]="pagina === paginaUsos()" (click)="irParaUsos(pagina)">
+              {{ pagina + 1 }}
+            </button>
+          </li>
+          }
+          <li hlmPaginationItem>
+            <hlm-pagination-next iconOnly="true" (click)="irParaUsos(paginaUsos() + 1)" />
+          </li>
+        </ul>
+      </nav>
+      }
+    </div>
+  </div>
+</div>
+
+<hlm-dialog-footer class="mt-2">
+  <button hlmBtn variant="outline" type="button" class="cursor-pointer" (click)="fechar()">Fechar</button>
+</hlm-dialog-footer>

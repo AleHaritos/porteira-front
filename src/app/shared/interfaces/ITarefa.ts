@@ -16,6 +16,12 @@ export interface ITarefa {
   prazo?: string | null;
   ordem: number;
   subtarefas: ISubTarefa[];
+  negocioId: number | null;
+  negocioNome: string | null;
+  safraId: number | null;
+  safraNome: string | null;
+  projetoId: number | null;
+  projetoNome: string | null;
 }
 
 export interface TarefaRequest {
@@ -25,6 +31,9 @@ export interface TarefaRequest {
   prioridade: PrioridadeTarefa;
   prazo?: string | null;
   subtarefas?: string[];
+  negocioId?: number | null;
+  safraId?: number | null;
+  projetoId?: number | null;
 }
 
 export interface TarefaStatusRequest {

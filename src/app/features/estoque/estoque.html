@@ -1,0 +1,60 @@
+<div class="estoque-page">
+  <div class="estoque-page__header">
+    <div class="estoque-page__titulo-bloco">
+      <ng-icon name="lucideWarehouse" size="20" />
+      <h1 class="estoque-page__titulo">Estoque</h1>
+    </div>
+    <button hlmBtn class="estoque-page__btn-novo cursor-pointer" (click)="abrirNovoProduto()">
+      <ng-icon name="lucidePlus" size="16" />
+      Novo Produto
+    </button>
+  </div>
+
+  <div class="fazenda-table">
+    <table hlmTable>
+      <thead>
+        <tr hlmTr class="fazenda-table__head-row">
+          <th hlmTh>Produto</th>
+          <th hlmTh>Quantidade</th>
+          <th hlmTh>Valor</th>
+          <th hlmTh class="fazenda-table__acoes-head">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (produto of produtos(); track produto.id) {
+        <tr hlmTr class="fazenda-table__row estoque-page__row-clicavel" (click)="abrirDetalhes(produto)">
+          <td hlmTd class="fazenda-table__nome">{{ produto.nome }}</td>
+          <td hlmTd>{{ formatarQuantidade(produto.quantidade) }}</td>
+          <td hlmTd>{{ formatarValor(produto.valor) }}</td>
+          <td hlmTd>
+            <div class="estoque-page__acoes">
+              <button hlmBtn variant="ghost" size="sm" class="estoque-page__btn-compra cursor-pointer"
+                (click)="abrirCompra(produto, $event)" title="Registrar compra">
+                <ng-icon name="lucideShoppingCart" size="16" />
+              </button>
+              <button hlmBtn variant="ghost" size="sm" class="estoque-page__btn-uso cursor-pointer"
+                (click)="abrirUso(produto, $event)" title="Registrar uso">
+                <ng-icon name="lucidePackageMinus" size="16" />
+              </button>
+              <button hlmBtn variant="ghost" size="sm" class="estoque-page__btn-excluir cursor-pointer"
+                (click)="excluirProduto(produto, $event)" title="Excluir">
+                <ng-icon name="lucideTrash2" size="16" />
+              </button>
+            </div>
+          </td>
+        </tr>
+        } @empty {
+        <tr hlmTr>
+          <td hlmTd [attr.colSpan]="4" class="fazenda-table__empty">
+            @if (carregando()) {
+            Carregando estoque...
+            } @else {
+            Nenhum produto cadastrado no estoque
+            }
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

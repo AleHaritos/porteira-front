@@ -13,10 +13,14 @@
 }
 
 .custos-fixos-tab__form-titulo {
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 500;
   color: #1f2937;
-  margin-bottom: 1rem;
+  background-color: #e3f5e8;
+  padding: 0.85rem 1.5rem;
+  margin: -1.25rem -1.5rem 1.25rem -1.5rem;
+  border-radius: 0.75rem 0.75rem 0 0;
+  border-bottom: 1px solid #d8e6dc;
 }
 
 .custos-fixos-tab__form {
