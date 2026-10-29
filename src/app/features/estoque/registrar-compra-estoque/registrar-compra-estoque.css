@@ -1,0 +1,55 @@
+.registrar-compra__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.registrar-compra__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #eafaf1;
+  color: #2f9e58;
+  flex-shrink: 0;
+}
+
+.registrar-compra__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 0;
+}
+
+.registrar-compra__linha {
+  display: flex;
+  gap: 16px;
+}
+
+.registrar-compra__linha > * {
+  flex: 1;
+}
+
+.registrar-compra__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.registrar-compra__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.registrar-compra__btn-salvar {
+  background: #2f9e58;
+  color: white;
+}
+
+.registrar-compra__btn-salvar:hover {
+  background: #278a4c;
+}

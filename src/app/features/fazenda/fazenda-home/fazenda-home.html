@@ -94,6 +94,13 @@
               </a>
             </li>
             <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="estoque" routerLinkActive #rlaEstoque="routerLinkActive"
+                [isActive]="rlaEstoque.isActive">
+                <ng-icon name="lucidePackage" />
+                <span>Estoque</span>
+              </a>
+            </li>
+            <li hlmSidebarMenuItem>
               <a hlmSidebarMenuButton routerLink="calendario" routerLinkActive #rlaCalendario="routerLinkActive"
                 [isActive]="rlaCalendario.isActive">
                 <ng-icon name="lucideCalendarDays" />
