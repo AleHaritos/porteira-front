@@ -26,7 +26,7 @@
 .custos-fixos-tab__form {
   display: flex;
   align-items: flex-end;
-  gap: 1rem;
+  gap: 1.75rem;
   flex-wrap: wrap;
 }
 
@@ -124,4 +124,72 @@
 .custos-fixos-tab__total strong {
   color: #278a4c;
   font-size: 1.1rem;
+}
+
+.custos-fixos-tab__campo--descricao {
+  flex: 1 1 380px;
+  min-width: 220px;
+  max-width: 480px;
+}
+
+.custos-fixos-tab__campo--checkbox {
+  flex: 0 0 auto;
+  min-width: unset;
+}
+
+.custos-fixos-tab__checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  height: 2.25rem;
+}
+
+.custos-fixos-tab__checkbox-wrapper hlm-checkbox {
+  cursor: pointer;
+}
+
+.custos-fixos-tab__checkbox-wrapper ::ng-deep hlm-checkbox button {
+  cursor: pointer;
+}
+
+.custos-fixos-tab__checkbox-wrapper ::ng-deep hlm-checkbox button[data-state='checked'] {
+  background-color: #2f9e58;
+  border-color: #2f9e58;
+}
+
+.custos-fixos-tab__checkbox-wrapper ::ng-deep hlm-checkbox button[data-state='checked']:hover {
+  background-color: #278a4c;
+  border-color: #278a4c;
+}
+
+.custos-fixos-tab__campo--checkbox label {
+  text-align: center;
+}
+
+.custos-fixos-tab__checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.25rem;
+}
+
+.custos-fixos-tab__badge-arrendo {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background-color: #e3f5e8;
+  color: #278a4c;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.custos-fixos-tab__badge-outro {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  font-size: 0.78rem;
+  font-weight: 600;
 }

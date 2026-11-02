@@ -2,7 +2,7 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLinkWithHref } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideEllipsisVertical, lucideExternalLink, lucidePencil, lucidePlus, lucideSearch } from '@ng-icons/lucide';
+import { lucideEllipsisVertical, lucidePencil, lucidePlus, lucideSearch } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmInputImports } from '@spartan-ng/helm/input';
@@ -13,8 +13,6 @@ import { CommonModule } from '@angular/common';
 import { NovaSafra } from './nova-safra/nova-safra';
 import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { SafraService } from '../../core/services/safra/safra-service';
-import { CustoSafraCard } from './custo-safra-card/custo-safra-card';
-import { FluxoSafraCard } from './fluxo-safra-card/fluxo-safra-card';
 
 @Component({
   selector: 'app-safra',
@@ -28,10 +26,8 @@ import { FluxoSafraCard } from './fluxo-safra-card/fluxo-safra-card';
     HlmDropdownMenuImports,
     NgIcon,
     RouterLinkWithHref,
-    CustoSafraCard,
-    FluxoSafraCard
   ],
-  providers: [provideIcons({ lucideEllipsisVertical, lucideSearch, lucidePlus, lucideExternalLink, lucidePencil  })],
+  providers: [provideIcons({ lucideEllipsisVertical, lucideSearch, lucidePlus, lucidePencil })],
   styleUrl: './safra.css',
   templateUrl: './safra.html',
 })
@@ -42,7 +38,6 @@ export class Safra implements OnInit {
   private router = inject(Router);
 
   private fazendaId!: number;
-  safraSelecionada = signal<ISafra | null>(null);
 
   safras = signal<ISafra[]>([]);
   paginaAtual = signal(0);
@@ -112,11 +107,6 @@ export class Safra implements OnInit {
     return labels[status];
   }
 
-  selecionar(safra: ISafra) {
-    const jaSelecionada = this.safraSelecionada()?.id === safra.id;
-    this.safraSelecionada.set(jaSelecionada ? null : safra);
-  }
-
   abrirNovaSafra() {
     const dialogRef = this.dialogService.open(NovaSafra, {
       context: { fazendaId: this.fazendaId },
@@ -141,11 +131,6 @@ export class Safra implements OnInit {
         this.carregar();
       }
     });
-  }
-
-  verDados(safra: ISafra) {
-    const jaSelecionada = this.safraSelecionada()?.id === safra.id;
-    this.safraSelecionada.set(jaSelecionada ? null : safra);
   }
 
   statusClasse(status: StatusSafra): string {

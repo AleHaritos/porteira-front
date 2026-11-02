@@ -4,12 +4,13 @@ import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { ManejosTab } from '../manejos-tab/manejos-tab';
 import { ProdutosTab } from '../produtos-tab/produtos-tab';
 import { TalhoesTab } from '../talhoes-tab/talhoes-tab';
+import { SafraResumo } from '../safra-resumo/safra-resumo';
 
-type AbaSafra = 'talhoes' | 'manejos' | 'produtos';
+type AbaSafra = 'resumo' | 'talhoes' | 'manejos' | 'produtos';
 
 @Component({
   selector: 'app-safra-detalhes',
-  imports: [HlmTabsImports, TalhoesTab, ManejosTab, ProdutosTab],
+  imports: [HlmTabsImports, SafraResumo, TalhoesTab, ManejosTab, ProdutosTab],
   styleUrl: './safra-detalhes.css',
   templateUrl: './safra-detalhes.html',
 })
@@ -19,7 +20,7 @@ export class SafraDetalhes implements OnInit {
   safraId!: number;
   fazendaId!: number;
 
-  abaAtiva = signal<AbaSafra>('talhoes');
+  abaAtiva = signal<AbaSafra>('resumo');
 
   ngOnInit(): void {
     this.safraId = Number(this.route.snapshot.paramMap.get('safraId'));

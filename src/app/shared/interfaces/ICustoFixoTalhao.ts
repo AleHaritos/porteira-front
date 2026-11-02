@@ -3,10 +3,12 @@ export interface ICustoFixoTalhao {
   talhaoId: number;
   descricao: string;
   valor: number;
+  arrendo: boolean;
 }
 
 export interface CustoFixoTalhaoRequest {
   talhaoId: number;
   descricao: string;
   valor: number;
+  arrendo: boolean;
 }

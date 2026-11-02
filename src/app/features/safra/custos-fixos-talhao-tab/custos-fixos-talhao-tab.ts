@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideTrash2, lucidePlus } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmCheckboxImports } from '@spartan-ng/helm/checkbox';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmTableImports } from '@spartan-ng/helm/table';
@@ -14,7 +15,7 @@ const moeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL
 
 @Component({
   selector: 'app-custos-fixos-talhao-tab',
-  imports: [ReactiveFormsModule, HlmButtonImports, HlmInputImports, HlmLabelImports, HlmTableImports, NgIcon],
+  imports: [ReactiveFormsModule, HlmButtonImports, HlmCheckboxImports, HlmInputImports, HlmLabelImports, HlmTableImports, NgIcon],
   providers: [provideIcons({ lucideTrash2, lucidePlus })],
   styleUrl: './custos-fixos-talhao-tab.css',
   templateUrl: './custos-fixos-talhao-tab.html',
@@ -39,6 +40,7 @@ export class CustosFixosTalhaoTab implements OnInit {
 
   form = this.fb.group({
     descricao: ['', Validators.required],
+    arrendo: [true],
   });
 
   ngOnInit(): void {
@@ -67,7 +69,7 @@ export class CustosFixosTalhaoTab implements OnInit {
   }
 
   adicionar(): void {
-    const descricao = this.form.value.descricao;
+    const { descricao, arrendo } = this.form.value;
     if (!descricao || !this.valorRaw() || this.valorRaw()! <= 0) {
       this.toastService.showError('Erro', 'Preencha a descrição e um valor válido');
       return;
@@ -76,7 +78,7 @@ export class CustosFixosTalhaoTab implements OnInit {
     this.salvando.set(true);
 
     this.custoFixoTalhaoService
-      .salvar({ talhaoId: this.talhaoId(), descricao, valor: this.valorRaw()! })
+      .salvar({ talhaoId: this.talhaoId(), descricao, valor: this.valorRaw()!, arrendo: !!arrendo })
       .subscribe({
         next: () => {
           this.form.reset();

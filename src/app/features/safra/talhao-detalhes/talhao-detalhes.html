@@ -100,36 +100,36 @@
       </div>
 
       <div class="talhao-detalhes__duas-colunas">
-        <div class="talhao-detalhes__custos-fixos-card">
-          <div class="talhao-detalhes__custos-fixos-header">
-            <div class="talhao-detalhes__custos-fixos-titulo-bloco">
-              <span class="talhao-detalhes__custos-fixos-icone">
-                <ng-icon name="lucideWallet" size="18" />
-              </span>
-              <div>
-                <p class="talhao-detalhes__custos-fixos-titulo">Custos Fixos</p>
-                <p class="talhao-detalhes__custos-fixos-subtitulo">
-                  {{ custosFixos().length }} custo(s) · total {{ formatarValor(totalCustosFixos()) }}
-                </p>
-              </div>
-            </div>
-            <button type="button" class="talhao-detalhes__custos-fixos-ver-todas cursor-pointer"
-              (click)="selecionarAba('custosFixos')">
-              Ver todas
-            </button>
-          </div>
+  <div class="talhao-detalhes__custos-fixos-card">
+  <div class="talhao-detalhes__custos-fixos-header">
+    <div class="talhao-detalhes__custos-fixos-titulo-bloco">
+      <span class="talhao-detalhes__custos-fixos-icone">
+        <ng-icon name="lucideWallet" size="18" />
+      </span>
+      <div>
+        <p class="talhao-detalhes__custos-fixos-titulo">Custos Fixos</p>
+        <p class="talhao-detalhes__custos-fixos-subtitulo">
+          {{ custosFixos().length }} custo(s) · total {{ formatarValor(totalCustosFixos()) }}
+        </p>
+      </div>
+    </div>
+    <button type="button" class="talhao-detalhes__custos-fixos-ver-todas cursor-pointer"
+      (click)="selecionarAba('custosFixos')">
+      Ver todas
+    </button>
+  </div>
 
-          <div class="talhao-detalhes__custos-fixos-lista">
-            @for (custo of custosFixosPreview(); track custo.id) {
-            <div class="talhao-detalhes__custos-fixos-item">
-              <span class="talhao-detalhes__custos-fixos-item-descricao">{{ custo.descricao }}</span>
-              <span class="talhao-detalhes__custos-fixos-item-valor">{{ formatarValor(custo.valor) }}</span>
-            </div>
-            } @empty {
-            <p class="talhao-detalhes__custos-fixos-vazio">Nenhum custo fixo cadastrado</p>
-            }
-          </div>
-        </div>
+  <div class="talhao-detalhes__custos-fixos-lista">
+    <div class="talhao-detalhes__custos-fixos-item">
+      <span class="talhao-detalhes__custos-fixos-item-descricao">Arrendos</span>
+      <span class="talhao-detalhes__custos-fixos-item-valor">{{ formatarValor(totalCustosArrendo()) }}</span>
+    </div>
+    <div class="talhao-detalhes__custos-fixos-item">
+      <span class="talhao-detalhes__custos-fixos-item-descricao">Custos Extras</span>
+      <span class="talhao-detalhes__custos-fixos-item-valor">{{ formatarValor(totalCustosExtra()) }}</span>
+    </div>
+  </div>
+</div>
 
         <div class="talhao-detalhes__categoria-card">
           <div class="talhao-detalhes__categoria-header">

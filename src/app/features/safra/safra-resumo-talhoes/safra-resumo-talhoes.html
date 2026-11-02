@@ -1,0 +1,215 @@
+<div class="talhao-detalhes">
+  <div class="talhao-detalhes__header">
+    <div class="talhao-detalhes__titulo-bloco">
+      <span class="talhao-detalhes__icone">
+        <ng-icon name="lucideLandPlot" size="20" />
+      </span>
+      <div>
+        <h2 class="talhao-detalhes__titulo">Todos os talhões ativos</h2>
+        <p class="talhao-detalhes__subtitulo">
+          {{ talhoesAtivos().length }} talhão(ões) · {{ formatarArea(areaTotalAtivos()) }} ha
+        </p>
+      </div>
+    </div>
+
+    <button type="button" class="talhao-detalhes__btn-exportar cursor-pointer" (click)="exportarPdf()"
+      [disabled]="exportandoPdf() || carregando() || !talhoesAtivos().length">
+      <ng-icon name="lucideFileText" size="18" />
+      {{ exportandoPdf() ? 'Gerando PDF...' : 'Exportar PDF' }}
+    </button>
+  </div>
+
+  @if (carregando()) {
+  <p class="talhao-detalhes__estado">Carregando dados dos talhões...</p>
+  } @else if (!talhoesAtivos().length) {
+  <p class="talhao-detalhes__estado">Nenhum talhão ativo nesta safra.</p>
+  } @else {
+  <div class="talhao-detalhes__content">
+    <div class="talhao-detalhes__rateio-card">
+      <div class="talhao-detalhes__rateio-header">
+        <span class="talhao-detalhes__rateio-icone">
+          <ng-icon name="lucideCalculator" size="20" />
+        </span>
+        <div>
+          <p class="talhao-detalhes__rateio-label">Custo estimado dos talhões</p>
+          <p class="talhao-detalhes__rateio-descricao">
+            Soma de todos os talhões ativos, com rateio proporcional à área sobre os gastos totais da safra
+          </p>
+        </div>
+      </div>
+
+      <div class="talhao-detalhes__rateio-grid">
+        <div class="talhao-detalhes__rateio-item">
+          <span class="talhao-detalhes__rateio-item-label">Custos com Manejo</span>
+          <span class="talhao-detalhes__rateio-item-valor">{{ formatarValor(custoManejoTotal()) }}</span>
+        </div>
+
+        <div class="talhao-detalhes__rateio-item">
+          <span class="talhao-detalhes__rateio-item-label">Custos com Manutenção e Combustível</span>
+          <span class="talhao-detalhes__rateio-item-valor">{{ formatarValor(custoCombustivelManutencaoEstimado())
+            }}</span>
+        </div>
+
+        <div class="talhao-detalhes__rateio-item">
+          <span class="talhao-detalhes__rateio-item-label">Custos Extras</span>
+          <span class="talhao-detalhes__rateio-item-valor">{{ formatarValor(totalCustosFixos()) }}</span>
+        </div>
+
+        <div class="talhao-detalhes__rateio-item talhao-detalhes__rateio-item--destaque">
+          <span class="talhao-detalhes__rateio-item-label">Custo estimado dos talhões</span>
+          <span class="talhao-detalhes__rateio-item-valor talhao-detalhes__rateio-item-valor--destaque">
+            {{ formatarValor(gastosTotal()) }}
+          </span>
+        </div>
+
+        <div class="talhao-detalhes__rateio-item talhao-detalhes__rateio-item--destaque">
+          <span class="talhao-detalhes__rateio-item-label">Custo estimado por hectare</span>
+          <span class="talhao-detalhes__rateio-item-valor talhao-detalhes__rateio-item-valor--destaque">
+            {{ formatarValor(custoTotalPorHectare()) }}
+          </span>
+        </div>
+
+        @if (temProducaoColheita()) {
+        <div class="talhao-detalhes__rateio-item talhao-detalhes__rateio-item--destaque">
+          <span class="talhao-detalhes__rateio-item-label">Custo estimado por unidade produzida</span>
+          <span class="talhao-detalhes__rateio-item-valor talhao-detalhes__rateio-item-valor--destaque">
+            {{ formatarValor(custoPorUnidadeProduzida()) }} / sc
+          </span>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="talhao-detalhes__duas-colunas">
+      <div class="talhao-detalhes__custos-fixos-card">
+        <div class="talhao-detalhes__custos-fixos-header">
+          <div class="talhao-detalhes__custos-fixos-titulo-bloco">
+            <span class="talhao-detalhes__custos-fixos-icone">
+              <ng-icon name="lucideWallet" size="18" />
+            </span>
+            <div>
+              <p class="talhao-detalhes__custos-fixos-titulo">Custos Fixos</p>
+              <p class="talhao-detalhes__custos-fixos-subtitulo">
+                {{ custosFixos().length }} custo(s) · total {{ formatarValor(totalCustosFixos()) }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="talhao-detalhes__custos-fixos-lista">
+          <div class="talhao-detalhes__custos-fixos-item">
+            <span class="talhao-detalhes__custos-fixos-item-descricao">Arrendos</span>
+            <span class="talhao-detalhes__custos-fixos-item-valor">{{ formatarValor(totalCustosArrendo()) }}</span>
+          </div>
+          <div class="talhao-detalhes__custos-fixos-item">
+            <span class="talhao-detalhes__custos-fixos-item-descricao">Custos Extras</span>
+            <span class="talhao-detalhes__custos-fixos-item-valor">{{ formatarValor(totalCustosExtra()) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="talhao-detalhes__categoria-card">
+        <div class="talhao-detalhes__categoria-header">
+          <span class="talhao-detalhes__categoria-icone">
+            <ng-icon name="lucideFuel" size="18" />
+          </span>
+          <div>
+            <p class="talhao-detalhes__categoria-titulo">Combustível e Manutenção</p>
+            <p class="talhao-detalhes__categoria-subtitulo">Rateio proporcional à área dos talhões ativos</p>
+          </div>
+        </div>
+
+        <div class="talhao-detalhes__categoria-item">
+          <div class="talhao-detalhes__categoria-item-topo">
+            <span class="talhao-detalhes__categoria-item-nome">Combustível</span>
+            <span class="talhao-detalhes__categoria-item-total">
+              Safra: {{ formatarValor(custosCombustivelManutencao()?.totalCombustivel ?? 0) }}
+            </span>
+          </div>
+          <div class="talhao-detalhes__categoria-item-valores">
+            <div>
+              <span class="talhao-detalhes__categoria-item-label">Valor atribuído aos talhões</span>
+              <span class="talhao-detalhes__categoria-item-valor">{{ formatarValor(custoCombustivelEstimado())
+                }}</span>
+            </div>
+            <div>
+              <span class="talhao-detalhes__categoria-item-label">Por hectare</span>
+              <span class="talhao-detalhes__categoria-item-valor">{{ formatarValor(custoCombustivelPorHa()) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="talhao-detalhes__categoria-item">
+          <div class="talhao-detalhes__categoria-item-topo">
+            <span class="talhao-detalhes__categoria-item-nome">Manutenção</span>
+            <span class="talhao-detalhes__categoria-item-total">
+              Safra: {{ formatarValor(custosCombustivelManutencao()?.totalManutencao ?? 0) }}
+            </span>
+          </div>
+          <div class="talhao-detalhes__categoria-item-valores">
+            <div>
+              <span class="talhao-detalhes__categoria-item-label">Valor atribuído aos talhões</span>
+              <span class="talhao-detalhes__categoria-item-valor">{{ formatarValor(custoManutencaoEstimado())
+                }}</span>
+            </div>
+            <div>
+              <span class="talhao-detalhes__categoria-item-label">Por hectare</span>
+              <span class="talhao-detalhes__categoria-item-valor">{{ formatarValor(custoManutencaoPorHa()) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="talhao-detalhes__colheita-resumo-card">
+      <div class="talhao-detalhes__rateio-header">
+        <span class="talhao-detalhes__rateio-icone">
+          <ng-icon name="lucideWheat" size="20" />
+        </span>
+        <div>
+          <p class="talhao-detalhes__rateio-label">Colheita</p>
+          <p class="talhao-detalhes__rateio-descricao">Resumo da produção e receita de todos os talhões ativos</p>
+        </div>
+      </div>
+
+      <div class="talhao-detalhes__colheita-stats">
+        <div class="talhao-detalhes__colheita-stat">
+          <span class="talhao-detalhes__colheita-stat-label">Total de sc</span>
+          <span class="talhao-detalhes__colheita-stat-valor">{{ formatarSacas(producaoTotalColheita()) }}</span>
+        </div>
+
+        <div class="talhao-detalhes__colheita-stat">
+          <span class="talhao-detalhes__colheita-stat-label">Média de valor</span>
+          <span class="talhao-detalhes__colheita-stat-valor">{{ formatarValor(mediaValorColheita()) }}</span>
+        </div>
+
+        <div class="talhao-detalhes__colheita-stat">
+          <span class="talhao-detalhes__colheita-stat-label">Produção/Ha</span>
+          <span class="talhao-detalhes__colheita-stat-valor">{{ formatarSacas(producaoPorHaColheita()) }}</span>
+        </div>
+
+        <div class="talhao-detalhes__colheita-stat talhao-detalhes__colheita-stat--destaque">
+          <span class="talhao-detalhes__colheita-stat-label">Receita Total</span>
+          <span class="talhao-detalhes__colheita-stat-valor talhao-detalhes__colheita-stat-valor--destaque">
+            {{ formatarValor(receitaTotalColheita()) }}
+          </span>
+        </div>
+
+        <div class="talhao-detalhes__colheita-stat talhao-detalhes__colheita-stat--destaque">
+          <span class="talhao-detalhes__colheita-stat-label">Receita/Ha</span>
+          <span class="talhao-detalhes__colheita-stat-valor talhao-detalhes__colheita-stat-valor--destaque">
+            {{ formatarValor(receitaPorHaColheita()) }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div #graficoReceitaGastosWrap>
+      <app-receita-gastos-talhao-card nomeTalhao="Todos os talhões ativos" [receita]="receitaTotalColheita()"
+        [custoRateioTotal]="custoEstimado()" [custoCombustivel]="custoCombustivelEstimado()"
+        [custoManutencao]="custoManutencaoEstimado()" [custoFixos]="totalCustosFixos()"
+        [custoManejo]="custoManejoTotal()" />
+    </div>
+  </div>
+  }
+</div>

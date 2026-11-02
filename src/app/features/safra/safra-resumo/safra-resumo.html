@@ -1,0 +1,181 @@
+<div class="safra-resumo">
+  <hlm-tabs [tab]="abaAtiva()" class="w-full">
+    <hlm-tabs-list variant="line" class="safra-resumo__tabs-list">
+      <button hlmTabsTrigger="safra" (click)="selecionarAba('safra')" class="cursor-pointer">
+        Resumo da Safra
+      </button>
+      <button hlmTabsTrigger="talhoes" (click)="selecionarAba('talhoes')" class="cursor-pointer">
+        Resumo dos Talhões
+      </button>
+    </hlm-tabs-list>
+
+    <div hlmTabsContent="safra" class="safra-resumo__content">
+      @if (abaAtiva() === 'safra') {
+      <div class="safra-resumo__filtros" [formGroup]="filtroForm">
+        <div class="safra-resumo__filtro-campo">
+          <label hlmLabel for="safraDataInicio">De</label>
+          <hlm-date-picker formControlName="dataInicio" [maxDate]="maxDate" class="w-full">
+            <hlm-date-picker-trigger buttonId="safraDataInicio" class="w-full">Data inicial</hlm-date-picker-trigger>
+          </hlm-date-picker>
+        </div>
+
+        <div class="safra-resumo__filtro-campo">
+          <label hlmLabel for="safraDataFim">Até</label>
+          <hlm-date-picker formControlName="dataFim" [maxDate]="maxDate" class="w-full">
+            <hlm-date-picker-trigger buttonId="safraDataFim" class="w-full">Data final</hlm-date-picker-trigger>
+          </hlm-date-picker>
+        </div>
+
+        <button hlmBtn class="safra-resumo__btn-pesquisar cursor-pointer" (click)="pesquisar()">
+          <ng-icon name="lucideSearch" size="16" />
+          Pesquisar
+        </button>
+
+        <button hlmBtn variant="outline" type="button" class="safra-resumo__btn-limpar cursor-pointer"
+          (click)="limpar()">
+          Limpar
+        </button>
+
+        <button hlmBtn variant="outline" type="button" class="safra-resumo__btn-exportar cursor-pointer"
+          [disabled]="exportandoPdf()" (click)="exportarPdf()">
+          <ng-icon name="lucideFileDown" size="16" />
+          {{ exportandoPdf() ? 'Gerando...' : 'Exportar PDF' }}
+        </button>
+      </div>
+
+      @if (!resumoCarregado()) {
+      <p class="safra-resumo__estado">Carregando resumo da safra...</p>
+      } @else {
+      <div class="safra-resumo__card">
+        <div class="safra-resumo__header">
+          <span class="safra-resumo__icone">
+            <ng-icon name="lucideCalculator" size="20" />
+          </span>
+          <div>
+            <p class="safra-resumo__label">Resumo Financeiro da Safra</p>
+            <p class="safra-resumo__descricao">Gastos e receitas atribuídos a esta safra</p>
+          </div>
+        </div>
+
+        <div class="safra-resumo__grid">
+          <div class="safra-resumo__item">
+            <span class="safra-resumo__item-label">Abastecimento</span>
+            <span class="safra-resumo__item-valor">{{ formatarValor(totalAbastecimento()) }}</span>
+          </div>
+
+          <div class="safra-resumo__item">
+            <span class="safra-resumo__item-label">Manutenção</span>
+            <span class="safra-resumo__item-valor">{{ formatarValor(totalManutencao()) }}</span>
+          </div>
+
+          <div class="safra-resumo__item safra-resumo__item--destaque">
+            <span class="safra-resumo__item-label">Custo Total (Financeiro)</span>
+            <span class="safra-resumo__item-valor safra-resumo__item-valor--custo">{{ formatarValor(totalCustos())
+              }}</span>
+          </div>
+
+          <div class="safra-resumo__item safra-resumo__item--destaque">
+            <span class="safra-resumo__item-label">Receita Total</span>
+            <span class="safra-resumo__item-valor safra-resumo__item-valor--receita">{{ formatarValor(totalReceitas())
+              }}</span>
+          </div>
+
+          <div class="safra-resumo__item safra-resumo__item--lucro">
+            <span class="safra-resumo__item-label">Lucro</span>
+            <span class="safra-resumo__item-valor" [class.safra-resumo__item-valor--positivo]="lucro() >= 0"
+              [class.safra-resumo__item-valor--negativo]="lucro() < 0">
+              {{ formatarValor(lucro()) }}
+            </span>
+          </div>
+        </div>
+
+        <p class="safra-resumo__nota">
+          Abastecimento e manutenção já estão incluídos no Custo Total — aparecem aqui só como referência, não são
+          somados de novo.
+        </p>
+      </div>
+      }
+
+      <div class="fazenda-table">
+        <div class="safra-resumo__transacoes-header">
+          <h3 class="safra-resumo__transacoes-titulo">Transações</h3>
+        </div>
+
+        <div hlmTableContainer>
+          <table hlmTable>
+            <thead hlmTHead>
+              <tr hlmTr>
+                <th hlmTh>Data</th>
+                <th hlmTh class="pl-9">Tipo</th>
+                <th hlmTh>Descrição</th>
+                <th hlmTh class="pl-7">Valor</th>
+              </tr>
+            </thead>
+
+            <tbody hlmTBody>
+              @for (transacao of transacoes(); track transacao.id) {
+              <tr hlmTr class="fazenda-table__row">
+                <td hlmTd>{{ transacao.data | date: 'dd/MM/yyyy' }}</td>
+                <td hlmTd>
+                  <span class="fazenda-table__badge" [ngClass]="tipoClasse(transacao.tipo)">
+                    <ng-icon [name]="transacao.tipo === 'RECEITA' ? 'lucideTrendingUp' : 'lucideTrendingDown'"
+                      size="12" />
+                    {{ tipoLabel(transacao.tipo) }}
+                  </span>
+                </td>
+                <td hlmTd [title]="transacao.descricao || ''">
+                  {{ (transacao.descricao | truncar: 40) || '-' }}
+                </td>
+                <td hlmTd>
+                  <span class="financeiro-table__valor" [ngClass]="valorClasse(transacao.tipo)">
+                    {{ formatarValor(transacao.valor) }}
+                  </span>
+                </td>
+              </tr>
+              } @empty {
+              <tr hlmTr>
+                <td hlmTd [attr.colSpan]="4" class="fazenda-table__empty">
+                  @if (carregandoTransacoes()) {
+                  Carregando transações...
+                  } @else {
+                  Nenhuma transação encontrada
+                  }
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (totalPaginas() > 1) {
+        <nav hlmPagination class="fazenda-table__pagination">
+          <ul hlmPaginationContent>
+            <li hlmPaginationItem>
+              <hlm-pagination-previous iconOnly="true" (click)="irPara(paginaAtual() - 1)" />
+            </li>
+
+            @for (pagina of paginasVisiveis(); track pagina) {
+            <li hlmPaginationItem>
+              <button hlmPaginationLink [isActive]="pagina === paginaAtual()" (click)="irPara(pagina)">
+                {{ pagina + 1 }}
+              </button>
+            </li>
+            }
+
+            <li hlmPaginationItem>
+              <hlm-pagination-next iconOnly="true" (click)="irPara(paginaAtual() + 1)" />
+            </li>
+          </ul>
+        </nav>
+        }
+      </div>
+      }
+    </div>
+
+    <div hlmTabsContent="talhoes" class="safra-resumo__content">
+      @if (abaAtiva() === 'talhoes') {
+      <app-safra-resumo-talhoes [safraId]="safraId()" />
+      }
+    </div>
+  </hlm-tabs>
+</div>

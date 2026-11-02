@@ -123,7 +123,12 @@ export class TalhaoDetalhes implements OnInit {
   });
 
   totalCustosFixos = computed(() => this.custosFixos().reduce((soma, c) => soma + c.valor, 0));
-  custosFixosPreview = computed(() => this.custosFixos().slice(0, 5));
+  totalCustosArrendo = computed(() =>
+    this.custosFixos().filter((c) => c.arrendo).reduce((soma, c) => soma + c.valor, 0),
+  );
+  totalCustosExtra = computed(() =>
+    this.custosFixos().filter((c) => !c.arrendo).reduce((soma, c) => soma + c.valor, 0),
+  );
 
   custoCombustivelEstimado = computed(
     () => (this.custosCombustivelManutencao()?.totalCombustivel ?? 0) * this.proporcaoArea(),
