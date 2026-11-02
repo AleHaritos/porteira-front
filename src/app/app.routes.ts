@@ -131,7 +131,12 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/tarefa/tarefa').then((m) => m.Tarefa),
           },
-           {
+          {
+            path: 'notas',
+            loadComponent: () =>
+              import('./features/notas/notas').then((m) => m.Notas),
+          },
+          {
             path: 'estoque',
             loadComponent: () =>
               import('./features/estoque/estoque').then((m) => m.Estoque),

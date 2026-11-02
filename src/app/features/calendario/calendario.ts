@@ -9,6 +9,7 @@ import { EventoCalendarioService } from '../../core/services/calendario/evento-c
 import { ToastService } from '../../core/services/toast-service';
 import { IEventoCalendario } from '../../shared/interfaces/IEventoCalendario';
 import { NovoEvento } from './novo-evento/novo-evento';
+import { HlmTooltipImports } from '@spartan-ng/helm/tooltip';
 
 interface DiaCalendario {
   data: Date;
@@ -26,7 +27,7 @@ const MESES = [
 
 @Component({
   selector: 'app-calendario',
-  imports: [CommonModule, HlmButtonImports, NgIcon],
+  imports: [CommonModule, HlmButtonImports, HlmTooltipImports, NgIcon],
   providers: [provideIcons({ lucideCalendarDays, lucideChevronLeft, lucideChevronRight, lucidePlus, lucideTrash2 })],
   styleUrl: './calendario.css',
   templateUrl: './calendario.html',

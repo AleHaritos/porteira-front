@@ -1,6 +1,9 @@
 <div class="safra-detalhes">
   <hlm-tabs [tab]="abaAtiva()" class="w-full">
     <hlm-tabs-list variant="line" class="safra-detalhes__tabs-list">
+      <button hlmTabsTrigger="resumo" (click)="selecionarAba('resumo')" class="cursor-pointer">
+        Resumo
+      </button>
       <button hlmTabsTrigger="talhoes" (click)="selecionarAba('talhoes')" class="cursor-pointer">
         Talhões
       </button>
@@ -11,6 +14,12 @@
         Produtos
       </button>
     </hlm-tabs-list>
+
+    <div hlmTabsContent="resumo" class="safra-detalhes__content">
+      @if (abaAtiva() === 'resumo') {
+        <app-safra-resumo [safraId]="safraId" [fazendaId]="fazendaId" />
+      }
+    </div>
 
     <div hlmTabsContent="talhoes" class="safra-detalhes__content">
       @if (abaAtiva() === 'talhoes') {

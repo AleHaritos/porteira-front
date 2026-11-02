@@ -1,0 +1,93 @@
+.nova-nota__header-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nova-nota__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #eafaf1;
+  color: #2f9e58;
+  flex-shrink: 0;
+}
+
+.nova-nota__header-linha > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nova-nota__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 0;
+}
+
+.nova-nota__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nova-nota__contador {
+  align-self: flex-end;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.nova-nota__vinculo-toggle {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nova-nota__toggle-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 100px;
+}
+
+.nova-nota__toggle-btn--ativo {
+  background: #2f9e58 !important;
+  color: white !important;
+  border-color: #2f9e58 !important;
+}
+
+.nova-nota__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.nova-nota__btn-salvar {
+  background: #2f9e58;
+  color: white;
+}
+
+.nova-nota__btn-salvar:hover {
+  background: #278a4c;
+}
+
+.nova-nota__textarea {
+  width: 100%;
+  max-width: 100%;
+  min-height: 160px;
+  field-sizing: fixed;
+  overflow-wrap: anywhere;
+  resize: vertical;
+}
+
+.nova-nota__form,
+.nova-nota__campo {
+  min-width: 0;
+}
