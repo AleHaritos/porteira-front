@@ -1,0 +1,103 @@
+<hlm-dialog-header>
+  <div class="nova-nota__header-linha">
+    <div class="nova-nota__icone">
+      <ng-icon name="lucideStickyNote" size="20" />
+    </div>
+    <div>
+      <h3 hlmDialogTitle>{{ editando() ? 'Editar Nota' : 'Nova Nota' }}</h3>
+      <p hlmDialogDescription>Registre uma anotação e, se quiser, vincule a um negócio, safra ou projeto</p>
+    </div>
+  </div>
+</hlm-dialog-header>
+
+<form [formGroup]="form" class="nova-nota__form mt-2" (ngSubmit)="salvar()">
+  <div class="nova-nota__campo">
+    <label hlmLabel for="notaTitulo">Título</label>
+    <input hlmInput id="notaTitulo" formControlName="titulo" maxlength="150"
+      placeholder="Ex: Reunião com o arrendatário" />
+    <span class="nova-nota__contador">{{ form.controls.titulo.value?.length ?? 0 }}/150</span>
+  </div>
+
+  <div class="nova-nota__campo">
+    <label hlmLabel>Vínculo</label>
+    <div class="nova-nota__vinculo-toggle">
+      <button type="button" hlmBtn variant="outline" class="nova-nota__toggle-btn cursor-pointer"
+        [class.nova-nota__toggle-btn--ativo]="vinculo() === 'NENHUM'" (click)="onVinculoChange('NENHUM')">
+        Nenhum
+      </button>
+      <button type="button" hlmBtn variant="outline" class="nova-nota__toggle-btn cursor-pointer"
+        [class.nova-nota__toggle-btn--ativo]="vinculo() === 'NEGOCIO'" (click)="onVinculoChange('NEGOCIO')">
+        Negócio
+      </button>
+      <button type="button" hlmBtn variant="outline" class="nova-nota__toggle-btn cursor-pointer"
+        [class.nova-nota__toggle-btn--ativo]="vinculo() === 'SAFRA'" (click)="onVinculoChange('SAFRA')">
+        Safra
+      </button>
+      <button type="button" hlmBtn variant="outline" class="nova-nota__toggle-btn cursor-pointer"
+        [class.nova-nota__toggle-btn--ativo]="vinculo() === 'PROJETO'" (click)="onVinculoChange('PROJETO')">
+        Projeto
+      </button>
+    </div>
+  </div>
+
+  @if (vinculo() === 'NEGOCIO') {
+  <div class="nova-nota__campo">
+    <label hlmLabel>Negócio</label>
+    <hlm-select [value]="negocioSelecionado()" (valueChange)="onNegocioChange($event)"
+      [itemToString]="itemToStringNegocio" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (negocio of negocios(); track negocio.id) {
+        <hlm-select-item [value]="negocio.id">{{ negocio.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  } @else if (vinculo() === 'SAFRA') {
+  <div class="nova-nota__campo">
+    <label hlmLabel>Safra</label>
+    <hlm-select [value]="safraSelecionada()" (valueChange)="onSafraChange($event)" [itemToString]="itemToStringSafra"
+      class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (safra of safras(); track safra.id) {
+        <hlm-select-item [value]="safra.id">{{ safra.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  } @else if (vinculo() === 'PROJETO') {
+  <div class="nova-nota__campo">
+    <label hlmLabel>Projeto</label>
+    <hlm-select [value]="projetoSelecionado()" (valueChange)="onProjetoChange($event)"
+      [itemToString]="itemToStringProjeto" class="w-full">
+      <hlm-select-trigger class="w-full">
+        <hlm-select-value />
+      </hlm-select-trigger>
+      <hlm-select-content *hlmSelectPortal>
+        @for (projeto of projetos(); track projeto.id) {
+        <hlm-select-item [value]="projeto.id">{{ projeto.nome }}</hlm-select-item>
+        }
+      </hlm-select-content>
+    </hlm-select>
+  </div>
+  }
+
+  <div class="nova-nota__campo">
+    <label hlmLabel for="notaCorpo">Anotação</label>
+    <textarea hlmTextarea id="notaCorpo" class="nova-nota__textarea" formControlName="corpo" rows="8"
+      placeholder="Escreva aqui... (Ctrl + Enter para salvar)" (keydown.control.enter)="salvar()"
+      (keydown.meta.enter)="salvar()"></textarea>
+  </div>
+
+  <div class="nova-nota__acoes">
+    <button type="button" hlmBtn variant="outline" class="cursor-pointer" (click)="cancelar()">Cancelar</button>
+    <button type="submit" hlmBtn class="nova-nota__btn-salvar cursor-pointer" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : (editando() ? 'Salvar' : 'Criar Nota') }}
+    </button>
+  </div>
+</form>

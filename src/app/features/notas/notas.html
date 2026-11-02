@@ -1,0 +1,132 @@
+<div class="notas">
+  <header class="notas__header">
+    <div class="notas__titulo-bloco">
+      <span class="notas__icone"><ng-icon name="lucideStickyNote" size="22" /></span>
+      <div>
+        <h1 class="notas__titulo">Notas</h1>
+        <p class="notas__subtitulo">
+          @if (temFiltroAtivo()) {
+          {{ notasFiltradas().length }} de {{ notas().length }} {{ notas().length === 1 ? 'nota' : 'notas' }}
+          } @else {
+          {{ notas().length }} {{ notas().length === 1 ? 'nota' : 'notas' }}
+          }
+        </p>
+      </div>
+    </div>
+
+    <button hlmBtn class="notas__btn-nova cursor-pointer" (click)="abrirDialogo()">
+      <ng-icon name="lucidePlus" size="16" />
+      Nova nota
+    </button>
+  </header>
+
+  <section class="notas__toolbar">
+    <div class="notas__busca">
+      <ng-icon name="lucideSearch" size="16" class="notas__busca-icone" />
+      <input hlmInput type="text" class="w-full pl-9 pr-9" placeholder="Pesquisar por título..." [value]="busca()"
+        (input)="aoDigitarBusca($event)" />
+      @if (busca()) {
+      <button type="button" class="notas__busca-limpar cursor-pointer" aria-label="Limpar pesquisa"
+        (click)="busca.set('')">
+        <ng-icon name="lucideX" size="14" />
+      </button>
+      }
+    </div>
+
+    <div class="notas__filtros">
+      <div class="notas__chips">
+        <button type="button" class="notas__chip cursor-pointer" [class.notas__chip--ativo]="!tipoFiltro()"
+          (click)="selecionarTipo(null)">
+          Todas
+          <span class="notas__chip-contagem">{{ notas().length }}</span>
+        </button>
+
+        @for (tipo of tipos; track tipo.valor) {
+        <button type="button" class="notas__chip cursor-pointer" [attr.data-tipo]="tipo.valor"
+          [class.notas__chip--ativo]="tipoFiltro() === tipo.valor" (click)="selecionarTipo(tipo.valor)">
+          <ng-icon [name]="tipo.icone" size="14" />
+          {{ tipo.rotulo }}
+          <span class="notas__chip-contagem">{{ contagemDe(tipo.valor) }}</span>
+        </button>
+        }
+      </div>
+
+      @if (tipoAtual(); as tipo) {
+      <hlm-select [value]="vinculoFiltro()" (valueChange)="aoMudarVinculoFiltro($event)"
+        [itemToString]="itemToStringFiltro" class="notas__filtro-select">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value placeholder="Todos" />
+        </hlm-select-trigger>
+        <hlm-select-content *hlmSelectPortal>
+          <hlm-select-item [value]="null">{{ tipo.todos }}</hlm-select-item>
+          @for (opcao of opcoesDoTipo(); track opcao.id) {
+          <hlm-select-item [value]="opcao.id">{{ opcao.nome }}</hlm-select-item>
+          }
+        </hlm-select-content>
+      </hlm-select>
+      }
+    </div>
+  </section>
+
+  @if (carregando()) {
+  <div class="notas__grid">
+    @for (item of esqueleto; track item) {
+    <div class="nota-skeleton"></div>
+    }
+  </div>
+  } @else if (!notas().length) {
+  <div class="notas__vazio">
+    <span class="notas__vazio-icone"><ng-icon name="lucideStickyNote" size="28" /></span>
+    <h2>Nenhuma nota ainda</h2>
+    <p>Registre ideias, combinados e lembretes e, se quiser, vincule a um negócio, safra ou projeto.</p>
+    <button hlmBtn class="notas__btn-nova cursor-pointer" (click)="abrirDialogo()">
+      <ng-icon name="lucidePlus" size="16" />
+      Criar primeira nota
+    </button>
+  </div>
+  } @else if (!notasFiltradas().length) {
+  <div class="notas__vazio">
+    <span class="notas__vazio-icone"><ng-icon name="lucideSearch" size="28" /></span>
+    <h2>Nenhuma nota encontrada</h2>
+    <p>Nada corresponde à pesquisa ou aos filtros escolhidos.</p>
+    <button hlmBtn variant="outline" class="cursor-pointer" (click)="limparFiltros()">Limpar filtros</button>
+  </div>
+  } @else {
+  <div class="notas__grid">
+    @for (nota of notasFiltradas(); track nota.id) {
+    <article class="nota-card" tabindex="0" [attr.data-tipo]="tipoDaNota(nota)" (click)="abrirDialogo(nota)"
+      (keydown.enter)="aoTeclarNoCard($event, nota)">
+      <div class="nota-card__topo">
+        <h3 class="nota-card__titulo">
+          @for (parte of partesTitulo(nota.titulo); track $index) {
+          <span [class.nota-card__destaque]="parte.destaque">{{ parte.texto }}</span>
+          }
+        </h3>
+        <button type="button" class="nota-card__excluir cursor-pointer" aria-label="Excluir nota"
+          (click)="excluirNota(nota, $event)">
+          <ng-icon name="lucideTrash2" size="15" />
+        </button>
+      </div>
+
+      @if (nota.corpo) {
+      <p class="nota-card__corpo">{{ nota.corpo }}</p>
+      } @else {
+      <p class="nota-card__corpo nota-card__corpo--vazio">Sem conteúdo</p>
+      }
+
+      <footer class="nota-card__rodape">
+        @if (configDaNota(nota); as config) {
+        <span class="nota-card__tag" [title]="config.rotulo + ': ' + nomeVinculo(nota)">
+          <ng-icon [name]="config.icone" size="12" />
+          <span class="nota-card__tag-texto">{{ nomeVinculo(nota) }}</span>
+        </span>
+        } @else {
+        <span class="nota-card__tag nota-card__tag--neutra">Sem vínculo</span>
+        }
+        <span class="nota-card__data">{{ nota.atualizadoEm | date: 'dd/MM/yyyy' }}</span>
+      </footer>
+    </article>
+    }
+  </div>
+  }
+</div>

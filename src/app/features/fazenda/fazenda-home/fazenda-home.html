@@ -114,6 +114,13 @@
                 <span>Tarefas</span>
               </a>
             </li>
+            <li hlmSidebarMenuItem>
+              <a hlmSidebarMenuButton routerLink="notas" routerLinkActive #rlaNotas="routerLinkActive"
+                [isActive]="rlaNotas.isActive">
+                <ng-icon name="lucideNotebookPen" />
+                <span>Notas</span>
+              </a>
+            </li>
           </ul>
         </div>
       </div>
